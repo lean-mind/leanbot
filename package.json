@@ -2,14 +2,23 @@
   "name": "leanbot",
   "version": "1.0.0",
   "description": "LeanBot for Slack",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+    "start:dev": "nodemon"
   },
   "author": "Michael Reyes (@mreysei)",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
-    "slackbots": "^1.2.0"
+    "dotenv": "^8.2.0",
+    "slackbots": "1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.5",
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.2"
   }
 }
