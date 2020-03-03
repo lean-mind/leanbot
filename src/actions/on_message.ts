@@ -1,6 +1,7 @@
-import SlackBot from 'slackbots';
 import { Message, MessageType } from "../models/message";
 import { onMentions } from "./on_mentions";
+import { Bot } from "../services/bot/bot";
+import { onGratitude } from "./on_gratitude";
 
 const isNotMessage = (data) => {
   return data.type !== 'message'
@@ -9,14 +10,16 @@ const isNotMessage = (data) => {
     || data.bot_id !== undefined
 }
 
-export const onMessage = (bot: SlackBot, data) => {
+export const onMessage = (bot: Bot, data) => {
   if (isNotMessage(data)) return;
-  console.log(data)
 
   const message: Message = new Message(data);
   switch (message.type) {
     case MessageType.Mention:
       onMentions(bot, message);
+      break;
+    case MessageType.Gratitude:
+      onGratitude(bot, message);
       break;
   }
 }

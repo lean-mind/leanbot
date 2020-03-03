@@ -1,17 +1,13 @@
-import SlackBot from 'slackbots';
 import dotenv from 'dotenv';
+import { Bot } from './services/bot/bot';
 import { onStart } from './actions/on_start';
-import { onError } from './actions/on_error';
 import { onMessage } from './actions/on_message';
+import { onError } from './actions/on_error';
 
 dotenv.config();
 
-const bot = new SlackBot({
-  token: process.env.BOT_TOKEN,
-  name: process.env.BOT_NAME,
-  disconnect: false,
-});
+const bot = new Bot();
 
-bot.on("start", () => onStart(bot));
-bot.on("error", (error) => onError(bot, error));
-bot.on("message", (data) => onMessage(bot, data));
+bot.onStart(() => onStart(bot))
+bot.onMessage((data) => onMessage(bot, data))
+bot.onError((data) => onError(bot, data))

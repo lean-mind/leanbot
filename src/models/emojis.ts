@@ -1,3 +1,3 @@
 export enum Emojis {
-  MonoBocaTapada = ':speak_no_evil:',
+  MonkeyMouth = ':speak_no_evil:',
 }

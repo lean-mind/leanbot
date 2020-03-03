@@ -12,9 +12,12 @@
   "dependencies": {
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
+    "firebase": "^7.9.3",
+    "request": "^2.88.2",
     "slackbots": "1.2.0"
   },
   "devDependencies": {
+    "@types/extend": "^3.0.1",
     "@types/node": "^13.7.5",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
