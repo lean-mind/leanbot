@@ -3,7 +3,7 @@ import { Channel } from "./channel";
 import { Group } from "./group";
 import { User } from "./user";
 import { Direct } from "./direct";
-import { UserBot } from "./user_bot";
+import { UserBot } from "./user-bot";
 
 export interface Response {
   ok: boolean,

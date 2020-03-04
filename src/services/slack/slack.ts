@@ -4,7 +4,7 @@ import request from 'request';
 import WebSocket from 'ws';
 import { setWsHeartbeat } from 'ws-heartbeat/client';
 import { EventEmitter } from 'events';
-import { MethodName } from "./methods_name";
+import { MethodName } from "./methods-name";
 import { Params } from "./params";
 import { Response } from "../../models/api/slack/response";
 import { Team, TeamNull } from "../../models/api/slack/team";
@@ -13,7 +13,7 @@ import { User } from "../../models/api/slack/user";
 import { Direct } from "../../models/api/slack/direct";
 import { Group } from "../../models/api/slack/group";
 import { Events } from "./events";
-import { MessageParams } from "../../models/api/slack/params/message_params";
+import { MessageParams } from "../../models/api/slack/params/message-params";
 
 interface Data {
   url: string;
@@ -174,6 +174,10 @@ export class Slack {
 
   getChannels(): Channel[] {
     return this.channels;
+  }
+
+  getUsers(): User[] {
+    return this.users;
   }
 
   on(event: Events, listener: (...args: any[]) => void) {

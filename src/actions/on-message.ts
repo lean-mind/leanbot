@@ -1,7 +1,7 @@
 import { Message, MessageType } from "../models/message";
-import { onMentions } from "./on_mentions";
+import { onMentions } from "./on-mentions";
 import { Bot } from "../services/bot/bot";
-import { onGratitude } from "./on_gratitude";
+import { onGratitude } from "./on-gratitude";
 
 const isNotMessage = (data) => {
   return data.type !== 'message'

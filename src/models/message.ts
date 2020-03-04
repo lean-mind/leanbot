@@ -6,7 +6,7 @@ export enum MessageType {
 
 enum MessageRegExp {
   Mention = '<@[a-zA-Z0-9]{9}>',
-  Gratitude = '<@[a-zA-Z0-9]{9}> [+]*'
+  Gratitude = '<@[a-zA-Z0-9]{9}> [+]+'
 }
 
 export class Message {
@@ -34,15 +34,12 @@ export class Message {
 
   private calculateType(): MessageType {
     if (this.match(MessageRegExp.Gratitude)) {
-      console.log("GRATITUDE")
       this.updateGratitudePoints();
       return MessageType.Gratitude;
     } else if (this.match(MessageRegExp.Mention)) {
-      console.log("MENTION")
       this.updateUsersMentionId();
       return MessageType.Mention;
     } else {
-      console.log("UNDEFINED")
       return MessageType.Undefined;
     }
   }
@@ -50,7 +47,7 @@ export class Message {
   private match(expresion: string, text?: string) {
     const regexp = new RegExp(expresion);
 
-    return regexp.test(text ?? this.text);
+    return regexp.test(text || this.text);
   }
 
   private updateUsersMentionId() {

@@ -1,36 +1,40 @@
-import * as firebase from 'firebase';
+import admin from 'firebase-admin';
+import { UserData } from '../../models/database/user-data';
+import { GratitudeData } from '../../models/database/gratitude-data';
 
 export class Database {
-  private static instance: Database;
-  private database;
 
-  private constructor() {
-    const apiKey = process.env.FIREBASE_API_KEY;
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const messagingSenderId = process.env.FIREBASE_SENDER_ID;
-    const appId = process.env.FIREBASE_APP_ID;
-    const measurementId = process.env.FIREBASE_MEASUREMENT_ID;
+  constructor(
+    private database: admin.database.Database = admin.database()
+  ) { }
 
-    const config = {
-      apiKey,
-      authDomain: `${projectId}.firebaseapp.com`,
-      databaseURL: `https://${projectId}.firebaseio.com`,
-      projectId,
-      storageBucket: `${projectId}.appspot.com`,
-      messagingSenderId,
-      appId,
-      measurementId,
-    };
+  async getUserData(userId: string): Promise<UserData> {
+    let userData: UserData | null = null;
+    await this.database.ref(`users/${userId}`).once("value").then((snapshot) => {
+      userData = snapshot?.val();
+    })
 
-    firebase.initializeApp(config);
-    this.database = firebase.database();
+    if (userData === null) {
+      userData = await this.createUserWithDefaultData(userId);
+    }
+    return userData;
   }
 
-  static getInstance(): Database {
-    if (!Database.instance) {
-      Database.instance = new Database();
-    }
+  private async createUserWithDefaultData(userId: string): Promise<UserData> {
+    const userDataDefault = await this.getDefaultValues('users');
+    this.database.ref(`users/${userId}`).set(userDataDefault);
+    return userDataDefault;
+  }
 
-    return Database.instance;
+  async updateGratitudePoints(userId: string, gratitude: GratitudeData) {
+    await this.database.ref(`users/${userId}`).update({ gratitude })
+  }
+
+  private async getDefaultValues(field: string) {
+    let defaultValues;
+    await this.database.ref(`default/${field}`).once("value").then((snapshot) => {
+      defaultValues = snapshot?.val();
+    })
+    return defaultValues;
   }
 }
