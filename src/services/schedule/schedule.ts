@@ -8,13 +8,19 @@ export class Schedule {
     private schedule = scheduleJob
   ) { }
 
-  everyWeek(callback: CallbackFunction) {
-    const allMondays = '0 0 9 * * 1';
-    this.schedule(allMondays, callback)
+  everyFirstDayOfMonth(callback: CallbackFunction) {
+    this.schedule('0 9 * 1 *', callback);
   }
 
-  everyDay(callback: CallbackFunction) {
-    const allDays = '0 0 9 * * 1-5';
-    this.schedule(allDays, callback)
+  everyMonday(callback: CallbackFunction) {
+    this.schedule('0 9 * * 1', callback);
+  }
+
+  everyFriday(callback: CallbackFunction) {
+    this.schedule('0 9 * * 5', callback);
+  }
+
+  everyWorkingDay(callback: CallbackFunction) {
+    this.schedule('0 9 * * 1-5', callback);
   }
 }

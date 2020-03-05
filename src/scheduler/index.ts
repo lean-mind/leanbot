@@ -4,11 +4,11 @@ import { Schedule } from "../services/schedule/schedule";
 export const scheduler = (bot: Bot) => {
   const schedule = new Schedule();
 
-  schedule.everyWeek(() => {
+  schedule.everyMonday(() => {
     bot.restartGratitudePoints();
   });
 
-  schedule.everyDay(() => {
-
+  schedule.everyFirstDayOfMonth(() => {
+    bot.registerGratitudePointsOfMonth();
   });
 }

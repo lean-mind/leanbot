@@ -1,6 +1,6 @@
+import { Bot } from "../services/bot/bot";
 import { Message, MessageType } from "../models/message";
 import { onMentions } from "./on-mentions";
-import { Bot } from "../services/bot/bot";
 import { onGratitude } from "./on-gratitude";
 
 const isNotMessage = (data) => {

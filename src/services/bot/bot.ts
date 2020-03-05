@@ -5,6 +5,7 @@ import { MessageParams } from '../../models/api/slack/params/message-params';
 import { Database } from '../database/database';
 import { UserData } from '../../models/database/user-data';
 import { config } from '../../config/config-data';
+import { GratitudeUpdate } from '../../models/database/gratitude-data';
 
 export class Bot {
   private token: string;
@@ -56,14 +57,15 @@ export class Bot {
   }
 
   async giveGratitudePoints(userIdFrom: string, userIdTo: string, points: number): Promise<number> {
-    const userFrom: UserData = await this.database.getUserData(userIdFrom);
-    const userTo: UserData = await this.database.getUserData(userIdTo);
+    const userFrom: UserData = await this.database.getUser(userIdFrom);
+    const userTo: UserData = await this.database.getUser(userIdTo);
 
     if (points > userFrom.gratitude.toGive) {
       points = userFrom.gratitude.toGive;
     }
 
     userFrom.gratitude.toGive -= points;
+    userTo.gratitude.totalMonth += points;
     userTo.gratitude.totalWeek += points;
     userTo.gratitude.total += points;
 
@@ -73,7 +75,30 @@ export class Bot {
     return points;
   }
 
-  restartGratitudePoints() {
-    // TODO: reestablecer las gratitudes semanales
+  async restartGratitudePoints() {
+    const gratitude: GratitudeUpdate = {
+      toGive: 15,
+      totalWeek: 0,
+    }
+    await this.database.updateGratitudePointsForAllUsers(gratitude);
+  }
+
+  async registerGratitudePointsOfMonth() {
+    const now = new Date();
+    let month = now.getMonth() + 1;
+    let year = now.getFullYear();
+
+    if (month == 1) {
+      month = 12;
+      year--;
+    } else {
+      month--;
+    }
+
+    const gratitude: GratitudeUpdate = {
+      newMonthHistorical: `${year}/${month}`,
+      totalMonth: 0,
+    }
+    await this.database.updateGratitudePointsForAllUsers(gratitude);
   }
 }
