@@ -11,7 +11,7 @@ Pet proyect de un bot para el Slack de LeanMind 💙
   - [Instalar paquetes](#instalar-paquetes)
 - [Scripts](#scripts)
 - [Estructura](#estructura)
-- [Recursos](#recusos)
+- [Recursos](#recursos)
 
 ----------------
 
