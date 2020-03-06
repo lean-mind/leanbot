@@ -58,9 +58,11 @@ Como es una aplicación node abrá que instalar los paquetes con un `npm i`
 
 Tenemos estos scripts:
 ```
-build        // Genera la carpeta build, la que se desplegará
-start        // Arranca la app, la idea es para producción
-start:dev    // Arranca la app en modo desarrollo, que se actualizará al guardar 
+build        // Genera la carpeta build
+start        // Arranca la app
+start:dev    // Arranca la app y se actualizará al guardar 
+test         // Lanza los tests 
+test:watch   // Lanza los tests y se relanzarán al guardar 
 ```
 
 Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <script>` siendo script uno de los anteriores mencionados
