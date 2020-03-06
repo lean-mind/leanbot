@@ -1,4 +1,19 @@
 # LeanBot para Slack
+Pet proyect de un bot para el Slack de LeanMind 💙
+
+----------------
+
+## Índice
+
+- [Instalación](#instalación)
+  - [Bot](#bot)
+  - [Firebase](#firebase)
+  - [Instalar paquetes](#instalar-paquetes)
+- [Scripts](#scripts)
+- [Estructura](#estructura)
+- [Recursos](#recusos)
+
+----------------
 
 ## Instalación
 
