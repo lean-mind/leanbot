@@ -7,26 +7,18 @@ import { UserData } from '../../models/database/user-data';
 import { config } from '../../config/config-data';
 import { GratitudeUpdate } from '../../models/database/gratitude-data';
 
+const initializeSlack = () => new Slack({
+  token: config.slack.token,
+  name: config.slack.name,
+  disconnect: config.slack.disconnect,
+});
+
 export class Bot {
-  private token: string;
-  private name: string;
-  private disconnect: boolean;
-  private database: Database;
 
-  private api: Slack;
-
-  constructor() {
-    this.token = config.slack.token;
-    this.name = config.slack.name;
-    this.disconnect = config.slack.disconnect;
-
-    this.api = new Slack({
-      token: this.token,
-      name: this.name,
-      disconnect: this.disconnect,
-    });
-    this.database = new Database();
-  }
+  constructor(
+    private api: Slack = initializeSlack(),
+    private database: Database = new Database()
+  ) { }
 
   onStart(listener: (...args: any[]) => void) {
     this.api.on(Events.start, listener);
@@ -40,12 +32,12 @@ export class Bot {
     this.api.on(Events.error, listener);
   }
 
-  writeMessageToUser(id: string, text: string, params: MessageParams = {}) {
-    this.api.postMessageToUser(id, text, params);
+  writeMessageToUser(userId: string, text: string, params: MessageParams = {}) {
+    this.api.postMessageToUser(userId, text, params);
   }
 
-  writeMessageToChannel(id: string, text: string, params: MessageParams = {}) {
-    this.api.postMessageToChannel(id, text, params);
+  writeMessageToChannel(channelId: string, text: string, params: MessageParams = {}) {
+    this.api.postMessageToChannel(channelId, text, params);
   }
 
   getChannels(): Channel[] {
