@@ -1,4 +1,4 @@
-import { Emojis } from "../../../emojis";
+import { Emojis } from "../../emojis";
 
 export interface MessageParams {
   icon_emoji?: Emojis,

@@ -1,7 +1,7 @@
 import { Slack } from '../slack/slack';
 import { Events } from '../slack/events';
-import { Channel } from '../../models/api/slack/channel';
-import { MessageParams } from '../../models/api/slack/params/message-params';
+import { Channel } from '../../models/slack/channel';
+import { MessageParams } from '../../models/slack/params/message-params';
 import { Database } from '../database/database';
 import { UserData } from '../../models/database/user-data';
 import { config } from '../../config/config-data';

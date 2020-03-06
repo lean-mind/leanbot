@@ -1,7 +1,7 @@
 import { Emojis } from "../models/emojis";
 import { Bot } from "../services/bot/bot";
-import { Channel } from "../models/api/slack/channel";
-import { MessageParams } from "../models/api/slack/params/message-params";
+import { Channel } from "../models/slack/channel";
+import { MessageParams } from "../models/slack/params/message-params";
 import { scheduler } from "../scheduler";
 
 export const onStart = (bot: Bot) => {

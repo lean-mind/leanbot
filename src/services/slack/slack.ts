@@ -6,14 +6,14 @@ import { setWsHeartbeat } from 'ws-heartbeat/client';
 import { EventEmitter } from 'events';
 import { MethodName } from "./methods-name";
 import { Params } from "./params";
-import { Response } from "../../models/api/slack/response";
-import { Team, TeamNull } from "../../models/api/slack/team";
-import { Channel } from "../../models/api/slack/channel";
-import { User } from "../../models/api/slack/user";
-import { Direct } from "../../models/api/slack/direct";
-import { Group } from "../../models/api/slack/group";
+import { Response } from "../../models/slack/response";
+import { Team, TeamNull } from "../../models/slack/team";
+import { Channel } from "../../models/slack/channel";
+import { User } from "../../models/slack/user";
+import { Direct } from "../../models/slack/direct";
+import { Group } from "../../models/slack/group";
 import { Events } from "./events";
-import { MessageParams } from "../../models/api/slack/params/message-params";
+import { MessageParams } from "../../models/slack/params/message-params";
 
 interface Data {
   url: string;
