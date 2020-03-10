@@ -49,6 +49,8 @@ export class Bot {
   }
 
   async giveGratitudePoints(userIdFrom: string, userIdTo: string, points: number): Promise<number> {
+    if (points == 0) return points;
+
     const userFrom: UserData = await this.database.getUser(userIdFrom);
     const userTo: UserData = await this.database.getUser(userIdTo);
 
@@ -57,8 +59,8 @@ export class Bot {
     }
 
     userFrom.gratitude.toGive -= points;
-    userTo.gratitude.totalMonth += points;
     userTo.gratitude.totalWeek += points;
+    userTo.gratitude.totalMonth += points;
     userTo.gratitude.total += points;
 
     this.database.updateGratitudePoints(userIdFrom, userFrom.gratitude);
@@ -76,7 +78,7 @@ export class Bot {
   }
 
   async registerGratitudePointsOfMonth() {
-    const now = new Date();
+    const now = new Date(Date.now());
     let month = now.getMonth() + 1;
     let year = now.getFullYear();
 

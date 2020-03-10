@@ -6,7 +6,7 @@ export interface GratitudeData {
   historical: GratitudeHistory[]
 }
 
-interface GratitudeHistory {
+export interface GratitudeHistory {
   month: string,
   points: number | null,
 }

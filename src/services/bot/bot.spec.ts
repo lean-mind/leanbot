@@ -4,6 +4,9 @@ import { Database } from "../database/database";
 import { Slack } from "../slack/slack";
 import { Channel } from "../../models/slack/channel";
 import { buildChannel } from "../../tests/builders/build-channel";
+import { UserData } from "../../models/database/user-data";
+import { buildUserData } from "../../tests/builders/build-user-data";
+import { buildGratitudeData, buildGratitudeUpdate } from "../../tests/builders/build-gratitude-data";
 
 jest.mock('../slack/slack');
 jest.mock('../database/database');
@@ -99,6 +102,97 @@ describe('Bot', () => {
       const channel: Channel | null = bot.getGeneralChannel();
       
       expect(channel).toBeNull();
+    });
+
+    let userFrom: UserData;
+    let userTo: UserData;
+    let anonymousUser: UserData; 
+    let users: UserData[];
+    const initialPointsToGive = 15;
+
+    beforeEach(() => {
+      userFrom = buildUserData({id: "irrelevantUserIdFrom"});
+      userTo = buildUserData({id: "irrevelantUserIdTo"});
+      anonymousUser = buildUserData({});
+      users = [userFrom, userTo];
+
+      databaseMock.getUser = jest.fn(async (id: string) => users.find((userData) => userData.id == id) || anonymousUser);
+      databaseMock.updateGratitudePoints = jest.fn();
+    });
+
+    afterEach(() => {
+      Date.now = jest.fn(() => new Date().getTime());
+    });
+
+    it('returns points received when one user gives points to other user', async () => {
+      const points: number = 5;
+      const pointsReceived = await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
+      
+      expect(pointsReceived).toEqual(points);
+    });
+
+    it('returns max points when one user gives more than max points', async () => {
+      const points: number = 25;
+      const pointsReceived = await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
+
+      expect(pointsReceived).not.toEqual(points);
+      expect(pointsReceived).toEqual(initialPointsToGive);
+    });
+
+    it('returns 0 points when one user gives no points', async () => {
+      const points: number = 0;
+      const pointsReceived = await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
+
+      expect(pointsReceived).toEqual(0);
+    });
+
+    it('points to give decrease after giving points', async () => {
+      const points: number = 5;
+
+      await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
+
+      expect(userFrom.gratitude.toGive).toEqual(initialPointsToGive-points);
+    });
+
+    it('points received increase after receiving points', async () => {
+      const points: number = 5;
+      const initialTotal: number = 50; 
+      const initialTotalMonth: number = 25; 
+      const initialTotalWeek: number = 0; 
+      userTo.gratitude = buildGratitudeData({
+        total: initialTotal,
+        totalMonth: initialTotalMonth,
+        totalWeek: initialTotalWeek,
+      });
+
+      await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
+
+      expect(userTo.gratitude.totalWeek).toEqual(initialTotalWeek + points);
+      expect(userTo.gratitude.totalMonth).toEqual(initialTotalMonth + points);
+      expect(userTo.gratitude.total).toEqual(initialTotal + points);
+    });
+
+    it('restartGratitudePoints', () => {
+      const gratitude = buildGratitudeUpdate({
+        toGive: initialPointsToGive,
+        totalWeek: 0,
+      });
+
+      bot.restartGratitudePoints()
+
+      expect(databaseMock.updateGratitudePointsForAllUsers).toHaveBeenCalledWith(gratitude);
+    });
+
+    it('registerGratitudePointsOfMonth', () => {
+      const gratitude = buildGratitudeUpdate({
+        newMonthHistorical: "2019/10",
+        totalMonth: 0,
+      });
+
+      Date.now = jest.fn(() => new Date(2019, 10).getTime());
+      bot.registerGratitudePointsOfMonth()
+
+      expect(databaseMock.updateGratitudePointsForAllUsers).toHaveBeenCalledWith(gratitude);
     });
   });
 });

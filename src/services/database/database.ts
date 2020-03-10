@@ -18,7 +18,7 @@ export class Database {
 
   async getUsers(): Promise<UserData[]> {
     const users: UserData[] = [];
-    await this.database.ref('users').once("value").then((snapshot) => {
+    await this.database.ref("users").once("value").then((snapshot) => {
       const data = snapshot.val();
       Object.keys(data).forEach((key) => {
         users.push({ id: key, gratitude: data[key].gratitude })
