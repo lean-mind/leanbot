@@ -17,3 +17,24 @@ export interface GratitudeUpdate {
   totalWeek?: number,
   newMonthHistorical?: string,
 }
+
+export const mixGratitudePoints = (
+  gratitude: GratitudeData, 
+  gratitudeToUpdate: GratitudeUpdate
+): GratitudeData => {
+  if (gratitudeToUpdate.newMonthHistorical !== undefined) {
+    gratitude.historical = gratitude.historical || [];
+    gratitude.historical.push({
+      month: gratitudeToUpdate.newMonthHistorical,
+      points: gratitude.totalMonth,
+    });
+  }
+
+  return {
+    total: gratitude.total,
+    totalWeek: gratitudeToUpdate.totalWeek || gratitude.totalWeek,
+    totalMonth: gratitudeToUpdate.totalMonth || gratitude.totalMonth,
+    toGive: gratitudeToUpdate.toGive || gratitude.toGive,
+    historical: gratitude.historical
+  }
+}
