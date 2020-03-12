@@ -27,7 +27,7 @@ export const buildGratitudeUpdate = ({
 });
 
 export const buildGratitudeHistory = ({
-  month = "10",
+  month = "2018/10",
   points = 0,
 }: Partial<GratitudeHistory>): GratitudeHistory => ({
   month,
