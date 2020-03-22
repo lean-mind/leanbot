@@ -1,77 +1,39 @@
-import admin from 'firebase-admin';
 import { UserData } from '../../models/database/user-data';
-import { GratitudeData, GratitudeUpdate } from '../../models/database/gratitude-data';
+import { GratitudeData, GratitudeUpdate, mixGratitudePoints } from '../../models/database/gratitude-data';
+import { Firebase } from '../firebase/firebase';
 
 export class Database {
-
   constructor(
-    private database: admin.database.Database = admin.database()
+    private firebase: Firebase = new Firebase()
   ) { }
 
-  private async getDefaultValues(field: string) {
-    let defaultValues;
-    await this.database.ref(`default/${field}`).once("value").then((snapshot) => {
-      defaultValues = snapshot?.val();
-    })
-    return defaultValues;
-  }
-
   async getUsers(): Promise<UserData[]> {
-    const users: UserData[] = [];
-    await this.database.ref("users").once("value").then((snapshot) => {
-      const data = snapshot.val();
-      Object.keys(data).forEach((key) => {
-        users.push({ id: key, gratitude: data[key].gratitude })
-      });
-    });
-    return users;
+    return await this.firebase.getUsers();
   }
 
   async getUser(userId: string): Promise<UserData> {
-    let userData: UserData | null = null;
-    await this.database.ref(`users/${userId}`).once("value").then((snapshot) => {
-      userData = snapshot?.val();
-    })
+    let userData: UserData | null = await this.firebase.getUser(userId);
 
     if (userData === null) {
-      userData = await this.createUserWithDefaultData(userId);
+      const userDefault = await this.firebase.getUserDefaultWithId(userId);
+      await this.firebase.setUser(userId, userDefault);
+      
+      return userDefault;
     }
-    userData.id = userId;
     return userData;
   }
 
-  private async createUserWithDefaultData(userId: string): Promise<UserData> {
-    const userDataDefault = await this.getDefaultValues('users');
-    this.database.ref(`users/${userId}`).set(userDataDefault);
-    return userDataDefault;
-  }
-
-  async updateGratitudePoints(userId: string, gratitude: GratitudeData) {
-    await this.database.ref(`users/${userId}`).update({ gratitude })
+  async updateGratitudePoints(userId: string, gratitude: GratitudeData): Promise<void> {
+    await this.firebase.updateGratitudePoints(userId, gratitude);
   }
 
   async updateGratitudePointsForAllUsers(gratitude: GratitudeUpdate): Promise<void> {
-    let users = {};
-    await this.database.ref('users').once("value").then((snapshot) => {
-      const data = snapshot.val();
-      Object.keys(data).forEach((key) => {
-        const userGratitude = data[key].gratitude;
-        let gratitudeUpdated: GratitudeData = {
-          toGive: gratitude.toGive ?? userGratitude.toGive,
-          total: userGratitude.total,
-          totalWeek: gratitude.totalWeek ?? userGratitude.totalWeek,
-          totalMonth: gratitude.totalMonth ?? userGratitude.totalMonth,
-          historical: gratitude.newMonthHistorical !== undefined ? [
-            ...userGratitude.historical ?? [],
-            {
-              month: gratitude.newMonthHistorical,
-              points: userGratitude.totalMonth,
-            }
-          ] : (userGratitude.historical ?? []),
-        };
-        users = { ...users, [key]: { ...data[key], gratitude: gratitudeUpdated } };
-      });
-    });
-    await this.database.ref('users').update(users);
+    const users: UserData[] = await this.firebase.getUsers();
+    const usersUpdated = users.map((user: UserData) => ({
+      ...user, 
+      gratitude: mixGratitudePoints(user.gratitude, gratitude)
+    }));
+
+    await this.firebase.setUsers(usersUpdated);
   }
 }

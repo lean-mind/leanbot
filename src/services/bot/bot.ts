@@ -79,8 +79,8 @@ export class Bot {
 
   async registerGratitudePointsOfMonth() {
     const now = new Date(Date.now());
-    let month = now.getMonth() + 1;
-    let year = now.getFullYear();
+    let month: number = now.getMonth() + 1;
+    let year: number = now.getFullYear();
 
     if (month == 1) {
       month = 12;
@@ -90,7 +90,7 @@ export class Bot {
     }
 
     const gratitude: GratitudeUpdate = {
-      newMonthHistorical: `${year}/${month}`,
+      newHistorical: { month, year },
       totalMonth: 0,
     }
     await this.database.updateGratitudePointsForAllUsers(gratitude);

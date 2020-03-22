@@ -185,7 +185,7 @@ describe('Bot', () => {
 
     it('registerGratitudePointsOfMonth', () => {
       const gratitude = buildGratitudeUpdate({
-        newMonthHistorical: "2019/10",
+        newHistorical: { month: 10, year: 2019 },
         totalMonth: 0,
       });
 
