@@ -29,10 +29,10 @@ export class Database {
 
   async updateGratitudePointsForAllUsers(gratitude: GratitudeUpdate): Promise<void> {
     const users: UserData[] = await this.firebase.getUsers();
-    const usersUpdated = users.map((user: UserData) => {
-      user.gratitude = mixGratitudePoints(user.gratitude, gratitude);
-      return user;
-    });
+    const usersUpdated = users.map((user: UserData) => ({
+      ...user, 
+      gratitude: mixGratitudePoints(user.gratitude, gratitude)
+    }));
 
     await this.firebase.setUsers(usersUpdated);
   }

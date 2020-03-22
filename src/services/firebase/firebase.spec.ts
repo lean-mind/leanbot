@@ -1,4 +1,4 @@
-import { Firebase } from "./firebase";
+import { Firebase, Table } from "./firebase";
 import { buildFirebaseAdmin } from "../../tests/builders/build-firebase-admin";
 import admin from "firebase-admin";
 import { buildUserData } from "../../tests/builders/build-user-data";
@@ -10,10 +10,11 @@ describe('Firebase', () => {
   let firebase: Firebase;
   let database: admin.database.Database;
 
-  it('getUser is called', async () => {
-    const userId = "irrelevantUserId";
-    const user = buildUserData({ id: userId })
+  const userId = "irrelevantUserId";
+  const user = buildUserData({ id: userId })
+  const users = [ buildUserData({}), buildUserData({}) ];
 
+  it('getUser is called', async () => {
     database = buildFirebaseAdmin({ response: user }).database();
     firebase = new Firebase(database);
     
@@ -23,8 +24,6 @@ describe('Firebase', () => {
   });
   
   it('getUsers is called', async () => {
-    const users = [ buildUserData({}), buildUserData({}) ];
-    
     database = buildFirebaseAdmin({ response: users }).database();
     firebase = new Firebase(database);
     
@@ -34,7 +33,6 @@ describe('Firebase', () => {
   });
   
   it('getUserDefaultWithId is called', async () => {
-    const userId = "irrelevantUserId";
     const userDefault = buildUserData({ id: undefined });
     const userExpected = buildUserData({ id: userId });
     
@@ -44,34 +42,28 @@ describe('Firebase', () => {
     const response = await firebase.getUserDefaultWithId(userId);
     
     expect(response).toEqual(userExpected);
-    expect(database.ref).toHaveBeenLastCalledWith("default/users");
+    expect(database.ref).toHaveBeenLastCalledWith(Table.defaultUsers);
   });
 
-  it('setUser is called', async () => {
-    const userId = "irrelevantUserId";
-    const user = buildUserData({ });
-    
+  it('setUser is called', async () => {    
     database = buildFirebaseAdmin({ }).database();
     firebase = new Firebase(database);
     
     await firebase.setUser(userId, user);
     
-    expect(database.ref).toHaveBeenLastCalledWith(`users/${userId}`);
+    expect(database.ref).toHaveBeenLastCalledWith(`${Table.users}/${userId}`);
   });
   
   it('setUsers is called', async () => {
-    const users = [buildUserData({ })];
-    
     database = buildFirebaseAdmin({ }).database();
     firebase = new Firebase(database);
     
     await firebase.setUsers(users);
     
-    expect(database.ref).toHaveBeenLastCalledWith("users");
+    expect(database.ref).toHaveBeenLastCalledWith(Table.users);
   });
   
   it('updateGratitudePoints is called', async () => {
-    const userId = "irrelevantUserId";
     const gratitude = buildGratitudeData({});
 
     database = buildFirebaseAdmin({ }).database();
@@ -79,6 +71,6 @@ describe('Firebase', () => {
     
     await firebase.updateGratitudePoints(userId, gratitude);
     
-    expect(database.ref).toHaveBeenLastCalledWith(`users/${userId}`);
+    expect(database.ref).toHaveBeenLastCalledWith(`${Table.users}/${userId}`);
   });
 });

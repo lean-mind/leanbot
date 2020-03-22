@@ -7,7 +7,8 @@ export interface GratitudeData {
 }
 
 export interface GratitudeHistory {
-  month: string,
+  month: number,
+  year: number,
   points: number | null,
 }
 
@@ -15,26 +16,31 @@ export interface GratitudeUpdate {
   toGive?: number,
   totalMonth?: number,
   totalWeek?: number,
-  newMonthHistorical?: string,
+  newHistorical?: Partial<GratitudeHistory>,
 }
 
 export const mixGratitudePoints = (
   gratitude: GratitudeData, 
   gratitudeToUpdate: GratitudeUpdate
 ): GratitudeData => {
-  if (gratitudeToUpdate.newMonthHistorical !== undefined) {
-    gratitude.historical = gratitude.historical || [];
-    gratitude.historical.push({
-      month: gratitudeToUpdate.newMonthHistorical,
+  const historical = gratitude.historical || [];
+  
+  if (gratitudeToUpdate.newHistorical) {
+    const record: GratitudeHistory = {
+      month: gratitudeToUpdate.newHistorical.month || 0,
+      year: gratitudeToUpdate.newHistorical.year || 1990,
       points: gratitude.totalMonth,
-    });
+    }
+    historical.push(record);
   }
 
-  return {
+  const gratitudeUpdated: GratitudeData = {
     total: gratitude.total,
     totalWeek: gratitudeToUpdate.totalWeek || gratitude.totalWeek,
     totalMonth: gratitudeToUpdate.totalMonth || gratitude.totalMonth,
     toGive: gratitudeToUpdate.toGive || gratitude.toGive,
-    historical: gratitude.historical
+    historical: historical
   }
+
+  return gratitudeUpdated;
 }

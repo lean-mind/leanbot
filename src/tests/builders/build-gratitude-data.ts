@@ -18,18 +18,20 @@ export const buildGratitudeUpdate = ({
   toGive,
   totalMonth,
   totalWeek,
-  newMonthHistorical,
+  newHistorical,
 }: Partial<GratitudeUpdate>): GratitudeUpdate => ({
   toGive,
   totalMonth,
   totalWeek,
-  newMonthHistorical,
+  newHistorical,
 });
 
 export const buildGratitudeHistory = ({
-  month = "2018/10",
+  month = 10,
+  year = 2018,
   points = 0,
 }: Partial<GratitudeHistory>): GratitudeHistory => ({
   month,
+  year,
   points,
 });

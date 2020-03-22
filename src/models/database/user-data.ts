@@ -12,7 +12,7 @@ export interface FirebaseUser {
 }
 
 export const toUserData = (firebaseUser: FirebaseUser): UserData => {
-  const userId = Object.keys(firebaseUser)[0] 
+  const [userId] = Object.keys(firebaseUser);
 
   return {
   id: userId,

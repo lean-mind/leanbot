@@ -1,8 +1,7 @@
 import { Database } from "./database"
 import { UserData } from "../../models/database/user-data";
 import { buildGratitudeData, buildGratitudeUpdate } from "../../tests/builders/build-gratitude-data";
-import { buildFirebaseAdmin } from "../../tests/builders/build-firebase-admin";
-import { GratitudeData, mixGratitudePoints, GratitudeUpdate } from "../../models/database/gratitude-data";
+import { GratitudeData, mixGratitudePoints } from "../../models/database/gratitude-data";
 import { buildUserData } from "../../tests/builders/build-user-data";
 import { Firebase } from "../firebase/firebase";
 
