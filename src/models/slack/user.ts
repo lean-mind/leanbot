@@ -10,7 +10,7 @@ export interface User {
   tz: string,
   tz_label: string,
   tz_offset: number,
-  profile: UserProfile,
+  profile?: UserProfile,
   is_admin: boolean,
   is_owner: boolean,
   is_primary_owner: boolean,

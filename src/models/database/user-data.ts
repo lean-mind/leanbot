@@ -15,9 +15,10 @@ export const toUserData = (firebaseUser: FirebaseUser): UserData => {
   const [userId] = Object.keys(firebaseUser);
 
   return {
-  id: userId,
-  gratitude: firebaseUser[userId].gratitude
-}};
+    id: userId,
+    gratitude: firebaseUser[userId].gratitude
+  }
+};
 
 export const toFirebaseUser = (user: UserData): FirebaseUser => ({
   [user.id]: {
