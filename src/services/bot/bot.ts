@@ -74,15 +74,17 @@ export class Bot {
     return points;
   }
 
-  async restartGratitudePoints() {
+  async restartGratitudePoints(): Promise<UserData[]>  {
+    const users: UserData[] = await this.database.getUsers();
     const gratitude: GratitudeUpdate = {
       toGive: 15,
       totalWeek: 0,
     }
     await this.database.updateGratitudePointsForAllUsers(gratitude);
+    return users;
   }
 
-  async registerGratitudePointsOfMonth() {
+  async registerGratitudePointsOfMonth(){
     const now = new Date(Date.now());
     let month: number = now.getMonth() + 1;
     let year: number = now.getFullYear();
@@ -98,6 +100,7 @@ export class Bot {
       newHistorical: { month, year },
       totalMonth: 0,
     }
+
     await this.database.updateGratitudePointsForAllUsers(gratitude);
   }
 }
