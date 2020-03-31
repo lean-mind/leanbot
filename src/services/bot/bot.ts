@@ -6,6 +6,7 @@ import { Database } from '../database/database';
 import { UserData } from '../../models/database/user-data';
 import { config } from '../../config/config-data';
 import { GratitudeUpdate } from '../../models/database/gratitude-data';
+import { User } from '../../models/slack/user';
 
 const initializeSlack = () => new Slack({
   token: config.slack.token,
@@ -38,6 +39,10 @@ export class Bot {
 
   writeMessageToChannel(channelId: string, text: string, params: MessageParams = {}) {
     this.api.postMessageToChannel(channelId, text, params);
+  }
+
+  getUsers(): User[] {
+    return this.api.getUsers();
   }
 
   getChannels(): Channel[] {
