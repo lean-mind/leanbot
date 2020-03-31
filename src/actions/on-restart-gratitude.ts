@@ -7,8 +7,10 @@ export const onRestartGratitude = async (bot: Bot) => {
   let totalPoints: number = 0;
   let resultMessage: string = "Estos son los resultados de esta semana:\n";
   const specialMessage: string = `Se han restablecido los puntos semanales.\nSi agradecer tú quieres, *usar con sabiduría tú debes* ${Emojis.Yoda}.`;
-  const slackUsers: User[] = bot.getUsers();
-  const firebaseUsers: UserData[] = await bot.restartGratitudePoints();
+  const slackUsers: User[] = bot.getSlackUsers();
+  const firebaseUsers: UserData[] = await bot.getUsers();
+  
+  await bot.restartGratitudePoints();
   const sortByTotalWeek = (a: UserData, b: UserData) => b.gratitude.totalWeek - a.gratitude.totalWeek;
 
   firebaseUsers.sort(sortByTotalWeek).forEach((user: UserData, index: number) => {

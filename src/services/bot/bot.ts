@@ -41,7 +41,11 @@ export class Bot {
     this.api.postMessageToChannel(channelId, text, params);
   }
 
-  getUsers(): User[] {
+  async getUsers(): Promise<UserData[]> {
+    return await this.database.getUsers();
+  }
+
+  getSlackUsers(): User[] {
     return this.api.getUsers();
   }
 
@@ -74,14 +78,12 @@ export class Bot {
     return points;
   }
 
-  async restartGratitudePoints(): Promise<UserData[]>  {
-    const users: UserData[] = await this.database.getUsers();
+  async restartGratitudePoints(): Promise<void>  {
     const gratitude: GratitudeUpdate = {
       toGive: 15,
       totalWeek: 0,
     }
     await this.database.updateGratitudePointsForAllUsers(gratitude);
-    return users;
   }
 
   async registerGratitudePointsOfMonth(){

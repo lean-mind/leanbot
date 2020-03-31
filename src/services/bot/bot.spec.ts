@@ -77,7 +77,7 @@ describe('Bot', () => {
     it('returns all slack users', () => {
       const given: User[] = [buildUser({})];
       apiMock.getUsers = jest.fn(() => given);
-      const users: User[] = bot.getUsers();
+      const users: User[] = bot.getSlackUsers();
       
       expect(users).toEqual(given);
     }); 
@@ -188,7 +188,7 @@ describe('Bot', () => {
         totalWeek: 0,
       });
 
-      bot.restartGratitudePoints()
+      bot.restartGratitudePoints();
 
       expect(databaseMock.updateGratitudePointsForAllUsers).toHaveBeenCalledWith(gratitude);
     });
