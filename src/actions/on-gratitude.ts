@@ -1,5 +1,6 @@
 import { Message } from "../models/message"
 import { Bot } from "../services/bot/bot";
+import { Emojis } from "../models/emojis";
 
 export const onGratitude = async (bot: Bot, message: Message) => {
   const userMentionedId = message.usersMentionId[0];
@@ -9,7 +10,13 @@ export const onGratitude = async (bot: Bot, message: Message) => {
   const points = await bot.giveGratitudePoints(message.userId, userMentionedId, message.gratitudePoints);
 
   if (points > 0) {
-    const text = `*¡<@${message.userId}> te ha dado ${points} punto/s de gratitud!*`
-    bot.writeMessageToUser(userMentionedId, text);
+    const messageToUserMentioned = `¡*<@${message.userId}>* te ha dado *${points}* punto/s de gratitud!`;
+    bot.writeMessageToUser(userMentionedId, messageToUserMentioned);
+
+    const messageToUserThatMention = `¡Has dado *${points}* puntos a *<@${userMentionedId}>*!`;
+    bot.writeMessageToUser(message.userId, messageToUserThatMention);
+  } else {
+    const messageToUserThatMention = `¡Chacho relajate con los puntitos, que ya no te quedan! ${Emojis.MaikDontAprove}`;
+    bot.writeMessageToUser(message.userId, messageToUserThatMention);
   }
 }

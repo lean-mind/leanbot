@@ -36,11 +36,13 @@ export const mixGratitudePoints = (
 
   const gratitudeUpdated: GratitudeData = {
     total: gratitude.total,
-    totalWeek: gratitudeToUpdate.totalWeek || gratitude.totalWeek,
-    totalMonth: gratitudeToUpdate.totalMonth || gratitude.totalMonth,
-    toGive: gratitudeToUpdate.toGive || gratitude.toGive,
-    historical: historical
+    totalWeek: mixPoints(gratitudeToUpdate.totalWeek, gratitude.totalWeek),
+    totalMonth: mixPoints(gratitudeToUpdate.totalMonth, gratitude.totalMonth),
+    toGive: mixPoints(gratitudeToUpdate.toGive, gratitude.toGive),
+    historical,
   }
-
+  
   return gratitudeUpdated;
 }
+
+const mixPoints = (toUpdatePoints: number | undefined, currentPoints: number) => toUpdatePoints != undefined ? toUpdatePoints : currentPoints;

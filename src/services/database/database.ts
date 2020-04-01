@@ -20,7 +20,7 @@ export class Database {
       
       return userDefault;
     }
-    return userData;
+    return userData; 
   }
 
   async updateGratitudePoints(userId: string, gratitude: GratitudeData): Promise<void> {
@@ -33,7 +33,6 @@ export class Database {
       ...user, 
       gratitude: mixGratitudePoints(user.gratitude, gratitude)
     }));
-
-    await this.firebase.setUsers(usersUpdated);
+    await this.firebase.setUsers(usersUpdated); 
   }
 }

@@ -26,16 +26,22 @@ export class Firebase {
   
   async getUser(userId: string): Promise<UserData | null> {
     const response = await this.database(Table.users, userId).get();
-    const value: FirebaseUser = response.val();
+    const value = response.val();
+    const firebaseUser: FirebaseUser = {[userId]: value};
 
-    return value ? toUserData(value) : null;
+    return value ? toUserData(firebaseUser) : null;
   }
   
   async getUsers(): Promise<UserData[]> {
     const response = await this.database(Table.users).get();
-    const values: FirebaseUser[] = response.val(); 
-
-    return values ? values.map((value: FirebaseUser) => toUserData(value)) : []
+    const values = response.val(); 
+    if (values) {
+      const usersId: string[] = Object.keys(values);
+      const firebaseUsers: FirebaseUser[] = usersId.map((userId: string) => ({ [userId]: values[userId] }));
+  
+      return firebaseUsers.map((user: FirebaseUser) => toUserData(user));
+    }
+    return []; 
   }
 
   async getUserDefaultWithId(userId: string): Promise<UserData> {
@@ -47,12 +53,19 @@ export class Firebase {
 
   async setUser(userId: string, user: UserData): Promise<void> {
     const value: FirebaseUser = toFirebaseUser(user);
-    await this.database(Table.users, userId).set(value);
+    await this.database(Table.users, userId).set(value[userId]);
   }
-
+  
   async setUsers(users: UserData[]): Promise<void> {
-    const values: FirebaseUser[] = users.map((user: UserData) => toFirebaseUser(user));
-    await this.database(Table.users).set(values);
+    let usersUpdated = {};
+    if (users.length == 0) return; 
+    users.forEach((user: UserData) => {
+      usersUpdated = {
+        ...usersUpdated,
+        ...toFirebaseUser(user),
+      }
+    });
+    await this.database(Table.users).set(usersUpdated);
   }
   
   async updateGratitudePoints(userId: string, gratitude: GratitudeData): Promise<void> {

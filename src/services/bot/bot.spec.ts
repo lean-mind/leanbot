@@ -7,6 +7,8 @@ import { buildChannel } from "../../tests/builders/build-channel";
 import { UserData } from "../../models/database/user-data";
 import { buildUserData } from "../../tests/builders/build-user-data";
 import { buildGratitudeData, buildGratitudeUpdate } from "../../tests/builders/build-gratitude-data";
+import { User } from "../../models/slack/user";
+import { buildUser } from "../../tests/builders/build-user";
 
 jest.mock('../slack/slack');
 jest.mock('../database/database');
@@ -71,6 +73,14 @@ describe('Bot', () => {
     const music: Channel = buildChannel({is_general: false})
     const food: Channel = buildChannel({is_general: false})
     const random: Channel = buildChannel({is_general: false})
+
+    it('returns all slack users', () => {
+      const given: User[] = [buildUser({})];
+      apiMock.getUsers = jest.fn(() => given);
+      const users: User[] = bot.getSlackUsers();
+      
+      expect(users).toEqual(given);
+    }); 
 
     it('returns all slack channels', () => {
       const given: Channel[] = [buildChannel({})];
@@ -178,7 +188,7 @@ describe('Bot', () => {
         totalWeek: 0,
       });
 
-      bot.restartGratitudePoints()
+      bot.restartGratitudePoints();
 
       expect(databaseMock.updateGratitudePointsForAllUsers).toHaveBeenCalledWith(gratitude);
     });

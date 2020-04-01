@@ -6,6 +6,7 @@ import { Database } from '../database/database';
 import { UserData } from '../../models/database/user-data';
 import { config } from '../../config/config-data';
 import { GratitudeUpdate } from '../../models/database/gratitude-data';
+import { User } from '../../models/slack/user';
 
 const initializeSlack = () => new Slack({
   token: config.slack.token,
@@ -40,6 +41,14 @@ export class Bot {
     this.api.postMessageToChannel(channelId, text, params);
   }
 
+  async getUsers(): Promise<UserData[]> {
+    return await this.database.getUsers();
+  }
+
+  getSlackUsers(): User[] {
+    return this.api.getUsers();
+  }
+
   getChannels(): Channel[] {
     return this.api.getChannels();
   }
@@ -69,7 +78,7 @@ export class Bot {
     return points;
   }
 
-  async restartGratitudePoints() {
+  async restartGratitudePoints(): Promise<void>  {
     const gratitude: GratitudeUpdate = {
       toGive: 15,
       totalWeek: 0,
@@ -77,7 +86,7 @@ export class Bot {
     await this.database.updateGratitudePointsForAllUsers(gratitude);
   }
 
-  async registerGratitudePointsOfMonth() {
+  async registerGratitudePointsOfMonth(){
     const now = new Date(Date.now());
     let month: number = now.getMonth() + 1;
     let year: number = now.getFullYear();
@@ -93,6 +102,7 @@ export class Bot {
       newHistorical: { month, year },
       totalMonth: 0,
     }
+
     await this.database.updateGratitudePointsForAllUsers(gratitude);
   }
 }
