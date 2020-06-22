@@ -9,7 +9,7 @@ export const onRestartGratitude = async (bot: Bot) => {
   const specialMessage: string = `Se han restablecido los puntos semanales.\nSi agradecer tú quieres, *usar con sabiduría tú debes* ${Emojis.Yoda}.`;
   const slackUsers: User[] = bot.getSlackUsers();
   const firebaseUsers: UserData[] = await bot.getUsers();
-  
+
   await bot.restartGratitudePoints();
   const sortByTotalWeek = (a: UserData, b: UserData) => b.gratitude.totalWeek - a.gratitude.totalWeek;
 
@@ -19,14 +19,15 @@ export const onRestartGratitude = async (bot: Bot) => {
     if (points > 0) {
       totalPoints += points;
       resultMessage += `*${position}.* <@${user.id}> con *${points} puntos* ${getEmojiForPosition(position)}\n`;
-    } 
+    }
   });
+
+  resultMessage += `\nSe han dado un total de *${totalPoints} puntos*, muchas gracias a todos por valorar a los compañeros ${Emojis.Heart}`;
 
   slackUsers.forEach((user: User) => {
     if (totalPoints > 0) {
-      resultMessage += `\nSe han dado un total de *${totalPoints} puntos*, muchas gracias a todos por valorar a los compañeros ${Emojis.Heart}`;
       bot.writeMessageToUser(user.id, resultMessage);
-    } 
+    }
     bot.writeMessageToUser(user.id, specialMessage);
   });
 }
@@ -41,5 +42,5 @@ const getEmojiForPosition = (position: number): string => {
       return Emojis.TrophyBronze;
     default:
       return "";
-  } 
+  }
 }
