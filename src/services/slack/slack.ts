@@ -7,11 +7,8 @@ import { EventEmitter } from 'events';
 import { MethodName } from "./methods-name";
 import { Params } from "./params";
 import { Response } from "../../models/slack/response";
-import { Team, TeamNull } from "../../models/slack/team";
 import { Channel } from "../../models/slack/channel";
 import { User } from "../../models/slack/user";
-import { Direct } from "../../models/slack/direct";
-import { Group } from "../../models/slack/group";
 import { Events } from "./events";
 import { MessageParams } from "../../models/slack/params/message-params";
 
@@ -27,14 +24,10 @@ export class Slack {
   private ws: WebSocket;
 
   private wsUrl: string = "";
-  private self: any;
-  private team: Team = new TeamNull();
   private channels: Channel[] = [];
   private users: User[] = [];
-  private ims: Direct[] = [];
-  private groups: Group[] = [];
 
-  constructor(params) {
+  constructor(params: any) {
     this.emitter = new EventEmitter(params);
     this.token = params.token;
 
@@ -44,16 +37,12 @@ export class Slack {
   private login() {
     this.api(MethodName.start).then((data: Response) => {
       this.wsUrl = data.url;
-      this.self = data.self;
-      this.team = data.team;
       this.channels = data.channels;
       this.users = data.users;
-      this.ims = data.ims;
-      this.groups = data.groups;
 
       this.connect()
       this.emitter.emit('start');
-    }).fail((data) => {
+    }).fail((data: any) => {
       this.emitter.emit('error', new Error(data?.error ? data.error : data));
     }).done()
   }
@@ -63,9 +52,9 @@ export class Slack {
 
     setWsHeartbeat(this.ws, '{ "kind": "ping" }');
 
-    const open = (data) => this.emitter.emit('open', data);
-    const close = (data) => this.emitter.emit('close', data);
-    const message = (data) => {
+    const open = (data: any) => this.emitter.emit('open', data);
+    const close = (data: any) => this.emitter.emit('close', data);
+    const message = (data: any) => {
       try {
         const messageData = JSON.parse(data)
         this.emitter.emit('message', messageData);
@@ -124,30 +113,6 @@ export class Slack {
         }
       })
     })
-  }
-
-  private post(type, id, text, params, cb) {
-    var method = ({
-      'group': 'getGroupId',
-      'channel': 'getChannelId',
-      'user': 'getChatId',
-      'slackbot': 'getUserId'
-    })[type];
-
-    if (typeof params === 'function') {
-      cb = params;
-      params = null;
-    }
-
-    const postMessage = (itemId) => {
-      return this.message(itemId, text, params);
-    }
-
-    return this[method](id).then(
-      postMessage.bind(this)
-    ).always((data) =>
-      cb && cb(data._value)
-    );
   }
 
   private message(id: string, text: string, params: MessageParams) {
