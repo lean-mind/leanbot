@@ -10,4 +10,8 @@ export const scheduler = (bot: Bot) => {
   schedule.everyFirstDayOfMonth(() => {
     bot.registerGratitudePointsOfMonth();
   });
+
+  schedule.everyWorkingDay(() => {
+    bot.restart();
+  });
 }

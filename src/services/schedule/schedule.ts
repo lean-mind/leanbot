@@ -9,18 +9,18 @@ export class Schedule {
   ) { }
 
   everyFirstDayOfMonth(callback: CallbackFunction) {
-    this.schedule('0 9 * 1 *', callback);
+    this.schedule('0 7 * 1 *', callback);
   }
 
   everyMonday(callback: CallbackFunction) {
-    this.schedule('0 9 * * 1', callback);
+    this.schedule('0 7 * * 1', callback);
   }
 
   everyFriday(callback: CallbackFunction) {
-    this.schedule('0 9 * * 5', callback);
+    this.schedule('0 7 * * 5', callback);
   }
 
   everyWorkingDay(callback: CallbackFunction) {
-    this.schedule('0 9 * * 1-5', callback);
+    this.schedule('0 6 * * 1-5', callback);
   }
 }
