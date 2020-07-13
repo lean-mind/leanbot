@@ -1,25 +1,41 @@
 import { Bot } from "../services/bot/bot";
 import { Message, MessageType } from "../models/message";
-import { onMentions } from "./on-mentions";
+import { Error, ErrorCode } from "../models/error";
 import { onGratitude } from "./on-gratitude";
+import { onSocketExpired } from "./on-socket-expired";
+import { onError } from "./on-error";
 
-const isNotMessage = (data) => {
-  return data.type !== 'message'
-    || data.subtype === 'bot_message'
-    || data.subtype === 'message_changed'
-    || data.bot_id !== undefined
+const isMessage = (data: any) => {
+  return data.type === 'message'
+    && data.subtype !== 'bot_message'
+    && data.subtype !== 'message_changed'
+    && data.bot_id === undefined
 }
 
-export const onMessage = (bot: Bot, data) => {
-  if (isNotMessage(data)) return;
+const isError = (data: any) => {
+  return data.type === 'error' && data.error !== undefined
+}
 
-  const message: Message = new Message(data);
-  switch (message.type) {
-    case MessageType.Mention:
-      onMentions(bot, message);
-      break;
-    case MessageType.Gratitude:
-      onGratitude(bot, message);
-      break;
+export const onMessage = (bot: Bot, data: any) => {
+  if (isError(data)) {
+    const error: Error = new Error(data.error);
+    switch (error.code) {
+      case ErrorCode.SocketExpired:
+        onSocketExpired(bot);
+        break;
+      case ErrorCode.MessageNull:
+        break;
+      default:
+        onError(error)
+    }
+  }
+
+  if (isMessage(data)) {
+    const message: Message = new Message(data);
+    switch (message.type) {
+      case MessageType.Gratitude:
+        onGratitude(bot, message);
+        break;
+    }
   }
 }

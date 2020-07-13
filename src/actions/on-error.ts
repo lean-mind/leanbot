@@ -1,3 +1,3 @@
-export const onError = (bot, error) => {
+export const onError = (error) => {
   console.error("Oops!", error);
 }
