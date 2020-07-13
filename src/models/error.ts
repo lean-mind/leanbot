@@ -3,6 +3,10 @@ export enum ErrorCode {
   MessageNull = 3
 }
 
+export const isError = (data: any) => {
+  return data.type === 'error' && data.error !== undefined
+}
+
 export class Error {
   code: ErrorCode;
   message: String;

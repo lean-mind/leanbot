@@ -9,6 +9,13 @@ enum MessageRegExp {
   Gratitude = '<@[a-zA-Z0-9]{9}> [+]+'
 }
 
+export const isMessage = (data: any) => {
+  return data.type === 'message'
+    && data.subtype !== 'bot_message'
+    && data.subtype !== 'message_changed'
+    && data.bot_id === undefined
+}
+
 export class Message {
   messageId: string;
   userId: string;

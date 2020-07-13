@@ -14,4 +14,4 @@ const bot = new Bot();
 
 bot.onStart(() => onStart(bot))
 bot.onMessage((data) => onMessage(bot, data))
-bot.onError((data) => onError(data))
+bot.onError((data) => onError(bot, data))

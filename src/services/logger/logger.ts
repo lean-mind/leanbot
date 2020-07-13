@@ -7,7 +7,7 @@ export class Logger {
   static onRestartGratitude = () => Logger.info("Weekly points have been restarted");
   static onRegisterGratitude = () => Logger.info("Monthly points have been registered");
   static onSocketExpired = () => Logger.info("Socket url expired and has been restarted");
-  static onError = (error: any) => Logger.error("Oops! There was a error: ", error);
+  static onError = (error: any) => Logger.error("Oops! There was a error", error);
 }
 
 const currentTime = () => {
