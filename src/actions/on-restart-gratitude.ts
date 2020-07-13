@@ -2,6 +2,7 @@ import { Bot } from "../services/bot/bot";
 import { User } from "../models/slack/user";
 import { Emojis } from "../models/emojis";
 import { UserData } from "../models/database/user-data";
+import { Logger } from "../services/logger/logger";
 
 export const onRestartGratitude = async (bot: Bot) => {
   let totalPoints: number = 0;
@@ -30,6 +31,7 @@ export const onRestartGratitude = async (bot: Bot) => {
     }
     bot.writeMessageToUser(user.id, specialMessage);
   });
+  Logger.onRestartGratitude();
 }
 
 const getEmojiForPosition = (position: number): string => {
