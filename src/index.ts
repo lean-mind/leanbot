@@ -4,6 +4,7 @@ import { Bot } from './services/bot/bot';
 import { onStart } from './actions/on-start';
 import { onMessage } from './actions/on-message';
 import { onError } from './actions/on-error';
+import { API } from './services/api/api';
 
 admin.initializeApp({
   credential: admin.credential.cert(config.firebase),
@@ -11,6 +12,7 @@ admin.initializeApp({
 })
 
 const bot = new Bot();
+new API(bot);
 
 bot.onStart(() => onStart(bot))
 bot.onMessage((data) => onMessage(bot, data))

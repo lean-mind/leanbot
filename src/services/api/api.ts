@@ -1,12 +1,13 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { Logger } from '../logger/logger';
 import { onRetrievePoints } from '../../actions/on-retrieve-points';
 import { Bot } from '../bot/bot';
 import { config } from '../../config/config-data';
 import { ApiRoutes } from './api-routes';
-import { ApiQuery } from './api-query';
+import { ApiBody } from './api-body';
 
-type CallbackResponse = (query: ApiQuery) => void;
+type CallbackResponse = (query: ApiBody, response: any) => void;
 
 export class API {
   private port: number = parseInt(config.apiPort);
@@ -16,8 +17,17 @@ export class API {
     private bot: Bot,
     private instance = express(),
   ) {
-    this.instance.get(ApiRoutes.points, this.response((query: ApiQuery) => {
-      onRetrievePoints(this.bot, query.user_id);
+    this.instance.use(bodyParser.json())
+    this.instance.use(bodyParser.urlencoded({ extended: true }))
+
+    this.instance.post(ApiRoutes.restart, this.response((_: ApiBody, res: any) => {
+      bot.restart();
+      res.send('I have been restarted, thanks!')
+    }))
+
+    this.instance.post(ApiRoutes.points, this.response(async (body: ApiBody, res: any) => {
+      const message = await onRetrievePoints(this.bot, body.user_id);
+      res.send(message);
     }))
 
     this.instance.listen(this.port, () => {
@@ -25,13 +35,13 @@ export class API {
     });
   }
 
-  private response = (callback: CallbackResponse) => (req: any, _: any) => {
-    const query = req.query as ApiQuery;
+  private response = (callback: CallbackResponse) => (req: any, res: any) => {
+    const body = req.body as ApiBody;
 
-    if (query.token === this.secret) {
-      callback(query);
+    if (body.token === this.secret) {
+      callback(body, res);
     } else {
-      Logger.onError(`Token '${query.token}' is invalid in command ${query.command}`)
+      Logger.onError(`Token '${body.token}' is invalid in command ${body.command}`)
     }
   }
 }

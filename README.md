@@ -22,16 +22,18 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 Necesitas el fichero `.env` en la raiz del proyecto, puedes duplicar el fichero `.env.sample` y modificar los valores:
 
 ```
-BOT_TOKEN      // Token de la aplicación de Slack (Bot Clasico) empieza por "xoxb"
-BOT_NAME       // Nombre que tendrá el Bot por defecto
-BOT_DISCONNECT // El estado del bot, on u off, por defecto false, es decir, conectado
+BOT_TOKEN              // Token de la aplicación de Slack (Bot Clasico) empieza por "xoxb"
+BOT_NAME               // Nombre que tendrá el Bot por defecto
+BOT_DISCONNECT         // El estado del bot, on u off, por defecto false, es decir, conectado
+API_PORT               // El puerto por el que se levantará express para los comandos
+SLACK_SIGNING_SECRET   // El 'Signing secret' de slack, sin este secret no se ejecutará ningún comando
 ```
 
 Para obtener el `BOT_TOKEN` hay que crear una aplicación de slack en esta dirección (https://api.slack.com/apps?new_classic_app=1), **por ahora** es completamente necesario que sea un bot clásico, por eso el parámetro `new_classic_app` en la url, porque a día de hoy (Marzo de 2020) las nuevas aplicaciones están dando el error `not_allowed_token_type`, si te da este error es posible que hayas creado una aplicación de las nuevas.
 
 Una vez creado el bot, deberías estar en las sección **Basic Information** tendrás un desplegable "**Add features and functionality**", añadiremos el **Bot**.
 
-Vamos a actualizar los scopes, que basicamente son los permisos. En el Step 1, por ahora, vamos a añadir los del grupo "**Scopes that cover what your app currently has access to through the bot token**", está pendiente mejorar esta parte y sólo seleccionar los permisos correspondientes. En el Step 2 no hace falta ninguno. El Step 3 es una confirmación.
+Vamos a actualizar los scopes, que basicamente son los permisos. En el Step 1, empezaremos con el permiso de **commands** y luego los todos los del grupo "**Scopes that cover what your app currently has access to through the bot token**", está pendiente mejorar esta parte y sólo seleccionar los permisos correspondientes. En el Step 2 no hace falta ninguno. El Step 3 es una confirmación, pero dado que estamos usando un bot clásico, hay que tener en cuenta que el botón para confirmar y que siga funcionando todo es **No, edit scopes**
 
 Ahora en el menú izquierdo entraremos en **OAuth & Permissions** e instalaremos la app en nuestro workspace. Ya tendrémos disponible el token del bot.
 

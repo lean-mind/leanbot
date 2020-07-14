@@ -1,3 +1,4 @@
 export enum ApiRoutes {
-  points = "/points"
+  restart = "/restart",
+  points = "/points",
 }
