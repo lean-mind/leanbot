@@ -17,48 +17,52 @@ const initializeSlack = () => new Slack({
 export class Bot {
 
   constructor(
-    private api: Slack = initializeSlack(),
+    private slack: Slack = initializeSlack(),
     private database: Database = new Database()
   ) { }
 
   onStart(listener: (...args: any[]) => void) {
-    this.api.on(Events.start, listener);
+    this.slack.on(Events.start, listener);
   }
 
   onMessage(listener: (...args: any[]) => void) {
-    this.api.on(Events.message, listener);
+    this.slack.on(Events.message, listener);
   }
 
   onError(listener: (...args: any[]) => void) {
-    this.api.on(Events.error, listener);
+    this.slack.on(Events.error, listener);
   }
 
   restart() {
-    this.api.start();
+    this.slack.start();
   }
 
   writeMessageToUser(userId: string, text: string, params: MessageParams = {}) {
-    this.api.postMessageToUser(userId, text, params);
+    this.slack.postMessageToUser(userId, text, params);
   }
 
   writeMessageToChannel(channelId: string, text: string, params: MessageParams = {}) {
-    this.api.postMessageToChannel(channelId, text, params);
+    this.slack.postMessageToChannel(channelId, text, params);
   }
 
   async getUsers(): Promise<UserData[]> {
     return await this.database.getUsers();
   }
 
+  async getUser(userId: string): Promise<UserData> {
+    return await this.database.getUser(userId);
+  }
+
   getSlackUsers(): User[] {
-    return this.api.getUsers();
+    return this.slack.getUsers();
   }
 
   getChannels(): Channel[] {
-    return this.api.getChannels();
+    return this.slack.getChannels();
   }
 
   getGeneralChannel(): Channel | null {
-    return this.api.getChannels().find(channel => channel.is_general) || null;
+    return this.slack.getChannels().find(channel => channel.is_general) || null;
   }
 
   async giveGratitudePoints(userIdFrom: string, userIdTo: string, points: number): Promise<number> {
