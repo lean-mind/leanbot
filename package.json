@@ -1,7 +1,8 @@
 {
   "name": "leanbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "LeanBot for Slack",
+  "proxy": "http://localhost:5050",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",

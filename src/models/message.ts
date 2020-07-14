@@ -1,12 +1,19 @@
 export enum MessageType {
+  Undefined,
   Mention,
   Gratitude,
-  Undefined,
 }
 
 enum MessageRegExp {
   Mention = '<@[a-zA-Z0-9]{9}>',
   Gratitude = '<@[a-zA-Z0-9]{9}> [+]+'
+}
+
+export const isMessage = (data: any) => {
+  return data.type === 'message'
+    && data.subtype !== 'bot_message'
+    && data.subtype !== 'message_changed'
+    && data.bot_id === undefined
 }
 
 export class Message {

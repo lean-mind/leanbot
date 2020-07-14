@@ -31,10 +31,10 @@ export class Slack {
     this.emitter = new EventEmitter(params);
     this.token = params.token;
 
-    this.login();
+    this.start();
   }
 
-  private login() {
+  start() {
     this.api(MethodName.start).then((data: Response) => {
       this.wsUrl = data.url;
       this.channels = data.channels;

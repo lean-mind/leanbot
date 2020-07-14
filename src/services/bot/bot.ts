@@ -33,6 +33,10 @@ export class Bot {
     this.api.on(Events.error, listener);
   }
 
+  restart() {
+    this.api.start();
+  }
+
   writeMessageToUser(userId: string, text: string, params: MessageParams = {}) {
     this.api.postMessageToUser(userId, text, params);
   }
@@ -78,7 +82,7 @@ export class Bot {
     return points;
   }
 
-  async restartGratitudePoints(): Promise<void>  {
+  async restartGratitudePoints(): Promise<void> {
     const gratitude: GratitudeUpdate = {
       toGive: 15,
       totalWeek: 0,
@@ -86,7 +90,7 @@ export class Bot {
     await this.database.updateGratitudePointsForAllUsers(gratitude);
   }
 
-  async registerGratitudePointsOfMonth(){
+  async registerGratitudePointsOfMonth() {
     const now = new Date(Date.now());
     let month: number = now.getMonth() + 1;
     let year: number = now.getFullYear();

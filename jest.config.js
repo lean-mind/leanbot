@@ -1,5 +1,5 @@
 module.exports = {
   "verbose": true,
-  "testPathIgnorePatterns" : ["build"],
+  "testPathIgnorePatterns": ["build"],
   "preset": "ts-jest"
 }

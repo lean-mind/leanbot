@@ -10,6 +10,7 @@ Pet proyect de un bot para el Slack de LeanMind 💙
   - [Firebase](#firebase)
   - [Instalar paquetes](#instalar-paquetes)
 - [Scripts](#scripts)
+- [Despliegue](#despliegue)
 - [Estructura](#estructura)
 - [Recursos](#recursos)
 
@@ -66,6 +67,17 @@ test:watch   // Lanza los tests y se relanzarán al guardar
 ```
 
 Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <script>` siendo script uno de los anteriores mencionados
+
+----------------
+
+## Despliegue
+
+Temporalmente se está utilizando `pm2` desplegándolo en segundo plano en el servidor
+```
+pm2 ls                            // Lista los procesos levantados
+pm2 stop <name>                   // Para el proceso especificado en <name>
+pm2 start index.js --name <name>  // Arranca el proceso y le da un nombre <name>
+```
 
 ----------------
 
