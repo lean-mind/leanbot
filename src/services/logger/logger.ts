@@ -3,9 +3,11 @@ export class Logger {
   private static error = (message: String, error: any) => console.error(`${currentTime()} ${message}:`, error);
 
   static onStart = () => Logger.info("Bot started");
+  static onApiStart = (port: number) => Logger.info(`API started in port ${port}`);
   static onGratitude = () => Logger.info("Points of gratitude have been given");
   static onRestartGratitude = () => Logger.info("Weekly points have been restarted");
   static onRegisterGratitude = () => Logger.info("Monthly points have been registered");
+  static onRetrievePoints = () => Logger.info("A user has retrieve their points");
   static onSocketExpired = () => Logger.info("Socket url expired and has been restarted");
   static onError = (error: any) => Logger.error("Oops! There was a error", error);
 }
