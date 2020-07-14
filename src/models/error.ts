@@ -1,6 +1,7 @@
 export enum ErrorCode {
+  Undefined = -1,
   SocketExpired = 1,
-  MessageNull = 3
+  MessageNull = 3,
 }
 
 export const isError = (data: any) => {
@@ -12,7 +13,8 @@ export class Error {
   message: String;
 
   constructor(fill: any) {
-    this.code = (fill.code as number);
+    const code = fill.code as number;
+    this.code = Object.values(ErrorCode).includes(code) ? code : ErrorCode.Undefined;
     this.message = fill.msg;
   }
 }

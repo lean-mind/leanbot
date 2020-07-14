@@ -1,7 +1,7 @@
 export enum MessageType {
+  Undefined,
   Mention,
   Gratitude,
-  Undefined,
 }
 
 enum MessageRegExp {

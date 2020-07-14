@@ -9,10 +9,12 @@ export const onMessage = (bot: Bot, data: any) => {
 
   if (isMessage(data)) {
     const message: Message = new Message(data);
-    switch (message.type) {
-      case MessageType.Gratitude:
-        onGratitude(bot, message);
-        break;
+    const messageHandler = {
+      [MessageType.Undefined]: () => { },
+      [MessageType.Mention]: () => { },
+      [MessageType.Gratitude]: () => { onGratitude(bot, message) },
     }
+
+    messageHandler[message.type]();
   }
 }

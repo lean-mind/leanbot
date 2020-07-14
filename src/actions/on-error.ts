@@ -5,14 +5,11 @@ import { Bot } from "../services/bot/bot";
 
 export const onError = (bot: Bot, data: any) => {
   const error: Error = new Error(data.error);
-
-  switch (error.code) {
-    case ErrorCode.SocketExpired:
-      onSocketExpired(bot);
-      break;
-    case ErrorCode.MessageNull:
-      break;
-    default:
-      Logger.onError(error)
+  const errorHandler = {
+    [ErrorCode.Undefined]: () => { Logger.onError(error) },
+    [ErrorCode.SocketExpired]: () => { onSocketExpired(bot) },
+    [ErrorCode.MessageNull]: () => { },
   }
+
+  errorHandler[error.code]();
 }
