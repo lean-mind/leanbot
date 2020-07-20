@@ -5,8 +5,8 @@ export enum MessageType {
 }
 
 enum MessageRegExp {
-  Mention = '<@[a-zA-Z0-9]>',
-  Gratitude = '<@[a-zA-Z0-9]> [+]+'
+  Mention = '<@[a-zA-Z0-9]*>',
+  Gratitude = '<@[a-zA-Z0-9]*> [+]+'
 }
 
 export const isMessage = (data: any) => {
@@ -69,6 +69,7 @@ export class Message {
     let mentionFound = false;
 
     this.text.split(" ").map((word: string) => {
+      console.log(word);
       if (mentionFound && word.includes("+") && this.gratitudePoints === null) {
         this.gratitudePoints = word.match(/[+]/g)?.length || 0;
       } else {

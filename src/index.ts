@@ -5,6 +5,7 @@ import { onStart } from './actions/on-start';
 import { onMessage } from './actions/on-message';
 import { onError } from './actions/on-error';
 import { API } from './services/api/api';
+import { onClose } from './actions/on-close';
 
 admin.initializeApp({
   credential: admin.credential.cert(config.firebase),
@@ -16,4 +17,5 @@ new API(bot);
 
 bot.onStart(() => onStart(bot))
 bot.onMessage((data) => onMessage(bot, data))
+bot.onClose((_) => onClose(bot))
 bot.onError((data) => onError(bot, data))

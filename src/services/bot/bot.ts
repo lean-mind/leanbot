@@ -29,6 +29,10 @@ export class Bot {
     this.slack.on(Events.message, listener);
   }
 
+  onClose(listener: (...args: any[]) => void) {
+    this.slack.on(Events.close, listener);
+  }
+
   onError(listener: (...args: any[]) => void) {
     this.slack.on(Events.error, listener);
   }

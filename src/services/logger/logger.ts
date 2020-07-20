@@ -3,6 +3,7 @@ export class Logger {
   private static error = (message: String, error: any) => console.error(`${currentTime()} ${message}:`, error);
 
   static onStart = () => Logger.info("Bot started");
+  static onClose = () => Logger.info("Bot stopped");
   static onApiStart = (port: number) => Logger.info(`API started in port ${port}`);
   static onGratitude = () => Logger.info("Points of gratitude have been given");
   static onRestartGratitude = () => Logger.info("Weekly points have been restarted");

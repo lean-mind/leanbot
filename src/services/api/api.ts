@@ -22,7 +22,7 @@ export class API {
 
     this.instance.post(ApiRoutes.restart, this.response((_: ApiBody, res: any) => {
       bot.restart();
-      res.send('I have been restarted, thanks!')
+      res.send('He sido reiniciado, ¡gracias!')
     }))
 
     this.instance.post(ApiRoutes.points, this.response(async (body: ApiBody, res: any) => {
