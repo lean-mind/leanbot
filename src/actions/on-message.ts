@@ -8,7 +8,8 @@ export const onMessage = (bot: Bot, data: any) => {
   if (isError(data)) onError(bot, data)
 
   if (isMessage(data)) {
-    const message: Message = new Message(data);
+    const user = bot.getSlackUser(data.user);
+    const message: Message = new Message(data, user);
     const messageHandler = {
       [MessageType.Undefined]: () => { },
       [MessageType.Mention]: () => { },

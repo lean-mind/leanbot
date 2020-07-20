@@ -22,7 +22,6 @@ export class Slack {
   private token: string;
   private emitter: EventEmitter;
   private ws: WebSocket;
-  private isStarted: boolean = false;
 
   private wsUrl: string = "";
   private channels: Channel[] = [];
@@ -36,7 +35,6 @@ export class Slack {
   }
 
   start() {
-    if (this.isStarted) return;
     this.api(MethodName.start).then((data: Response) => {
       this.wsUrl = data.url;
       this.channels = data.channels;
@@ -44,10 +42,8 @@ export class Slack {
 
       this.connect()
       this.emitter.emit('start');
-      this.isStarted = true;
     }).fail((data: any) => {
       this.emitter.emit('error', new Error(data?.error ? data.error : data));
-      this.isStarted = false;
     }).done()
   }
 
@@ -147,6 +143,10 @@ export class Slack {
 
   getUsers(): User[] {
     return this.users;
+  }
+
+  getUser(userId: string): User | undefined {
+    return this.users.find((user) => user.id === userId);
   }
 
   on(event: Events, listener: (...args: any[]) => void) {

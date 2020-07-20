@@ -1,3 +1,5 @@
+import { User } from "./slack/user";
+
 export enum MessageType {
   Undefined,
   Mention,
@@ -18,6 +20,7 @@ export const isMessage = (data: any) => {
 
 export class Message {
   messageId: string;
+  user: User | undefined;
   userId: string;
   usersMentionId: string[] = [];
   teamId: string;
@@ -28,8 +31,9 @@ export class Message {
   gratitudePoints: number | null = null;
   type: MessageType;
 
-  constructor(fill: any) {
+  constructor(fill: any, user: User | undefined) {
     this.messageId = fill.client_msg_id;
+    this.user = user;
     this.userId = fill.user;
     this.teamId = fill.team;
     this.sourceTeamId = fill.source_team;
@@ -69,7 +73,6 @@ export class Message {
     let mentionFound = false;
 
     this.text.split(" ").map((word: string) => {
-      console.log(word);
       if (mentionFound && word.includes("+") && this.gratitudePoints === null) {
         this.gratitudePoints = word.match(/[+]/g)?.length || 0;
       } else {

@@ -5,6 +5,8 @@ import { Logger } from "../services/logger/logger";
 
 export const onGratitude = async (bot: Bot, message: Message) => {
   const userMentionedId = message.usersMentionId[0];
+  const userMentioned = bot.getSlackUser(userMentionedId);
+  if (userMentioned === undefined) return;
   if (message.userId === userMentionedId) return;
   if (message.gratitudePoints === null) return;
 

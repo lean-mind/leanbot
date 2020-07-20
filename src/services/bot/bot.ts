@@ -61,6 +61,10 @@ export class Bot {
     return this.slack.getUsers();
   }
 
+  getSlackUser(userId: string): User | undefined {
+    return this.slack.getUser(userId);
+  }
+
   getChannels(): Channel[] {
     return this.slack.getChannels();
   }
