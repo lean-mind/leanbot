@@ -5,8 +5,8 @@ export enum MessageType {
 }
 
 enum MessageRegExp {
-  Mention = '<@[a-zA-Z0-9]{9}>',
-  Gratitude = '<@[a-zA-Z0-9]{9}> [+]+'
+  Mention = '<@[a-zA-Z0-9]>',
+  Gratitude = '<@[a-zA-Z0-9]> [+]+'
 }
 
 export const isMessage = (data: any) => {
