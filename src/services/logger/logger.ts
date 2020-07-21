@@ -9,7 +9,6 @@ export class Logger {
   static onRegisterGratitude = () => Logger.info(`Monthly points have been registered`);
   static onGratitude = (userFrom: string, userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude from ${userFrom}`);
   static onRetrievePoints = (user: string) => Logger.info(`${user} has retrieve their points`);
-  static onSocketExpired = () => Logger.info(`Socket url expired and has been restarted`);
   static onError = (error: any) => Logger.error(`Oops! There was a error`, error);
 }
 

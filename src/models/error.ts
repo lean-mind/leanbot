@@ -1,6 +1,5 @@
 export enum ErrorCode {
   Undefined = -1,
-  SocketExpired = 1,
   MessageNull = 3,
 }
 

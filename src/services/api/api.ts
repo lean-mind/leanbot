@@ -20,11 +20,6 @@ export class API {
     this.instance.use(bodyParser.json())
     this.instance.use(bodyParser.urlencoded({ extended: true }))
 
-    this.instance.post(ApiRoutes.restart, this.response((_: ApiBody, res: any) => {
-      bot.restart();
-      res.send('He sido reiniciado, ¡gracias!')
-    }))
-
     this.instance.post(ApiRoutes.points, this.response(async (body: ApiBody, res: any) => {
       const message = await onRetrievePoints(this.bot, body.user_id);
       res.send(message);
