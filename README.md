@@ -14,6 +14,12 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 - [Estructura](#estructura)
 - [Recursos](#recursos)
 
+
+### **Docs**
+
+- [Documentos](https://github.com/mreysei/leanbot/tree/master/docs)
+- [Funcionalidades](https://github.com/mreysei/leanbot/blob/master/docs/features.md)
+
 ----------------
 
 ## Instalación
@@ -76,9 +82,11 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 
 Temporalmente se está utilizando `pm2` desplegándolo en segundo plano en el servidor
 ```
-pm2 ls                            // Lista los procesos levantados
-pm2 stop <name>                   // Para el proceso especificado en <name>
-pm2 start index.js --name <name>  // Arranca el proceso y le da un nombre <name>
+pm2 ls                                  // Lista los procesos levantados
+pm2 stop <name>                         // Para el proceso especificado en <name>
+pm2 delete <name>                       // Elimina el proceso especificado en <name>
+pm2 start build/index.js --name <name>  // Arranca el proceso y le da un nombre <name> (importante: antes de levantar hacer un "npm run build")
+pm2 logs                                // Lista los últimos 15 logs del bot y se queda a la espera de nuevos logs
 ```
 
 ----------------
@@ -90,8 +98,11 @@ pm2 start index.js --name <name>  // Arranca el proceso y le da un nombre <name>
 - **models**: Aquí están los modelos, serán interfaces las que no tengan ninguna lógica, clases las que sí
 - **scheduler**: Aquí es donde se realizarán las acciones programadas
 - **services**
+  - **api**: Los slash commands entrarán a través de la API
   - **bot**: Es el encargado de realizar todas las acciones hacia Slack
-  - **database**: Es donde se accederá a la base de datos, en este caso firebase 
+  - **database**: Es donde se accederá a la base de datos de forma abstracta
+  - **firebase**: Es la base de datos en concreta que consumirá el servicio *database*
+  - **logger**: Aquí están todos los logs para tener un control de lo que va sucediendo en la aplicación
   - **schedule**: Es donde se crearán las fechas o intervalos de las acciones programadas
   - **slack**: Es el que conecta con slack, tanto por websocket como por api
 

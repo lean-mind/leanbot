@@ -2,8 +2,7 @@
 
 ## Mantenimiendo
 - El socket url del bot se expira aproximadamente cada 10 horas
-- Cuando el socket expira, el bot automaticamente lo levanta de nuevo
-- En caso de emergencia o de que sea necesario existe el comando `/restart` para volver a levantar el bot "a mano"
+- Cuando el socket expira, se emite el evento `close` y el bot automaticamente lo levanta de nuevo
 
 ## Puntos de gratitud
 Actualmente se pueden dar puntos de gratitud positivos a tus compañeros, donde hay que tener en cuenta los siguentes puntos:
