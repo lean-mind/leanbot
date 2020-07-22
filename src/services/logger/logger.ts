@@ -2,9 +2,10 @@ export class Logger {
   private static info = (message: String) => console.info(`${currentTime()} ${message}`);
   private static error = (message: String, error: any) => console.error(`${currentTime()} ${message}:`, error);
 
-  static onStart = () => Logger.info(`Bot started`);
-  static onClose = () => Logger.info(`Bot stopped`);
+  static onBotStart = () => Logger.info(`Bot started`);
+  static onBotStop = () => Logger.info(`Bot stopped`);
   static onApiStart = (port: number) => Logger.info(`API started in port ${port}`);
+  static onScheduleStart = () => Logger.info(`Scheduler started`);
   static onRestartGratitude = () => Logger.info(`Weekly points have been restarted`);
   static onRegisterGratitude = () => Logger.info(`Monthly points have been registered`);
   static onGratitude = (userFrom: string, userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude from ${userFrom}`);

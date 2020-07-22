@@ -95,6 +95,7 @@ pm2 logs                                // Lista los últimos 15 logs del bot y 
 
 - **actions**: Son las acciones que se lanzarán con los eventos del websocket que estará escuchando nuestra aplicación de slack
 - **config**: Aquí están las variables de configuración y de entorno
+- **endpoints**: Aquí están las funciones y rutas de los endpoints
 - **models**: Aquí están los modelos, serán interfaces las que no tengan ninguna lógica, clases las que sí
 - **scheduler**: Aquí es donde se realizarán las acciones programadas
 - **services**
