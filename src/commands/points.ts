@@ -8,5 +8,5 @@ export const points = async (body: Body, response: any, bot: Bot) => {
   const message = `Te quedan *${gratitude.toGive} puntos* y has recibido *${gratitude.totalWeek} puntos* esta semana`
 
   response.send(message);
-  Logger.onRetrievePoints(user?.real_name ?? "Any")
+  Logger.onRetrievePoints(user?.real_name ?? "Someone")
 }
