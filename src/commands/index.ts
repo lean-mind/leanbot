@@ -1,12 +1,12 @@
 import { points } from "./points";
-import { ApiBody } from "../services/api/api-body";
+import { Body } from "../services/api/api-body";
 import { Bot } from "../services/bot/bot";
 import { help } from "./help";
 
-type Action = (body: ApiBody, response: any, boy: Bot) => void;
+type Action = (body: Body, response: any, bot: Bot) => void;
 
-export interface Endpoint {
-  route: string;
+export interface Command {
+  name: string;
   function: Action;
 }
 
@@ -14,13 +14,13 @@ interface Dictionary<T> {
   [name: string]: T
 }
 
-export const Endpoints: Dictionary<Endpoint> = {
+export const Commands: Dictionary<Command> = {
   help: {
-    route: "/help",
+    name: "/help",
     function: help
   },
   points: {
-    route: "/points",
+    name: "/points",
     function: points
   }
 }

@@ -1,4 +1,4 @@
-export interface ApiBody {
+export interface Body {
   token: string;
   team_id: string;
   team_domain: string;
