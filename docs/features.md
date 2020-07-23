@@ -5,7 +5,13 @@
 - Cuando el socket expira, se emite el evento `close` y el bot automaticamente lo levanta de nuevo
 
 ## Ayuda
-- Tienes el comando `/help` para ver todas las actuales funcionalidades de la aplicación
+- Tienes el comando `/help` para ver todas las actuales funcionalidades de la aplicación (Te lleva a este fichero xd)
+
+## Logs
+- Puedes ver los logs en tiempo real conectándote al servidor y utilizando `pm2 logs`
+- También puedes ver todos los logs en los ficheros `*.log` que se generan en la raiz del proyecto
+- Tienes el comando `/logs` para listar los últimos 10 logs
+- El comando `/logs` tiene el parametro opcional `<lines>` donde puedes especificar el número de líneas que quieres ver (máximo 50)
 
 ## Puntos de gratitud
 Actualmente se pueden dar puntos de gratitud positivos a tus compañeros, donde hay que tener en cuenta los siguentes puntos:

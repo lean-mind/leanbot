@@ -7,5 +7,10 @@ export enum Emojis {
   TrophySilver = ':trophy_silver:',
   TrophyBronze = ':trophy_bronze:',
   Heart = ':heart:',
-  SuperSmileToogethere = ':super_smile_toogethere:'
+  SuperSmileToogethere = ':super_smile_toogethere:',
+  LoudSound = ':loud_sound:',
+  DrakeYes = ':drake_si:',
+  DrakeNo = ':drake_no:',
+  Pepe = ':pepe:',
+  AwYeah = ':aw_yeah:',
 }

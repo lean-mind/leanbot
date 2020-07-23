@@ -3,3 +3,4 @@ node_modules
 build
 service-account-key.json
 .vscode
+*.log
