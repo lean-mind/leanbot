@@ -1,6 +1,7 @@
 import { points } from "./points";
 import { ApiBody } from "../services/api/api-body";
 import { Bot } from "../services/bot/bot";
+import { help } from "./help";
 
 type Action = (body: ApiBody, response: any, boy: Bot) => void;
 
@@ -14,6 +15,10 @@ interface Dictionary<T> {
 }
 
 export const Endpoints: Dictionary<Endpoint> = {
+  help: {
+    route: "/help",
+    function: help
+  },
   points: {
     route: "/points",
     function: points

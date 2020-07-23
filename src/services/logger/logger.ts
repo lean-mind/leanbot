@@ -10,6 +10,7 @@ export class Logger {
   static onRegisterGratitude = () => Logger.info(`Monthly points have been registered`);
   static onGratitude = (userFrom: string, userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude from ${userFrom}`);
   static onRetrievePoints = (user: string) => Logger.info(`${user} has retrieve their points`);
+  static onHelp = () => Logger.info(`Someone asked for help`);
   static onError = (error: any) => Logger.error(`Oops! There was a error`, error);
 }
 

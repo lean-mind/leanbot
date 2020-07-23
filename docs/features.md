@@ -4,6 +4,9 @@
 - El socket url del bot se expira aproximadamente cada 10 horas
 - Cuando el socket expira, se emite el evento `close` y el bot automaticamente lo levanta de nuevo
 
+## Ayuda
+- Tienes el comando `/help` para ver todas las actuales funcionalidades de la aplicación
+
 ## Puntos de gratitud
 Actualmente se pueden dar puntos de gratitud positivos a tus compañeros, donde hay que tener en cuenta los siguentes puntos:
 - Tienes un total de 15 puntos semanales

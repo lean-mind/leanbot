@@ -7,4 +7,5 @@ export enum Emojis {
   TrophySilver = ':trophy_silver:',
   TrophyBronze = ':trophy_bronze:',
   Heart = ':heart:',
+  SuperSmileToogethere = ':super_smile_toogethere:'
 }
