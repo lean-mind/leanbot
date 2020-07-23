@@ -29,9 +29,11 @@ const getLogsMessage = (file: string, initialMessage: string, noLogMessage: stri
   let message = initialMessage;
 
   if (lines.length > 0) {
+    message += "\n```"
     lines.forEach((line: string) => {
       message += `\n${line}`
     })
+    message += "\n```"
   } else {
     message += `\n${noLogMessage}`
   }
