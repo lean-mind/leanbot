@@ -6,6 +6,7 @@ import { onMessage } from './actions/on-message';
 import { onError } from './actions/on-error';
 import { API } from './services/api/api';
 import { onClose } from './actions/on-close';
+import { scheduler } from './scheduler';
 
 admin.initializeApp({
   credential: admin.credential.cert(config.firebase),
@@ -14,6 +15,7 @@ admin.initializeApp({
 
 const bot = new Bot();
 new API(bot);
+scheduler(bot);
 
 bot.onStart(() => onStart(bot))
 bot.onMessage((data) => onMessage(bot, data))
