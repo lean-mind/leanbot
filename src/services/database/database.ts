@@ -17,10 +17,14 @@ export class Database {
     if (userData === null) {
       const userDefault = await this.firebase.getUserDefaultWithId(userId);
       await this.firebase.setUser(userId, userDefault);
-      
+
       return userDefault;
     }
-    return userData; 
+    return userData;
+  }
+
+  async getAllGratitudePoints(): Promise<number> {
+    return await this.firebase.getAllGratitudePoints();
   }
 
   async updateGratitudePoints(userId: string, gratitude: GratitudeData): Promise<void> {
@@ -30,9 +34,9 @@ export class Database {
   async updateGratitudePointsForAllUsers(gratitude: GratitudeUpdate): Promise<void> {
     const users: UserData[] = await this.firebase.getUsers();
     const usersUpdated = users.map((user: UserData) => ({
-      ...user, 
+      ...user,
       gratitude: mixGratitudePoints(user.gratitude, gratitude)
     }));
-    await this.firebase.setUsers(usersUpdated); 
+    await this.firebase.setUsers(usersUpdated);
   }
 }

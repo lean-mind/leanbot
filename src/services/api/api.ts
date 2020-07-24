@@ -31,6 +31,25 @@ export class API {
       });
     });
 
+    this.instance.get('/status', async (_: any, res: any) => {
+      res.send({
+        "schemaVersion": 1,
+        "label": "Status",
+        "message": this.bot.isConnected ? "Online" : "Offline",
+        "color": this.bot.isConnected ? "green" : "red"
+      });
+    })
+
+    this.instance.get('/gratitude-points', async (_: any, res: any) => {
+      const points = await this.bot.getAllGratitudePoints();
+      res.send({
+        "schemaVersion": 1,
+        "label": "Gratitude points given",
+        "message": points.toString(),
+        "color": "blue"
+      });
+    })
+
     this.instance.listen(this.port, () => {
       Logger.onApiStart(this.port);
     });

@@ -15,6 +15,7 @@ const initializeSlack = () => new Slack({
 });
 
 export class Bot {
+  isConnected: boolean = false;
 
   constructor(
     private slack: Slack = initializeSlack(),
@@ -22,7 +23,10 @@ export class Bot {
   ) { }
 
   onStart(listener: (...args: any[]) => void) {
-    this.slack.on(Events.start, listener);
+    this.slack.on(Events.start, (...args: any[]) => {
+      this.isConnected = true;
+      listener(args)
+    });
   }
 
   onMessage(listener: (...args: any[]) => void) {
@@ -30,7 +34,10 @@ export class Bot {
   }
 
   onClose(listener: (...args: any[]) => void) {
-    this.slack.on(Events.close, listener);
+    this.slack.on(Events.close, (...args: any[]) => {
+      this.isConnected = false;
+      listener(args)
+    });
   }
 
   onError(listener: (...args: any[]) => void) {
@@ -92,6 +99,10 @@ export class Bot {
     this.database.updateGratitudePoints(userIdTo, userTo.gratitude);
 
     return points;
+  }
+
+  async getAllGratitudePoints(): Promise<number> {
+    return this.database.getAllGratitudePoints();
   }
 
   async restartGratitudePoints(): Promise<void> {
