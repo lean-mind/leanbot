@@ -3,6 +3,7 @@ import { Body } from "../services/api/api-body";
 import { Bot } from "../services/bot/bot";
 import { help } from "./help";
 import { logs } from "./logs";
+import { random } from "./random";
 
 type Action = (body: Body, response: any, bot: Bot) => void;
 
@@ -27,5 +28,9 @@ export const Commands: Dictionary<Command> = {
   points: {
     name: "/points",
     function: points
+  },
+  random: {
+    name: "/random",
+    function: random
   }
 }

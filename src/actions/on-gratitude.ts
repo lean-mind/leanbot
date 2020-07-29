@@ -19,7 +19,7 @@ export const onGratitude = async (bot: Bot, message: Message) => {
     const messageToUserThatMention = `¡Has dado *${points}* puntos a *<@${userMentionedId}>*!`;
     bot.writeMessageToUser(message.userId, messageToUserThatMention);
 
-    Logger.onGratitude(message.user?.real_name ?? "Someone", userMentioned.real_name ?? "Someone", points);
+    Logger.onGratitude(userMentioned.real_name ?? "Someone", points);
   } else {
     const messageToUserThatMention = `¡Chacho relajate con los puntitos, que ya no te quedan! ${Emojis.MaikDontAprove}`;
     bot.writeMessageToUser(message.userId, messageToUserThatMention);

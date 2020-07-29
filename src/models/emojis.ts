@@ -13,4 +13,5 @@ export enum Emojis {
   DrakeNo = ':drake_no:',
   Pepe = ':pepe:',
   AwYeah = ':aw_yeah:',
+  CongaParrot = ':conga_parrot:'
 }

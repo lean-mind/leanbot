@@ -52,8 +52,8 @@ export class Bot {
     this.slack.postMessageToUser(userId, text, params);
   }
 
-  writeMessageToChannel(channelId: string, text: string, params: MessageParams = {}) {
-    this.slack.postMessageToChannel(channelId, text, params);
+  writeMessage(id: string, text: string, params: MessageParams = {}) {
+    this.slack.postMessage(id, text, params);
   }
 
   async getUsers(): Promise<UserData[]> {

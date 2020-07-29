@@ -133,7 +133,7 @@ export class Slack {
     this.message(userId, text, params);
   }
 
-  postMessageToChannel(channelId: string, text: string, params: MessageParams) {
+  postMessage(channelId: string, text: string, params: MessageParams) {
     this.message(channelId, text, params);
   }
 

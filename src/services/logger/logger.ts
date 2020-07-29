@@ -27,12 +27,14 @@ export class Logger {
   static onRegisterGratitude = () => Logger.info(`Monthly points have been registered`);
   static onHelp = (user: string) => Logger.info(`${user} used the help command`);
   static onLogs = (user: string) => Logger.info(`${user} used the logs command`);
-  static onGratitude = (userFrom: string, userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude from ${userFrom}`);
+  static onGratitude = (userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude`);
   static onRetrievePoints = (user: string) => Logger.info(`${user} has retrieve their points`);
+  static onRandom = (user: string) => Logger.info(`${user} has requested random users`);
 
   static onLogsError = (error: any) => Logger.error(`Oops! There was an error when asked for the logs`, error);
   static onFileWriteError = (file: string, error: any) => Logger.error(`Oops! There was an error when write in ${file} file`, error);
   static onFileReadError = (file: string, error: any) => Logger.error(`Oops! There was an error when read ${file} file`, error);
+  static onRandomError = (error: any) => Logger.error(`Oops! There was an error when request random users`, error);
   static onError = (error: any) => Logger.error(`Oops! There was an error`, error);
 }
 
