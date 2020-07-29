@@ -22,3 +22,8 @@ Actualmente se pueden dar puntos de gratitud positivos a tus compañeros, donde 
 - ¡¡No puedes darte puntos a ti mismo!!
 - *Por ahora* sólo puedes dar puntos a un usuario **por mensaje**, si quieres darle puntos a dos personas, son dos mensajes
 - Puedes ver tus puntos semanales con el comando `/points`
+
+## Random
+- Tienes el comando `/random` para elegir a un usuario aleatorio del equipo
+- El comando tiene un parametro `<users>` donde puedes especificar el número de usuarios aleatorios que quieres recibir
+- Si introduces un número mayor al número de usuarios existentes en Slack, usará el número de usuarios de Slack
