@@ -17,7 +17,7 @@ describe('Bot', () => {
   let apiMock: Slack;
   let databaseMock: Database;
   let bot: Bot;
-  
+
   beforeEach(() => {
     apiMock = new Slack(jest.fn());
     databaseMock = new Database();
@@ -26,75 +26,75 @@ describe('Bot', () => {
 
   describe('events', () => {
     test('onStart', () => {
-      const aListener = () => {};
+      const aListener = () => { };
       bot.onStart(aListener);
-      
+
       expect(apiMock.on).toHaveBeenCalledWith(Events.start, aListener);
     });
-    
+
     test('onMessage', () => {
-      const aListener = () => {};
+      const aListener = () => { };
       bot.onMessage(aListener);
-      
+
       expect(apiMock.on).toHaveBeenCalledWith(Events.message, aListener);
     });
-    
+
     test('onError', () => {
-      const aListener = () => {};
+      const aListener = () => { };
       bot.onError(aListener);
-      
+
       expect(apiMock.on).toHaveBeenCalledWith(Events.error, aListener);
     });
-    
+
     test('writeMessageToUser', () => {
       const userId = "irrelevantUserId";
       const text = "irrelevantText";
       const params = {};
-      
+
       bot.writeMessageToUser(userId, text, params);
-      
+
       expect(apiMock.postMessageToUser).toHaveBeenCalledWith(userId, text, params);
     });
-    
-    test('writeMessageToChannel', () => {
+
+    test('writeMessage', () => {
       const channelId = "irrelevantChannelId";
       const text = "irrelevantText";
       const params = {};
-      
-      bot.writeMessageToChannel(channelId, text, params);
-      
-      expect(apiMock.postMessageToChannel).toHaveBeenCalledWith(channelId, text, params);
+
+      bot.writeMessage(channelId, text, params);
+
+      expect(apiMock.postMessage).toHaveBeenCalledWith(channelId, text, params);
     });
   });
 
-  describe('actions', () => {  
-    const general: Channel = buildChannel({is_general: true})
-    const secundary: Channel = buildChannel({is_general: true})
-    const music: Channel = buildChannel({is_general: false})
-    const food: Channel = buildChannel({is_general: false})
-    const random: Channel = buildChannel({is_general: false})
+  describe('actions', () => {
+    const general: Channel = buildChannel({ is_general: true })
+    const secundary: Channel = buildChannel({ is_general: true })
+    const music: Channel = buildChannel({ is_general: false })
+    const food: Channel = buildChannel({ is_general: false })
+    const random: Channel = buildChannel({ is_general: false })
 
     it('returns all slack users', () => {
       const given: User[] = [buildUser({})];
       apiMock.getUsers = jest.fn(() => given);
       const users: User[] = bot.getSlackUsers();
-      
+
       expect(users).toEqual(given);
-    }); 
+    });
 
     it('returns all slack channels', () => {
       const given: Channel[] = [buildChannel({})];
       apiMock.getChannels = jest.fn(() => given);
       const channels: Channel[] = bot.getChannels();
-      
+
       expect(channels).toEqual(given);
-    }); 
+    });
 
     it('returns the general channel when it haves one ', () => {
       const given: Channel[] = [general, random];
       apiMock.getChannels = jest.fn(() => given);
       const channel: Channel | null = bot.getGeneralChannel();
-      
+
       expect(channel).toEqual(general);
     });
 
@@ -102,7 +102,7 @@ describe('Bot', () => {
       const given: Channel[] = [general, secundary, random];
       apiMock.getChannels = jest.fn(() => given);
       const channel: Channel | null = bot.getGeneralChannel();
-      
+
       expect(channel).toEqual(general);
     });
 
@@ -110,19 +110,19 @@ describe('Bot', () => {
       const given: Channel[] = [music, food, random];
       apiMock.getChannels = jest.fn(() => given);
       const channel: Channel | null = bot.getGeneralChannel();
-      
+
       expect(channel).toBeNull();
     });
 
     let userFrom: UserData;
     let userTo: UserData;
-    let anonymousUser: UserData; 
+    let anonymousUser: UserData;
     let users: UserData[];
     const initialPointsToGive = 15;
 
     beforeEach(() => {
-      userFrom = buildUserData({id: "irrelevantUserIdFrom"});
-      userTo = buildUserData({id: "irrevelantUserIdTo"});
+      userFrom = buildUserData({ id: "irrelevantUserIdFrom" });
+      userTo = buildUserData({ id: "irrevelantUserIdTo" });
       anonymousUser = buildUserData({});
       users = [userFrom, userTo];
 
@@ -137,7 +137,7 @@ describe('Bot', () => {
     it('returns points received when one user gives points to other user', async () => {
       const points: number = 5;
       const pointsReceived = await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
-      
+
       expect(pointsReceived).toEqual(points);
     });
 
@@ -161,14 +161,14 @@ describe('Bot', () => {
 
       await bot.giveGratitudePoints(userFrom.id, userTo.id, points);
 
-      expect(userFrom.gratitude.toGive).toEqual(initialPointsToGive-points);
+      expect(userFrom.gratitude.toGive).toEqual(initialPointsToGive - points);
     });
 
     it('points received increase after receiving points', async () => {
       const points: number = 5;
-      const initialTotal: number = 50; 
-      const initialTotalMonth: number = 25; 
-      const initialTotalWeek: number = 0; 
+      const initialTotal: number = 50;
+      const initialTotalMonth: number = 25;
+      const initialTotalWeek: number = 0;
       userTo.gratitude = buildGratitudeData({
         total: initialTotal,
         totalMonth: initialTotalMonth,
