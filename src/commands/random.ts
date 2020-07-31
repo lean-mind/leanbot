@@ -25,7 +25,7 @@ export const random = async (body: Body, response: any, bot: Bot) => {
       response.send(`Vaya, parece que no se ha obtenido ningún resultado ${Emojis.Pepe}`);
       Logger.onRandomError(new Error('Has not given any results'))
     } else {
-      const message = `Estos son los ${users} usuarios random: ${Emojis.CongaParrot}\n${usersSelected.join(" ")}`;
+      const message = `Estos son los usuarios random: ${Emojis.CongaParrot}\n${usersSelected.join(" ")}`;
       if (body.channel_name !== 'privategroup') {
         bot.writeMessage(body.channel_id, message)
         response.send();

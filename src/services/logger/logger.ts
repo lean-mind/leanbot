@@ -25,6 +25,7 @@ export class Logger {
   static onScheduleStart = () => Logger.info(`Scheduler started`);
   static onRestartGratitude = () => Logger.info(`Weekly points have been restarted`);
   static onRegisterGratitude = () => Logger.info(`Monthly points have been registered`);
+  static onReminderGratitude = () => Logger.info(`It has been recalled that have unspent points`);
   static onHelp = (user: string) => Logger.info(`${user} used the help command`);
   static onLogs = (user: string) => Logger.info(`${user} used the logs command`);
   static onGratitude = (userTo: string, points: number) => Logger.info(`${userTo} have been given ${points} points of gratitude`);
