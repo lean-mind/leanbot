@@ -1,6 +1,5 @@
-node_modules
-.env
-build
-service-account-key.json
 .vscode
-*.log
+.env
+node_modules
+dist
+logs

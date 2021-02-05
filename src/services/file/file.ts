@@ -1,42 +1,42 @@
-import { existsSync, appendFileSync, writeFileSync, readFileSync } from 'fs';
+import { existsSync, appendFileSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
 import { Logger } from '../logger/logger';
 
+const fileDir = 'logs'
+
 export class File {
+  private static exists(file: string): boolean {
+    if (!existsSync(fileDir)) {
+      mkdirSync(fileDir)
+    }
+
+    return existsSync(file)
+  }
+  
   static write(message: string, file: string) {
+    const filePath = join(fileDir, file)
     try {
-      if (existsSync(file)) {
-        appendFileSync(file, "\n" + message);
+      if (File.exists(filePath)) {
+        appendFileSync(filePath, "\n" + message);
       } else {
-        writeFileSync(file, message);
+        writeFileSync(filePath, message);
       }
     } catch (error) {
-      Logger.onFileWriteError(file, error);
+      Logger.onFileWriteError(filePath, error);
     }
   }
 
   static read(file: string): string[] {
+    const filePath = join(fileDir, file)
     try {
-      if (existsSync(file)) {
-        const data = readFileSync(file, { encoding: 'UTF-8' });
+      if (existsSync(filePath)) {
+        const data = readFileSync(filePath, { encoding: 'UTF-8' });
         const lines = data.split(/\r?\n/);
         return lines;
       }
     } catch (error) {
-      Logger.onFileReadError(file, error);
+      Logger.onFileReadError(filePath, error);
     }
     return [];
-  }
-
-  static readLastLines(file: string, numberOfLines: number): string[] {
-    const lines = File.read(file);
-    return File.getLastLines(lines, numberOfLines);
-  }
-
-  private static getLastLines(lines: string[], numberOfLines: number): string[] {
-    if (lines.length > numberOfLines) {
-      lines.shift();
-      return File.getLastLines(lines, numberOfLines)
-    }
-    return lines;
   }
 }

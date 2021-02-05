@@ -9,30 +9,16 @@ export class Schedule {
     private schedule = scheduleJob
   ) { }
 
-  everyFirstDayOfMonth(callback: CallbackFunction) {
-    this.add('0 7 * 1 *', callback);
+  private add = (when: string) => (callback: CallbackFunction) => {
+    this.jobs.push(this.schedule(when, callback))
   }
 
-  everyMonday(callback: CallbackFunction) {
-    this.add('0 7 * * 1', callback);
-  }
-
-  everyFriday(callback: CallbackFunction) {
-    this.add('0 7 * * 5', callback);
-  }
-
-  everyWorkingDay(callback: CallbackFunction) {
-    this.add('0 6 * * 1-5', callback);
-  }
-
-  private add(when: string, callback: CallbackFunction) {
-    this.jobs.push(this.schedule(when, callback));
-  }
+  everyMonday = this.add('0 7 * * 1')
+  everyFriday = this.add('0 7 * * 5')
+  everyWorkingDay = this.add('0 6 * * 1-5')
 
   finish() {
-    this.jobs.forEach((job: Job) => {
-      job.cancel();
-    });
-    this.jobs = [];
+    this.jobs.forEach((job: Job) => job.cancel())
+    this.jobs = []
   }
 }

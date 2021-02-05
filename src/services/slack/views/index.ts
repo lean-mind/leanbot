@@ -1,0 +1,1 @@
+export { ViewThanks } from './view-thanks'
