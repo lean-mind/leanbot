@@ -6,11 +6,11 @@
   "author": "Michael Reyes (@mreysei)",
   "license": "ISC",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
     "build": "tsc --build src/tsconfig.json",
     "start": "ts-node src/index.ts",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "axios": "^0.21.1",

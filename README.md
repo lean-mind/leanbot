@@ -6,9 +6,11 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 ## Índice
 
 - [Instalación](#instalación)
+  - [Variables de entorno](#variables-de-entorno)
   - [Bot](#bot)
-  - [Firebase](#firebase)
-  - [Instalar paquetes](#instalar-paquetes)
+  - [MongoDB](#mongodb)
+  - [TheCatAPI](#thecatapi)
+- [Trabajo en local](#trabajo-en-local)
 - [Scripts](#scripts)
 - [Despliegue](#despliegue)
 - [Estructura](#estructura)
@@ -17,49 +19,70 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 
 ### **Docs**
 
-- [Documentos](https://github.com/mreysei/leanbot/tree/master/docs)
-- [Funcionalidades](https://github.com/mreysei/leanbot/blob/master/docs/features.md)
+- [Página de documentos](https://github.com/lean-mind/leanbot/tree/master/docs)
+- [Funcionalidades](https://github.com/lean-mind/leanbot/blob/master/docs/features.md)
 
 ----------------
 
 ## Instalación
 
-### **Bot**
+### **Variables de entorno**
 Necesitas el fichero `.env` en la raiz del proyecto, puedes duplicar el fichero `.env.sample` y modificar los valores:
 
 ```
+# Api
+API_PORT               // El puerto por el que se levantará express para los comandos
+MAINTENANCE            // Si está en true, las peticiones que se hagan a la Api, devolverá un mensaje indicando que está en mantenimiento
+
+# Slack
+SLACK_SIGNING_SECRET   // El 'Signing secret' de slack, sin este secret no se ejecutará ningún comando
+
+# Bot
 BOT_TOKEN              // Token de la aplicación de Slack (Bot Clasico) empieza por "xoxb"
 BOT_NAME               // Nombre que tendrá el Bot por defecto
 BOT_DISCONNECT         // El estado del bot, on u off, por defecto false, es decir, conectado
-API_PORT               // El puerto por el que se levantará express para los comandos
-SLACK_SIGNING_SECRET   // El 'Signing secret' de slack, sin este secret no se ejecutará ningún comando
+
+# MongoDB
+MONGODB_PORT           // El puerto por el que se levantará mongodb
+MONGODB_DATABASE       // El nombre de la base de datos que se utilizará en mongodb
+MONGODB_USERNAME       // El nombre de usuario para identificarte en mongodb
+MONGODB_PASSWORD       // La contraseña para indentificarte en mongodb
+
+# TheCatAPI
+CAT_TOKEN              // El token de TheCatAPI para consumir imágenes de gatitos :3
 ```
 
-Para obtener el `BOT_TOKEN` hay que crear una aplicación de slack en esta dirección (https://api.slack.com/apps?new_classic_app=1), **por ahora** es completamente necesario que sea un bot clásico, por eso el parámetro `new_classic_app` en la url, porque a día de hoy (Marzo de 2020) las nuevas aplicaciones están dando el error `not_allowed_token_type`, si te da este error es posible que hayas creado una aplicación de las nuevas.
+### **Bot**
 
-Una vez creado el bot, deberías estar en las sección **Basic Information** tendrás un desplegable "**Add features and functionality**", añadiremos el **Bot**.
+Para obtener el `BOT_TOKEN` hay que crear una aplicación de slack en [api.slack.com/apps](https://api.slack.com/apps)
 
-Vamos a actualizar los scopes, que basicamente son los permisos. En el Step 1, empezaremos con el permiso de **commands** y luego los todos los del grupo "**Scopes that cover what your app currently has access to through the bot token**", está pendiente mejorar esta parte y sólo seleccionar los permisos correspondientes. En el Step 2 no hace falta ninguno. El Step 3 es una confirmación, pero dado que estamos usando un bot clásico, hay que tener en cuenta que el botón para confirmar y que siga funcionando todo es **No, edit scopes**
+Una vez creado el bot, deberías estar en las sección **Basic Information** tendrás un desplegable "**Add features and functionality**", entraremos en donde dice **Bot** y te redireccionará a la sección **App Home** donde actualizaremos los scopes dándole al botón en verde "Review Scopes to Add". Vamos al apartado de **Scopes** y añadiremos los siguientes **Bot Token Scopes** en base a los métodos que estamos consumiendo de Slack:
 
-Ahora en el menú izquierdo entraremos en **OAuth & Permissions** e instalaremos la app en nuestro workspace. Ya tendrémos disponible el token del bot.
+Method   | Bot Scopes
+---------|-----------
+[`/chat.postMessage`](https://api.slack.com/methods/chat.postMessage) | `chat:write`
+[`/conversations.members`](https://api.slack.com/methods/conversations.members) | `channels:read`, `groups:read`, `im:read`, `mpim:read`
+[`/views.open`](https://api.slack.com/methods/views.open) | _No scope required_ 
 
-Si revisas en el apartado **Basic Information** deberías tener marcado los bots, los permisos e instalado en tu workspace.
+Una vez tengamos los _scopes_ actualizados, podremos instalar el bot en nuestro _workspace_, podremos hacerlo al principio de la misma página donde actualizaste los _scopes_. Ya tendrémos disponible el token del bot que debería comenzar por `xoxb`.
 
-### **Firebase**
+Ahora, para poder consumir nuestras funcionalidades nos faltaría crear los **Slash Commands** y el **Interactivity** command. Para ello vamos al apartado de **Slash Commands* en el menú izquierdo donde podremos crear nuestros comandos, rellenaremos todos los campos necesarios con los comandos que tenemos en la [documentación de funcionalidades](https://github.com/lean-mind/leanbot/blob/master/docs/features.md). Si vas a trabajar en local, te recomiendo utilizar [`ngrok`](https://ngrok.com/), con el comando `ngrok http 80` te dará una url pública de tu ordenador para que los comandos tengan un endpoint por el cual acceder en local (Tendrás que actualizar los Slash Commands con la url cada vez que lances dicho comando). 
 
-Pasemos a Firebase, para empezar necesitas otro fichero, el `service-account-key.json` que estará en la carpeta `./src/config/`, éste es un fichero autogenerado por Firebase para poder conectarnos a la base de datos **Realtime**
+Teniendo los **Slash Commands** tendríamos que ir al apartado **Interactivity** para añadir un último endpoint `{URL}/interactive`, donde dice **Request URL**. Éste se utilizará para los comandos con "varios pasos", es decir, que si lanzas un comando y te devuelve un modal o un mensaje interactivo en el que tendrás que introducir información o habrán botones con acciones, irán a tráves del endpoint de **Interactivity**, para diferenciarlos, estamos utilizando el `external_id` para identificar el siguiente paso que deberá hacer.
 
-Para empezar creamos un nuevo proyecto en la consola de Firebase https://console.firebase.google.com/
-Una vez creado, vamos al apartado **Project Overview** en el menú izquierdo.
-Añadimos una nueva aplicación web, ignora el script que te dará al crear la aplicación, esto es para el firestore que no vamos a usar por ahora.
+Si revisas en el apartado **Basic Information** deberías tener los slash commands, los bots y los permisos marcados además de la app instalada en tu workspace de desarrollo.
 
-Como nosotros vamos a usar una base de datos realtime, vamos a ir a la configuración de la aplicación (en el engranaje al hacer click sobre la aplicación) y vamos al apartado **Cuentas de servicio**, aquí podremos generar el `json` que necesitamos para conectarnos con la base de datos.
+### **TheCatAPI**
 
-Sólo necesitaremos los valores de `private_key`, `project_id` y `client_email`
+Estamos utilizando [TheCatAPI](https://thecatapi.com) para obtener imágenes aleatorias de gatitos, con ponerlo en producción sería suficiente, si no está el token, devolverá siempre la misma url de una imagen. Creándote una cuenta en [TheCatAPI](https://thecatapi.com) podrás obtener el token.
 
-### **Instalar paquetes**
+----------------
 
-Como es una aplicación node abrá que instalar los paquetes con un `npm i`
+## Trabajo en local
+
+```
+TODO (docker y npm)
+```
 
 ----------------
 
@@ -67,7 +90,7 @@ Como es una aplicación node abrá que instalar los paquetes con un `npm i`
 
 Tenemos estos scripts:
 ```
-build        // Genera la carpeta build
+build        // Genera la carpeta dist
 start        // Arranca la app
 start:dev    // Arranca la app y se actualizará al guardar 
 test         // Lanza los tests 
@@ -80,37 +103,33 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 
 ## Despliegue
 
-Temporalmente se está utilizando `pm2` desplegándolo en segundo plano en el servidor
 ```
-pm2 ls                                  // Lista los procesos levantados
-pm2 stop <name>                         // Para el proceso especificado en <name>
-pm2 delete <name>                       // Elimina el proceso especificado en <name>
-pm2 start build/index.js --name <name>  // Arranca el proceso y le da un nombre <name> (importante: antes de levantar hacer un "npm run build")
-pm2 logs                                // Lista los últimos 15 logs del bot y se queda a la espera de nuevos logs
+TODO (docker)
 ```
 
 ----------------
 
 ## Estructura
 
-- **actions**: Son las acciones que se lanzarán con los eventos del websocket que estará escuchando nuestra aplicación de slack
-- **commands**: Aquí están todas las funcionalidades de los comandos
-- **config**: Aquí están las variables de configuración y de entorno
-- **models**: Aquí están los modelos, serán interfaces las que no tengan ninguna lógica, clases las que sí
+- **actions**: Las acciones programadas, los endpoints y la interactividad harán las acciones que hay en esta carpeta, dependiendo de la acción
+- **models**: Aquí están los Modelos de datos, DTOs e Interfaces
 - **scheduler**: Aquí es donde se realizarán las acciones programadas
 - **services**
-  - **api**: Los slash commands entrarán a través de la API
-  - **bot**: Es el encargado de realizar todas las acciones hacia Slack
-  - **database**: Es donde se accederá a la base de datos de forma abstracta
-  - **firebase**: Es la base de datos en concreta que consumirá el servicio *database*
+  - **api**: Los slash commands y la interactividad entrarán a través de la API
+  - **database**: Es donde se accederá a la base de datos
+    - **mongodb**: Es la implementación de la base de datos que estamos utilizando actualmente
+  - **file**: Es el servicio que se encargará de escribir en ficheros
+  - **i18n**: Aquí se encontrará todo lo relacionado con los textos y traducciones de la aplicación
   - **logger**: Aquí están todos los logs para tener un control de lo que va sucediendo en la aplicación
   - **schedule**: Es donde se crearán las fechas o intervalos de las acciones programadas
-  - **slack**: Es el que conecta con slack, tanto por websocket como por api
+  - **slack**: Es el que conecta con slack a través de los endpoints
+    - **methods**: Aquí estarán todos los métodos que utilizaremos de slack
+    - **views**: Son objetos que slack reconocerá como vistas
+- **tests**: Aquí están principalmente los builders de los tests que están con sus respectivos servicios
 
 ----------------
 
 ## Recursos
 - Slack API: https://api.slack.com/
   - Methods: https://api.slack.com/methods
-  - RealTimeMessaging: https://api.slack.com/rtm
 - Emojis para Slack (nombres): https://emojipedia.org/slack

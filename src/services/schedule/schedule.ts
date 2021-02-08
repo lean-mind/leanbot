@@ -14,10 +14,8 @@ export class Schedule {
   }
 
   everyMonday = this.add('0 7 * * 1')
-  everyFriday = this.add('0 7 * * 5')
-  everyWorkingDay = this.add('0 6 * * 1-5')
 
-  finish() {
+  finish = () => {
     this.jobs.forEach((job: Job) => job.cancel())
     this.jobs = []
   }
