@@ -36,7 +36,26 @@ describe('Actions Thanks Confirmation', () => {
     expect(slack.chatPostMessage).toBeCalledWith(myselfId, { text: `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}` })
   })
 
-  it.todo('should not give thanks to itself from channel')
+  it('should not give thanks to itself from channel', async () => {
+    const myselfId = "U-myself-id"
+    const anotherId = "U-another-id"
+    const toId = "C-channel-id"
+    const payload = ThanksPayloadBuilder({ 
+      from: myselfId,
+      recipients: [toId],
+      reason,
+    })
+     
+    slack.conversationsMembers = jest.fn(async () => ({
+      members: [anotherId, myselfId]
+    }))
+
+    await thanksConfirmation(payload, db, slack)
+
+    expect(slack.chatPostMessage).toBeCalledTimes(2)
+    expect(slack.chatPostMessage).nthCalledWith(1, anotherId, { text: i18n.thanks("messageTo", { from: `<@${myselfId}>`, reason }) })
+    expect(slack.chatPostMessage).nthCalledWith(2, myselfId, { text: i18n.thanks("messageFrom", { to: `<#${toId}>`, reason }) })
+  })
 
   it('should not give thanks to an empty channel', async () => {
     const toId = "C-channel-id"

@@ -42,6 +42,10 @@ const removeDuplicates = <T>(field?: keyof T) => (current: T | null, index: numb
   return list.indexOf(current) === index
 }
 
+const removeMyself = (myself: Id) => (current: Id) => {
+  return myself.id !== current.id
+}
+
 const getThanks = (team: Id, from: Id, recipient: Id, where: Id, reason: string, anonymous: boolean, date: Date): Thanks => {
   return new Thanks(team, from, recipient, where, reason, anonymous, date);
 }
@@ -86,7 +90,7 @@ export const thanksConfirmation = async (
   const recipientIdsFromChannels: Id[][] = await Promise.all(recipientsFiltered.channels.map(getMembersFromChannel(slack)))
   const allRecipientIds: Id[] = recipientIdsFromChannels.reduce(unifyIds, recipientsFiltered.users)
 
-  const uniqueIds: Id[] = allRecipientIds.filter(removeDuplicates<Id>("id"))
+  const uniqueIds: Id[] = allRecipientIds.filter(removeDuplicates<Id>("id")).filter(removeMyself(from))
   const thanksList: Thanks[] = uniqueIds.map((to: Id) => getThanks(teamWhereIsIt, from, to, where, reason, anonymous, createdAt))
 
   try {
