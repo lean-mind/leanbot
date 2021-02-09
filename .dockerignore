@@ -1,0 +1,9 @@
+.env
+.env.sample
+.editorconfig
+logs
+dist
+node_modules
+
+Dockerfile
+.dockerignore

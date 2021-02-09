@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   database:
-    image : mongo
+    image: mongo
     container_name: database
     environment:
       - PUID=1000
@@ -10,4 +10,11 @@ services:
       - /leanbot/database:/data/db
     ports:
       - 27017:27017
+    restart: unless-stopped
+  app: 
+    build: .
+    env_file: 
+      - ./.env.prod
+    depends_on: 
+      - database
     restart: unless-stopped
