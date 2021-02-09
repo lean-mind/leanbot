@@ -1,6 +1,6 @@
 import { Schedule } from "../services/schedule/schedule";
 import { Logger } from "../services/logger/logger";
-import { sendThanksSummary } from "../actions/thanks/send-thanks-summary";
+import { sendThanksSummary } from "../actions/thanks";
 
 export const scheduler = () => {
   const schedule = new Schedule();

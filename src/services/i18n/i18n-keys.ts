@@ -1,9 +1,12 @@
-export type Type = "thanks" | "thanksView" | "thanksSummary"
+export type Type = 
+    "thanks" | 
+    "thanksView" | 
+    "thanksSummary"
 
 export interface Keys {
-  thanks: ThanksKeys,
-  thanksView: ThanksViewKeys,
-  thanksSummary: ThanksSummaryKeys,
+  thanks: ThanksKeys
+  thanksView: ThanksViewKeys
+  thanksSummary: ThanksSummaryKeys
 }
 
 type ThanksKeys = 

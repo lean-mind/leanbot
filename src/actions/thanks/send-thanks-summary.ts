@@ -1,4 +1,5 @@
 import { SimpleThanks, Thanks, ThanksSummary } from "../../models/database/thanks";
+import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
 import { Slack } from "../../services/slack/slack";
@@ -44,8 +45,10 @@ const update = (summary: ThanksSummary[], currentThanks: Thanks, who: "from" | "
 export const sendThanksSummary = async (
   db: Database = new Database(),
   slack: Slack = new Slack(),
+  cat: Cat = new Cat()
 ) => {
   try {
+    const catImage = await cat.getRandomImage()
     const thanksFromLastWeek: Thanks[] = await db.getThanksFromLastWeek()
     const summary: ThanksSummary[] = thanksFromLastWeek.reduce((summary: ThanksSummary[], currentThanks: Thanks) => {
       update(summary, currentThanks, "from")
@@ -54,7 +57,7 @@ export const sendThanksSummary = async (
     }, [])
 
     summary.forEach(({ user, given, received }: ThanksSummary) => {
-      const blocks = ViewThanksSummary({ given, received })
+      const blocks = ViewThanksSummary({ image: catImage.url, given, received })
       sendMessage(slack, user.id, blocks)
     })
   } catch(e) {

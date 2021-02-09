@@ -3,7 +3,7 @@ import { I18n } from "../../i18n/i18n";
 import { getDateFormatted } from "../../logger/logger";
 
 interface ViewThanksSummaryProps {
-  image?: string,
+  image: string,
   given?: SimpleThanks[],
   received?: SimpleThanks[],
 }
@@ -15,19 +15,18 @@ const toMessage = ({ users, date, reason }: SimpleThanks) => {
 export const ViewThanksSummary = ({ image, given, received }: ViewThanksSummaryProps, i18n: I18n = new I18n()) => {
   const hasGiven = given !== undefined && given.length > 0
   const hasReceived = received !== undefined && received.length > 0
-  const imageByDefault = "https://www.radioformula.com.mx/wp-content/uploads/notas_anteriores/notas_201807/20180706_17_43_gato.jpg"
 
   return [
     {
       type: "image",
-      image_url: image ?? imageByDefault,
+      image_url: image,
       alt_text: "cats everywhere"
     },
     {
       type: "header",
       text: {
         type: "plain_text",
-        text: i18n.thanksSummary("title"),
+        text: i18n.thanksSummary("title"), 
         emoji: true
       }
     },
@@ -36,7 +35,7 @@ export const ViewThanksSummary = ({ image, given, received }: ViewThanksSummaryP
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasGiven ? `*${i18n.thanksSummary("given")}:*\n` + given?.map(toMessage).join("\n") : i18n.thanksSummary("noGiven")
+        text: hasGiven ? `*${i18n.thanksSummary("given")}*\n` + given?.map(toMessage).join("\n") : i18n.thanksSummary("noGiven")
       }
     },
     { type: "divider" },
@@ -44,7 +43,7 @@ export const ViewThanksSummary = ({ image, given, received }: ViewThanksSummaryP
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasReceived ? `*${i18n.thanksSummary("received")}:*\n` + received?.map(toMessage).join("\n") : i18n.thanksSummary("noReceived")
+        text: hasReceived ? `*${i18n.thanksSummary("received")}*\n` + received?.map(toMessage).join("\n") : i18n.thanksSummary("noReceived")
       }
     },
     { type: "divider" },

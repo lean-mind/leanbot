@@ -5,6 +5,7 @@ interface Config {
   apiPort: string
   slack: SlackConfig
   mongodb: MongoDBConfig
+  catToken: string
 }
 
 interface SlackConfig {
@@ -36,4 +37,5 @@ export const config: Config = {
     username: process.env.MONGODB_USERNAME || "user-unknown",
     password: process.env.MONGODB_PASSWORD || "pass-unknown",
   },
+  catToken: process.env.CAT_TOKEN || "token-unknown"
 };

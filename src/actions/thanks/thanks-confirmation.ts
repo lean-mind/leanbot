@@ -59,8 +59,8 @@ const sendMessagesFrom = (slack: Slack, where: Id, from: Id, to: Id[], reason: s
   const allRecipients = to.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
   const fromName = anonymous ? i18n.thanks("anAnonymous") : `<@${from.id}>`
   const anonymously = anonymous ? i18n.thanks("anonymously") : ""
-  const messageFrom = i18n.thanks("messageFrom", { to: `${allRecipients}${anonymously}`, reason: reason.toString() })
-  const messageWhere = i18n.thanks("messageWhere", { from: fromName, to: `${allRecipients}`, reason: reason.toString() })
+  const messageFrom = i18n.thanks("messageFrom", { to: `${allRecipients}${anonymously}`, reason })
+  const messageWhere = i18n.thanks("messageWhere", { from: fromName, to: `${allRecipients}`, reason })
 
   if (where.type !== IdType.unknown) {
     slack.chatPostMessage(where.id, { text: messageWhere })

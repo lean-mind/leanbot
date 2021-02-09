@@ -13,7 +13,7 @@ export class I18n {
 
   private transformKeyToValue = (text: string, values: Values = {}) => {
     return text.split(" ").reduce((messages: string[], currentWord: string) => {
-      if (currentWord.indexOf('${') === 0){
+      if (currentWord.indexOf('${') >= 0){
         const currentKey = currentWord.substring(currentWord.indexOf('{') + 1, currentWord.indexOf('}'));
         const value = currentWord.replace('${' + currentKey + '}', values[currentKey])
         return [...messages, value]
