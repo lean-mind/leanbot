@@ -13,8 +13,10 @@ services:
     restart: unless-stopped
   app: 
     build: .
-    env_file: 
+    env_file:
       - ./.env.prod
+    ports: 
+      - 80:80
     depends_on: 
       - database
     restart: unless-stopped

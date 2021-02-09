@@ -3,9 +3,9 @@ require('dotenv').config()
 interface Config {
   maintenance: boolean
   apiPort: string
+  catToken: string
   slack: SlackConfig
   mongodb: MongoDBConfig
-  catToken: string
 }
 
 interface SlackConfig {
@@ -16,15 +16,14 @@ interface SlackConfig {
 }
 
 interface MongoDBConfig {
-  readonly port: string
+  readonly uri: string
   readonly database: string
-  readonly username: string
-  readonly password: string
 }
 
 export const config: Config = {
   maintenance: process.env.MAINTENANCE === "true" || false,
   apiPort: process.env.API_PORT || "5051",
+  catToken: process.env.CAT_TOKEN || "token-unknown",
   slack: {
     token: process.env.BOT_TOKEN || "xoxb-unknown",
     name: process.env.BOT_NAME || "unknown",
@@ -32,10 +31,7 @@ export const config: Config = {
     signingSecret: process.env.SLACK_SIGNING_SECRET || "secret-unknown",
   },
   mongodb: {
-    port: process.env.MONGODB_PORT || "27017",
-    database: process.env.MONGODB_DATABASE || "db-unknown",
-    username: process.env.MONGODB_USERNAME || "user-unknown",
-    password: process.env.MONGODB_PASSWORD || "pass-unknown",
-  },
-  catToken: process.env.CAT_TOKEN || "token-unknown"
+    uri: process.env.MONGODB_URI || "mongodb://localhost:27017",
+    database: process.env.MONGODB_DATABASE || "db-unknown"
+  }
 };

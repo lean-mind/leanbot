@@ -36,6 +36,8 @@ describe('Actions Thanks Confirmation', () => {
     expect(slack.chatPostMessage).toBeCalledWith(myselfId, { text: `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}` })
   })
 
+  it.todo('should not give thanks to itself from channel')
+
   it('should not give thanks to an empty channel', async () => {
     const toId = "C-channel-id"
     const payload = ThanksPayloadBuilder({ 

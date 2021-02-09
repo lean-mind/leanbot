@@ -7,15 +7,14 @@ jest.mock("../../../config")
 
 describe('Service MongoDB: ', () => {
   const database = "test"
-  const instance = new MongoClient(`mongodb://localhost`)
+  const uri = "mongodb://localhost"
+  const instance = new MongoClient(uri)
   const mongodb = new MongoDB(instance)
 
   beforeEach(() => {
     config.mongodb = {
       database, 
-      username: "irrelevant-username",
-      password: "irrelevant-password",
-      port: "irrelevant-port",
+      uri,
     }
 
     instance.isConnected = jest.fn(() => true)

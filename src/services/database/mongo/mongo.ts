@@ -9,12 +9,8 @@ import { config } from '../../../config';
 
 export class MongoDB implements DatabaseInstance {
   constructor(
-    private instance = new MongoClient(`mongodb://localhost:${config.mongodb.port}`, { 
+    private instance = new MongoClient(config.mongodb.uri, { 
       useUnifiedTopology: true,
-      // auth: {
-      //   user: this.data.username,
-      //   password: this.data.password
-      // }
     })
   ) { }
 
