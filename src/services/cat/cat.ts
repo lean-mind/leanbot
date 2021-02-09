@@ -24,12 +24,11 @@ export class Cat {
     })
   ) { }
 
-  getRandomImage = async (props?: CatImageProps): Promise<Image> => {
-    const { limit, mimeTypes }: CatImageProps = props ?? { limit: 1, mimeTypes: ["jpg", "png", "gif"] }
+  getRandomImage = async ({ limit, mimeTypes }: CatImageProps): Promise<Image> => {
     const { data, status } = await this.api.get('/images/search', {
       params: {
-        limit,
-        mime_types: mimeTypes
+        limit: limit ?? 1,
+        mime_types: mimeTypes ?? ["jpg", "png", "gif"]
       }
     })
     
