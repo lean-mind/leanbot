@@ -1,6 +1,6 @@
-import { SimpleThanks } from "../../../models/database/thanks";
-import { I18n } from "../../i18n/i18n";
-import { getDateFormatted } from "../../logger/logger";
+import { SimpleThanks } from "../../../../models/database/thanks";
+import { I18n } from "../../../i18n/i18n";
+import { getDateFormatted } from "../../../logger/logger";
 
 interface ViewThanksSummaryProps {
   image: string,

@@ -1,32 +1,30 @@
-import { Body } from "../models/api"
-import { BodyBuilder } from "../tests/builders/api/body-builder"
-import { PayloadBuilder } from "../tests/builders/api/payload-builder"
-import { interactive } from "./interactive"
+import { Platform } from "../services/platform/platform"
+import { Slack } from "../services/platform/slack/slack"
+import { InteractivePropsBuilder } from "../tests/builders/actions/interactive-props-builder"
+import { interactive, InteractiveProps } from "./interactive"
 import { thanksConfirmation } from "./thanks"
 
 jest.mock('./thanks')
+jest.mock('../services/platform/slack/slack')
 
 describe('Actions Interactive', () => {
-  it('without matching', () => {
-    const body: Body = BodyBuilder({})
+  const platform: Platform = new Slack()
 
-    interactive(body)
+  it('without matching', () => {
+    const props: InteractiveProps = InteractivePropsBuilder({})
+
+    interactive(platform, props)
 
     expect(thanksConfirmation).not.toBeCalled()
   })
 
   it('matching with thanks confirmation', () => {
-    const body: Body = BodyBuilder({
-      payload: PayloadBuilder({
-        type: "view_submission",
-        view: {
-          external_id: "thanks-confirmation"
-        }
-      })
+    const props: InteractiveProps = InteractivePropsBuilder({
+      nextStep: "thanks-confirmation"
     })
 
-    interactive(body)
+    interactive(platform, props)
 
-    expect(thanksConfirmation).toBeCalledWith(body.payload)
+    expect(thanksConfirmation).toBeCalledWith(platform, props.data)
   })
 })

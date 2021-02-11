@@ -1,18 +1,17 @@
-import { Slack } from "../../services/slack/slack";
-import { ViewThanks } from "../../services/slack/views";
-import { BodyBuilder } from "../../tests/builders/api/body-builder";
-import { thanks } from "./thanks";
+import { Platform } from "../../services/platform/platform";
+import { Slack } from "../../services/platform/slack/slack";
+import { ThanksPropsBuilder } from "../../tests/builders/actions/thanks-props-builder";
+import { thanks, ThanksProps } from "./thanks";
 
 describe('Actions Thanks', () => {
-  const slack = new Slack()
-  const view = ViewThanks();
-  
-  it('should open the view in slack', () => {
-    const body = BodyBuilder({ trigger_id: "irrelevant-trigger-id" })
-    slack.viewsOpen = jest.fn()
+  const platform: Platform = new Slack()
+    
+  it('should open interactive in platform', () => {
+    const props: ThanksProps = ThanksPropsBuilder({})
+    platform.openInteractive = jest.fn() 
 
-    thanks(body, slack)
+    thanks(platform, props)
 
-    expect(slack.viewsOpen).toBeCalledWith(view, body.trigger_id)
+    expect(platform.openInteractive).toBeCalledWith(props.channelId, props.block)
   })
 })

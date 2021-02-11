@@ -1,4 +1,4 @@
-import { Logger } from "../../logger/logger"
+import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
 
 interface ChatPostMessageProps {
@@ -10,11 +10,9 @@ export const chatPostMessage = (request: Request) => async (channel: string, { t
   if (!text && !blocks) throw Error("Param text or blocks required");
   
   Logger.log(`/chat.postMessage -> { channel: "${channel}", text: "${text?.split("\n").join(" ")}", blocks: "${blocks}"}`)
-  const { status } = await request.post("/chat.postMessage", {
+  await request.post("/chat.postMessage", {
     channel,
     text: blocks ? null : text,
     blocks
   })
-
-  Logger.log(`/chat.postMessage <- Status ${status}`)
 }

@@ -1,9 +1,10 @@
-import { Body } from "../../models/api/body";
-import { Slack } from "../../services/slack/slack";
-import { ViewThanks } from "../../services/slack/views";
+import { Platform } from "../../services/platform/platform";
 
-export const thanks = ({ trigger_id }: Body, slack: Slack = new Slack()) => {
-  const view = ViewThanks();
+export interface ThanksProps {
+  channelId: string,
+  block: any,
+}
 
-  slack.viewsOpen(view, trigger_id)
+export const thanks = (platform: Platform, {channelId, block}: ThanksProps) => {
+  platform.openInteractive(channelId, block)
 }

@@ -1,19 +1,27 @@
 import { interactive } from "../../actions/interactive"
 import { thanks } from "../../actions/thanks/thanks"
-import { Body } from "../../models/api/body"
+import { Platform } from "../platform/platform"
 
-export interface Endpoint {
-  name: string,
-  action: (body: Body) => void
+export interface EndpointInstance {
+  name: Endpoint,
+  action: (platform: Platform, data: any) => void
+  getProps: (platform: Platform, data: any) => any
 } 
 
-export const Endpoints: Endpoint[] = [
+export enum Endpoint {
+  interactive = "/interactive",
+  thanks = "/thanks",
+}
+
+export const Endpoints: EndpointInstance[] = [
   { 
-    name: "/interactive",
-    action: interactive 
+    name: Endpoint.interactive,
+    action: interactive,
+    getProps: (platform, data) => platform.getInteractiveProps(data) ?? {}
   },
   { 
-    name: "/thanks",
-    action: thanks 
+    name: Endpoint.thanks,
+    action: thanks,
+    getProps: (platform, data) => platform.getThanksProps(data)
   }
 ]

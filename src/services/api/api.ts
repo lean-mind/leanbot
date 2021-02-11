@@ -1,13 +1,23 @@
 import { json, urlencoded } from 'body-parser';
 import { Logger } from '../logger/logger';
 import { config } from '../../config';
-import { Body } from '../../models/api/body';
-import { Endpoints } from './endpoints';
+import { EndpointInstance, Endpoints } from './endpoints';
 import { Emojis } from '../../models/emojis';
+import { Slack } from '../platform/slack/slack';
+import { Platform } from '../platform/platform';
+
+const getPlatformData = (request: any, getProps: any) => {
+  if (Slack.getToken(request) === config.slack.signingSecret) {
+    const platform: Platform = new Slack()
+    const data = Slack.getBody(request)
+    const props = getProps(platform, data)
+
+    return { platform, props }
+  }
+}
 
 export class API {
-  private port: number = parseInt(config.apiPort);
-  private secret: string = config.slack.signingSecret;
+  private port: number = parseInt(config.apiPort)
 
   constructor(
     private instance = require('express')()
@@ -15,22 +25,22 @@ export class API {
     this.instance.use(json())
     this.instance.use(urlencoded({ extended: true }))
 
-    Endpoints.forEach(({ name, action }) => {
-      this.instance.post(name, async (req: any, res: any) => {
+    Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
+      this.instance.post(name, async (request: any, response: any) => {
+        const data = getPlatformData(request, getProps)
+        
         if (config.maintenance) {
-          res.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
-        } else {
-          const payload = req.body.payload ? JSON.parse(req.body.payload) : {}
-          const body = { ...req.body, payload } as Body
-  
-          if (body?.token === this.secret || body.payload?.token === this.secret) {
-            action(body)
-            res.send()
-          } else {
-            Logger.onError(`Token '${body.token}' is invalid in command ${name}`)
-            res.send(`Token is invalid in command ${name}`)
-          }
+          return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
         }
+
+        if (data) {
+          action(data.platform, data.props)
+          return response.send()
+        }
+        
+        const errorMessage = "Invalid request"
+        Logger.onError(`${errorMessage}: ${request}`)
+        return response.send(errorMessage)
       })
     })
 

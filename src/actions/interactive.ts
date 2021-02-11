@@ -1,18 +1,24 @@
-import { Body, Payload } from "../models/api"
 import { Logger } from "../services/logger/logger"
+import { Platform } from "../services/platform/platform"
 import { thanksConfirmation } from "./thanks"
 
-const accept = (payload: Payload) => 
-  payload.type === "view_submission"
+export interface InteractiveProps {
+  nextStep: string,
+  data: any,
+  accept: boolean,
+}
 
-export const interactive = ({ payload }: Body) => {
-  const mapper = {
-    ["thanks-confirmation"]: thanksConfirmation,
+export const interactive = (platform: Platform, props: InteractiveProps) => {
+  if (props) {
+    const { nextStep, accept, data } = props
+    const mapper = {
+      ["thanks-confirmation"]: thanksConfirmation,
+    }
+    const command = mapper[nextStep];
+    
+    if (command && accept) {
+      Logger.log(`/interactive -> { nextStep : "${nextStep}", accept: "${accept}", data: "${data}" }`)
+      command(platform, data)
+    }
   }
-  const command = mapper[payload.view.external_id];
-  
-  if (command && accept(payload)) {
-    Logger.log(`/interactive -> { external_id : "${payload.view.external_id}" }`)
-    command(payload)
-  }
-} 
+}

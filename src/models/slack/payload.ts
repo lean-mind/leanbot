@@ -6,7 +6,7 @@ export interface View {
   [key: string]: any,
 }
 
-export interface Payload {
+export interface SlackPayload {
   type: string,
   token: string,
   action_ts: string,

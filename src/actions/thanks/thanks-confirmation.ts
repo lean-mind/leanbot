@@ -1,20 +1,23 @@
-import { Payload, View } from "../../models/api/payload"
 import { Thanks } from "../../models/database/thanks"
 import { Emojis } from "../../models/emojis"
 import { Id, IdType } from "../../models/slack/id"
 import { Database } from "../../services/database/database"
+import { MongoDB } from "../../services/database/mongo/mongo"
 import { I18n } from "../../services/i18n/i18n"
 import { Logger } from "../../services/logger/logger"
-import { Slack } from "../../services/slack/slack"
+import { Platform } from "../../services/platform/platform"
+import { Slack } from "../../services/platform/slack/slack"
+
+export interface ThanksConfirmationProps {
+  team: Id
+  from: Id
+  recipients: Id[]
+  reason: string
+  anonymous: boolean
+  where: Id
+}
 
 const i18n = new I18n()
-
-const getPropsFrom = ({ state }: View) => ({
-  recipients: state.values.recipients.action.selected_conversations.filter(removeDuplicates<string>()).map((toId: string) => new Id(toId)),
-  reason: state.values.reason.action.value.split("\n").join("\n>"),
-  anonymous: state.values.options.action.selected_options.some(({ value }) => value === "anonymous"),
-  where: new Id(state.values.where.action.selected_conversation)
-})
 
 const separateByType = (from: Id) => (recipientsFiltered: any, currentRecipient: Id) => {
   if (currentRecipient.type == IdType.channel){
@@ -25,15 +28,15 @@ const separateByType = (from: Id) => (recipientsFiltered: any, currentRecipient:
   return recipientsFiltered;
 }
 
-const getMembersFromChannel = (slack: Slack) => async (currentChannel: Id) => {
-  const { members } = await slack.conversationsMembers(currentChannel.id)
+const getMembersFromChannel = (platform: Platform) => async (currentChannel: Id) => {
+  const members = await platform.getMembersId(currentChannel.id)
 
   return members.map((member: string) => new Id(member))
 }
 
 const unifyIds = (acc: Id[], current: Id[]) => ([ ...acc, ...current])
 
-const removeDuplicates = <T>(field?: keyof T) => (current: T | null, index: number, list: (T | null)[]): boolean => {
+export const removeDuplicates = <T>(field?: keyof T) => (current: T | null, index: number, list: (T | null)[]): boolean => {
   if (current === null) return false
   if (field) {
     const listOfField = list.map((value: T | null) => value?.[field])
@@ -50,16 +53,16 @@ const getThanks = (team: Id, from: Id, recipient: Id, where: Id, reason: string,
   return new Thanks(team, from, recipient, where, reason, anonymous, date);
 }
 
-const sendMessagesTo = (slack: Slack, thanksList: Thanks[]): void => {
+const sendMessagesTo = (platform: Platform, thanksList: Thanks[]): void => {
   thanksList.map(({ from, to, reason, anonymous }: Thanks) => {
     const fromName = anonymous ? i18n.thanks("anAnonymous") : `<@${from.id}>`
     const messageTo = i18n.thanks("messageTo", { from: fromName, reason: reason.toString() })
   
-    slack.chatPostMessage(to.id, { text: messageTo })
+    platform.postMessage(to.id, messageTo)
   })
 }
 
-const sendMessagesFrom = (slack: Slack, where: Id, from: Id, to: Id[], reason: string, anonymous: boolean = false): void => {
+const sendMessagesFrom = (platform: Platform, where: Id, from: Id, to: Id[], reason: string, anonymous: boolean = false): void => {
   const allRecipients = to.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
   const fromName = anonymous ? i18n.thanks("anAnonymous") : `<@${from.id}>`
   const anonymously = anonymous ? i18n.thanks("anonymously") : ""
@@ -67,45 +70,42 @@ const sendMessagesFrom = (slack: Slack, where: Id, from: Id, to: Id[], reason: s
   const messageWhere = i18n.thanks("messageWhere", { from: fromName, to: `${allRecipients}`, reason })
 
   if (where.type !== IdType.unknown) {
-    slack.chatPostMessage(where.id, { text: messageWhere })
+    platform.postMessage(where.id, messageWhere)
   }
-  slack.chatPostMessage(from.id, { text: messageFrom })
+  platform.postMessage(from.id, messageFrom)
 }
 
-const sendMessage = async (slack: Slack, id: string, message: string): Promise<void> => {
-  await slack.chatPostMessage(id, { text: message })
+const sendMessage = async (platform: Platform, id: string, message: string): Promise<void> => {
+  await platform.postMessage(id, message)
 }
 
 export const thanksConfirmation = async (
-  { team, user, view }: Payload, 
-  db: Database = new Database(),
-  slack: Slack = new Slack(),
+  platform: Platform = new Slack(),
+  { team, from, recipients, reason, anonymous, where }: ThanksConfirmationProps,
+  db: Database = new MongoDB(),
 ) => {
-  const { recipients, reason, anonymous, where } = getPropsFrom(view)
-  const from = new Id(user.id)
-  const teamWhereIsIt = new Id(team.id)
   const createdAt = new Date()
 
   const recipientsFiltered = recipients.reduce(separateByType(from), { channels: [], users: [] })
-  const recipientIdsFromChannels: Id[][] = await Promise.all(recipientsFiltered.channels.map(getMembersFromChannel(slack)))
+  const recipientIdsFromChannels: Id[][] = await Promise.all(recipientsFiltered.channels.map(getMembersFromChannel(platform)))
   const allRecipientIds: Id[] = recipientIdsFromChannels.reduce(unifyIds, recipientsFiltered.users)
 
   const uniqueIds: Id[] = allRecipientIds.filter(removeDuplicates<Id>("id")).filter(removeMyself(from))
-  const thanksList: Thanks[] = uniqueIds.map((to: Id) => getThanks(teamWhereIsIt, from, to, where, reason, anonymous, createdAt))
+  const thanksList: Thanks[] = uniqueIds.map((to: Id) => getThanks(team, from, to, where, reason, anonymous, createdAt))
 
   try {
     if (thanksList.length > 0) {
       await db.saveThanks(thanksList)
 
-      sendMessagesTo(slack, thanksList)
-      sendMessagesFrom(slack, where, from, recipients, reason, anonymous)
+      sendMessagesTo(platform, thanksList)
+      sendMessagesFrom(platform, where, from, recipients, reason, anonymous)
     } else if (recipients[0].id !== from.id) {
-      sendMessage(slack, from.id, `${i18n.thanks("errorNothingToGive")} ${Emojis.Disappointed}`)
+      sendMessage(platform, from.id, `${i18n.thanks("errorNothingToGive")} ${Emojis.Disappointed}`)
     } else {
-      sendMessage(slack, from.id, `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}`)
+      sendMessage(platform, from.id, `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}`)
     }
   } catch(e) {
-    sendMessage(slack, from.id, `${i18n.thanks("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
+    sendMessage(platform, from.id, `${i18n.thanks("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
     Logger.onDBError(e)
   }
 }

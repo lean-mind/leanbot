@@ -1,4 +1,4 @@
-import { Logger } from "../../logger/logger"
+import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
 
 export const viewsOpen = (request: Request) => async (source: any, trigger_id: string) => {

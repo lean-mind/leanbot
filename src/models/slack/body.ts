@@ -1,6 +1,6 @@
-import { Payload } from "./payload";
+import { SlackPayload } from "./payload";
 
-export interface Body {
+export interface SlackBody {
   token: string;
   team_id: string;
   team_domain: string;
@@ -14,5 +14,5 @@ export interface Body {
   text: string;
   response_url: string;
   trigger_id: string;
-  payload: Payload
+  payload: SlackPayload
 }

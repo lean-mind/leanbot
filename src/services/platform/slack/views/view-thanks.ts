@@ -1,4 +1,4 @@
-import { I18n } from "../../i18n/i18n";
+import { I18n } from "../../../i18n/i18n";
 
 export const ViewThanks = (i18n: I18n = new I18n()) => ({
   type: "modal",

@@ -2,12 +2,13 @@ import { MongoClient } from 'mongodb'
 import { ThanksDto } from '../../../models/database/dtos/thanks-dto';
 import { JsonData } from '../../../models/json-data';
 import { Thanks } from '../../../models/database/thanks';
-import { DatabaseInstance, DatabaseResponse } from '../database';
+import { Database, DatabaseResponse } from '../database';
 import { Logger } from '../../logger/logger';
 import { Collection } from './collections';
 import { config } from '../../../config';
+import { Community } from '../../../models/database/community';
 
-export class MongoDB implements DatabaseInstance {
+export class MongoDB implements Database {
   constructor(
     private instance = new MongoClient(config.mongodb.uri, { 
       useUnifiedTopology: true,
@@ -38,6 +39,15 @@ export class MongoDB implements DatabaseInstance {
     if (this.instance.isConnected()) {
       await this.instance.close()
     }
+  }
+  
+  async getCommunities(): Promise<Community[]> {
+    const response = await this.on(async () => {
+      return []
+    });
+    
+    if (!response.ok) throw Error(response.error)
+    return response.data
   }
 
   async saveThanks(thanksList: Thanks[]): Promise<void> {

@@ -1,12 +1,14 @@
 import { SimpleThanks, Thanks, ThanksSummary } from "../../models/database/thanks";
 import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
+import { MongoDB } from "../../services/database/mongo/mongo";
 import { Logger } from "../../services/logger/logger";
-import { Slack } from "../../services/slack/slack";
-import { ViewThanksSummary } from "../../services/slack/views/view-thanks-summary";
+import { Platform } from "../../services/platform/platform";
+import { Slack } from "../../services/platform/slack/slack";
+import { ViewThanksSummary } from "../../services/platform/slack/views/view-thanks-summary";
 
-const sendMessage = async (slack: Slack, id: string, blocks: any[]): Promise<void> => {
-  await slack.chatPostMessage(id, { blocks })
+const sendMessage = async (platform: Platform, id: string, blocks: any[]): Promise<void> => {
+  await platform.postBlocks(id, blocks)
 }
 
 const getSimpleThanksFrom = (thanks: Thanks, isSender: boolean): SimpleThanks => ({
@@ -43,8 +45,8 @@ const update = (summary: ThanksSummary[], currentThanks: Thanks, who: "from" | "
 }
 
 export const sendThanksSummary = async (
-  db: Database = new Database(),
-  slack: Slack = new Slack(),
+  platform: Platform = new Slack(),
+  db: Database = new MongoDB(),
   cat: Cat = new Cat()
 ) => {
   try {
@@ -58,7 +60,7 @@ export const sendThanksSummary = async (
 
     summary.forEach(({ user, given, received }: ThanksSummary) => {
       const blocks = ViewThanksSummary({ image: catImage.url, given, received })
-      sendMessage(slack, user.id, blocks)
+      sendMessage(platform, user.id, blocks)
     })
   } catch(e) {
     Logger.onError(e)
