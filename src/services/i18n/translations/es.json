@@ -1,33 +1,33 @@
 {
-  "thanks": {
+  "gratitudeMessage": {
     "anAnonymous": "Un anónimo",
     "anonymously": " (de forma anónima)",
-    "messageTo": "${from} te ha dado las gracias:\n> ${reason}",
-    "messageFrom": "Le has dado las gracias a ${to}:\n> ${reason}",
-    "messageWhere": "${from} le ha dado las gracias a ${to}:\n> ${reason}",
+    "recipientMessage": "${sender} te ha dado las gracias:\n> ${text}",
+    "senderMessage": "Le has dado las gracias a ${recipient}:\n> ${text}",
+    "channelMessage": "${sender} le ha dado las gracias a ${recipient}:\n> ${text}",
     "error": "Vaya, hubo algún error y no se guardaron tus agradecimientos...",
-    "errorThanksItself": "Vaya, no puedes agradecerte a ti mismo...",
+    "errorMessageSelf": "Vaya, no puedes agradecerte a ti mismo...",
     "errorNothingToGive": "Vaya, parece que no hay nadie a quien darle las gracias..."
   },
-  "thanksView": {
+  "gratitudeMessageView": {
     "title": "¡Agradecimientos!",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "recipientsLabel": "¿A quién o quiénes?",
     "recipientsPlaceholder": "Selecciona a las personas o canales",
-    "reasonLabel": "¿Por qué?",
+    "textLabel": "¿Por qué?",
     "optionsLabel": "Más opciones",
     "optionsAnonymousLabel": "Anónimo",
     "optionsAnonymousDescription": "Si está marcado, las personas mencionadas recibirán un agradecimiento de alguien de forma anónima",
-    "whereLabel": "¿Quiéres que se publique en un canal?",
-    "whereDescription": "* Es opcional y el bot tiene que pertenecer al canal",
-    "wherePlaceholder": "Canal"
+    "channelLabel": "¿Quiéres que se publique en un canal?",
+    "channelDescription": "* Es opcional y el bot tiene que pertenecer al canal",
+    "channelPlaceholder": "Canal"
   },
-  "thanksSummary": {
+  "gratitudeMessageSummary": {
     "title": "Resumen semanal :clap:",
-    "given": "Dados:",
-    "noGiven": "No has dado las gracias esta semana",
-    "givenCount": "Has dado las gracias *${count} veces*",
+    "sent": "Dados:",
+    "noSent": "No has dado las gracias esta semana",
+    "sentCount": "Has dado las gracias *${count} veces*",
     "received": "Recibidos:",
     "noReceived": "No has recibido gracias esta semana",
     "receivedCount": "Te han dado las gracias *${count} veces*"

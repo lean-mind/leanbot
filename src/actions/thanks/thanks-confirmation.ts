@@ -1,30 +1,28 @@
-import { Thanks } from "../../models/database/thanks"
+import { GratitudeMessage } from "../../models/database/gratitude-message"
 import { Emojis } from "../../models/emojis"
 import { Id, IdType } from "../../models/slack/id"
 import { Database } from "../../services/database/database"
-import { MongoDB } from "../../services/database/mongo/mongo"
 import { I18n } from "../../services/i18n/i18n"
 import { Logger } from "../../services/logger/logger"
 import { Platform } from "../../services/platform/platform"
-import { Slack } from "../../services/platform/slack/slack"
 
 export interface ThanksConfirmationProps {
-  team: Id
-  from: Id
+  communityId: string
+  sender: Id
   recipients: Id[]
-  reason: string
-  anonymous: boolean
-  where: Id
+  channel: Id
+  text: string
+  isAnonymous: boolean
 }
 
 const i18n = new I18n()
 
-const separateByType = (from: Id) => (recipientsFiltered: any, currentRecipient: Id) => {
+const separateByType = (sender: Id) => (recipientsFiltered: any, currentRecipient: Id) => {
   if (currentRecipient.type == IdType.channel){
     recipientsFiltered.channels.push(currentRecipient)
-  } else if (currentRecipient.id !== from.id) {
+  } else if (currentRecipient.id !== sender.id) {
     recipientsFiltered.users.push(currentRecipient)
-  }
+  } 
   return recipientsFiltered;
 }
 
@@ -36,43 +34,32 @@ const getMembersFromChannel = (platform: Platform) => async (currentChannel: Id)
 
 const unifyIds = (acc: Id[], current: Id[]) => ([ ...acc, ...current])
 
-export const removeDuplicates = <T>(field?: keyof T) => (current: T | null, index: number, list: (T | null)[]): boolean => {
-  if (current === null) return false
-  if (field) {
-    const listOfField = list.map((value: T | null) => value?.[field])
-    return removeDuplicates()(current[field], index, listOfField)
-  }
-  return list.indexOf(current) === index
+const removeMyself = (myself: Id) => (current: Id) => myself.id !== current.id
+
+const getGratitudeMessage = (communityId: string, sender: Id, recipient: Id, channel: Id, text: string, isAnonymous: boolean, date: Date): GratitudeMessage => {
+  return new GratitudeMessage(communityId, sender, recipient, channel, text, isAnonymous, date);
 }
 
-const removeMyself = (myself: Id) => (current: Id) => {
-  return myself.id !== current.id
-}
-
-const getThanks = (team: Id, from: Id, recipient: Id, where: Id, reason: string, anonymous: boolean, date: Date): Thanks => {
-  return new Thanks(team, from, recipient, where, reason, anonymous, date);
-}
-
-const sendMessagesTo = (platform: Platform, thanksList: Thanks[]): void => {
-  thanksList.map(({ from, to, reason, anonymous }: Thanks) => {
-    const fromName = anonymous ? i18n.thanks("anAnonymous") : `<@${from.id}>`
-    const messageTo = i18n.thanks("messageTo", { from: fromName, reason: reason.toString() })
+const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeMessage[]): void => {
+  gratitudeMessages.map(({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
+    const senderName = isAnonymous ? i18n.gratitudeMessage("anAnonymous") : `<@${sender.id}>`
+    const recipientMessage = i18n.gratitudeMessage("recipientMessage", { sender: senderName, text: text.toString() })
   
-    platform.postMessage(to.id, messageTo)
+    platform.postMessage(recipient.id, recipientMessage)
   })
 }
 
-const sendMessagesFrom = (platform: Platform, where: Id, from: Id, to: Id[], reason: string, anonymous: boolean = false): void => {
-  const allRecipients = to.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
-  const fromName = anonymous ? i18n.thanks("anAnonymous") : `<@${from.id}>`
-  const anonymously = anonymous ? i18n.thanks("anonymously") : ""
-  const messageFrom = i18n.thanks("messageFrom", { to: `${allRecipients}${anonymously}`, reason })
-  const messageWhere = i18n.thanks("messageWhere", { from: fromName, to: `${allRecipients}`, reason })
+const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous: boolean = false): void => {
+  const allRecipients = recipient.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
+  const senderName = isAnonymous ? i18n.gratitudeMessage("anAnonymous") : `<@${sender.id}>`
+  const anonymously = isAnonymous ? i18n.gratitudeMessage("anonymously") : ""
+  const senderMessage = i18n.gratitudeMessage("senderMessage", { recipient: `${allRecipients}${anonymously}`, text })
+  const channelMessage = i18n.gratitudeMessage("channelMessage", { sender: senderName, recipient: `${allRecipients}`, text })
 
-  if (where.type !== IdType.unknown) {
-    platform.postMessage(where.id, messageWhere)
+  if (channel.type !== IdType.unknown) {
+    platform.postMessage(channel.id, channelMessage)
   }
-  platform.postMessage(from.id, messageFrom)
+  platform.postMessage(sender.id, senderMessage)
 }
 
 const sendMessage = async (platform: Platform, id: string, message: string): Promise<void> => {
@@ -80,32 +67,41 @@ const sendMessage = async (platform: Platform, id: string, message: string): Pro
 }
 
 export const thanksConfirmation = async (
-  platform: Platform = new Slack(),
-  { team, from, recipients, reason, anonymous, where }: ThanksConfirmationProps,
-  db: Database = new MongoDB(),
+  platform: Platform,
+  { communityId, sender, recipients, text, isAnonymous, channel }: ThanksConfirmationProps,
+  db: Database = Database.make(),
 ) => {
   const createdAt = new Date()
 
-  const recipientsFiltered = recipients.reduce(separateByType(from), { channels: [], users: [] })
+  const recipientsFiltered = recipients.reduce(separateByType(sender), { channels: [], users: [] })
   const recipientIdsFromChannels: Id[][] = await Promise.all(recipientsFiltered.channels.map(getMembersFromChannel(platform)))
   const allRecipientIds: Id[] = recipientIdsFromChannels.reduce(unifyIds, recipientsFiltered.users)
 
-  const uniqueIds: Id[] = allRecipientIds.filter(removeDuplicates<Id>("id")).filter(removeMyself(from))
-  const thanksList: Thanks[] = uniqueIds.map((to: Id) => getThanks(team, from, to, where, reason, anonymous, createdAt))
+  const uniqueIds: Id[] = allRecipientIds.filter(removeDuplicates<Id>("id")).filter(removeMyself(sender))
+  const gratitudeMessages: GratitudeMessage[] = uniqueIds.map((recipient: Id) => getGratitudeMessage(communityId, sender, recipient, channel, text, isAnonymous, createdAt))
 
   try {
-    if (thanksList.length > 0) {
-      await db.saveThanks(thanksList)
+    if (gratitudeMessages.length > 0) {
+      await db.saveGratitudeMessage(gratitudeMessages)
 
-      sendMessagesTo(platform, thanksList)
-      sendMessagesFrom(platform, where, from, recipients, reason, anonymous)
-    } else if (recipients[0].id !== from.id) {
-      sendMessage(platform, from.id, `${i18n.thanks("errorNothingToGive")} ${Emojis.Disappointed}`)
+      sendRecipientMessages(platform, gratitudeMessages)
+      sendSenderMessage(platform, channel, sender, recipients, text, isAnonymous)
+    } else if (recipients[0].id !== sender.id) {
+      sendMessage(platform, sender.id, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
     } else {
-      sendMessage(platform, from.id, `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}`)
+      sendMessage(platform, sender.id, `${i18n.gratitudeMessage("errorMessageSelf")} ${Emojis.FacePalm}`)
     }
   } catch(e) {
-    sendMessage(platform, from.id, `${i18n.thanks("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
+    sendMessage(platform, sender.id, `${i18n.gratitudeMessage("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
     Logger.onDBError(e)
   }
+}
+
+export const removeDuplicates = <T>(field?: keyof T) => (current: T | null, index: number, list: (T | null)[]): boolean => {
+  if (current === null) return false
+  if (field) {
+    const listOfField = list.map((value: T | null) => value?.[field])
+    return removeDuplicates()(current[field], index, listOfField)
+  }
+  return list.indexOf(current) === index
 }

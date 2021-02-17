@@ -1,19 +1,19 @@
 import { I18n } from "../../../i18n/i18n";
 
-export const ViewThanks = (i18n: I18n = new I18n()) => ({
+export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
   type: "modal",
   external_id: "thanks-confirmation",
   title: {
     type: "plain_text",
-    text: i18n.thanksView("title")
+    text: i18n.gratitudeMessageView("title")
   },
   submit: {
     type: "plain_text",
-    text: i18n.thanksView("submit")
+    text: i18n.gratitudeMessageView("submit")
   },
   close: {
     type: "plain_text",
-    text: i18n.thanksView("cancel")
+    text: i18n.gratitudeMessageView("cancel")
   },
   blocks: [
     {
@@ -21,13 +21,13 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
       block_id: "recipients",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.thanksView("recipientsLabel")}*`
+        text: `*${i18n.gratitudeMessageView("recipientsLabel")}*`
       },
       accessory: {
         type: "multi_conversations_select",
         placeholder: {
           type: "plain_text",
-          text: i18n.thanksView("recipientsPlaceholder"),
+          text: i18n.gratitudeMessageView("recipientsPlaceholder"),
           emoji: true
         },
         filter: {
@@ -38,7 +38,7 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
     },
     {
       type: "input",
-      block_id: "reason",
+      block_id: "text",
       element: {
         type: "plain_text_input",
         multiline: true,
@@ -46,7 +46,7 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
       },
       label: {
         type: "plain_text",
-        text: i18n.thanksView("reasonLabel"),
+        text: i18n.gratitudeMessageView("textLabel"),
         emoji: true
       }
     },
@@ -55,7 +55,7 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
       block_id: "options",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.thanksView("optionsLabel")}*`
+        text: `*${i18n.gratitudeMessageView("optionsLabel")}*`
       },
       accessory: {
         type: "checkboxes",
@@ -63,11 +63,11 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
           {
             text: {
               type: "mrkdwn",
-              text: i18n.thanksView("optionsAnonymousLabel")
+              text: i18n.gratitudeMessageView("optionsAnonymousLabel")
             },
             description: {
               type: "mrkdwn",
-              text: `_${i18n.thanksView("optionsAnonymousDescription")}_`
+              text: `_${i18n.gratitudeMessageView("optionsAnonymousDescription")}_`
             },
             value: "anonymous"
           }
@@ -77,16 +77,16 @@ export const ViewThanks = (i18n: I18n = new I18n()) => ({
     },
     {
       type: "section",
-      block_id: "where",
+      block_id: "channel",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.thanksView("whereLabel")}*\n${i18n.thanksView("whereDescription")}`
+        text: `*${i18n.gratitudeMessageView("channelLabel")}*\n${i18n.gratitudeMessageView("channelDescription")}`
       },
       accessory: {
         type: "conversations_select",
         placeholder: {
           type: "plain_text",
-          text: i18n.thanksView("wherePlaceholder"),
+          text: i18n.gratitudeMessageView("channelPlaceholder"),
         },
         filter: {
           include: [ "public" ]

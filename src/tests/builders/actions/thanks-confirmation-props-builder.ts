@@ -2,17 +2,17 @@ import { ThanksConfirmationProps } from "../../../actions/thanks/thanks-confirma
 import { Id } from "../../../models/slack/id";
 
 export const ThanksConfirmationPropsBuilder = ({
-  team = "irrelevant-team-id",
-  from = "irrelevant-from-id",
+  communityId = "irrelevant-community-id",
+  sender = "irrelevant-sender-id",
   recipients = ["irrelevant-recipient-id"],
-  reason = "irrelevant-reason",
-  anonymous = false,
-  where = "irrelevant-where-id",
+  text = "irrelevant-text",
+  isAnonymous = false,
+  channel = "irrelevant-channel-id",
 }): ThanksConfirmationProps => ({
-  team: new Id(team),
-  from: new Id(from),
+  communityId,
+  sender: new Id(sender),
   recipients: recipients.map((recipient) => new Id(recipient)),
-  reason,
-  anonymous,
-  where: new Id(where),
+  text,
+  isAnonymous,
+  channel: new Id(channel),
 })

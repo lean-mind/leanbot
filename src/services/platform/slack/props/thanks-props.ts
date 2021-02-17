@@ -1,9 +1,9 @@
 import { ThanksProps } from "../../../../actions/thanks/thanks";
 import { SlackBody } from "../../../../models/slack/body";
-import { ViewThanks } from "../views";
+import { ViewGratitudeMessage } from "../views";
 
 export const getSlackThanksProps = (body: SlackBody): ThanksProps => {
-  const view = ViewThanks();
+  const view = ViewGratitudeMessage();
   const channelId = body.trigger_id;
 
   return {

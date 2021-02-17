@@ -1,28 +1,21 @@
-import { Thanks } from "../../models/database/thanks"
-import { ThanksBuilder } from "../../tests/builders/models/thanks-builder"
+import { Database, DatabaseName } from "./database"
 import { MongoDB } from "./mongo/mongo"
-import { Database } from "./database"
 
 jest.mock('./mongo/mongo')
 
 describe('Service Database:', () => {
-  const database: Database = new MongoDB()
-
-  it('saveThanks method should called from the database', async () => {
-    const thanksList: Thanks[] = [ThanksBuilder({})]
-
-    await database.saveThanks(thanksList)
-
-    expect(database.saveThanks).toBeCalledWith(thanksList)
+  it('should make MongoDB by default', () => {
+    const database = Database.make()
+    expect(database).toBeInstanceOf(MongoDB)
   })
 
-  it('getThanksFromLastWeek method should called from the database', async () => {
-    const thanksList: Thanks[] = [ThanksBuilder({})]
-    database.getThanksFromLastWeek = jest.fn(async () => thanksList)
+  it('should make MongoDB', () => {
+    const database = Database.make("mongo")
+    expect(database).toBeInstanceOf(MongoDB)
+  })
 
-    const response = await database.getThanksFromLastWeek()
-
-    expect(database.getThanksFromLastWeek).toBeCalled()
-    expect(response).toBe(thanksList)
+  it('should not accept other database names', () => {
+    const make = () => Database.make("anotherdb" as DatabaseName)
+    expect(make).toThrow(Error)
   })
 })

@@ -1,26 +1,26 @@
 {
-  "thanks": {
+  "gratitudeMessage": {
     "anAnonymous": "An anonymous",
     "anonymously": " (anonymously)",
-    "messageTo": "${from} has thanked you:\n> ${reason}",
-    "messageFrom": "You have thanked ${to}:\n> ${reason}",
-    "messageWhere": "${from} thanked ${to}:\n> ${reason}",
+    "recipientMessage": "${sender} has thanked you:\n> ${text}",
+    "senderMessage": "You have thanked ${recipient}:\n> ${text}",
+    "channelMessage": "${sender} thanked ${recipient}:\n> ${text}",
     "error": "Oops, there was an error and the thanks you was not sent...",
-    "errorThanksItself": "Oops, you can't send thanks you to yourself...",
+    "errorMessageSelf": "Oops, you can't send thanks you to yourself...",
     "errorNothingToGive": "Oops, there seems to be no one to thank..."
   },
-  "thanksView": {
+  "gratitudeMessageView": {
     "title": "Thanks!",
     "submit": "Send",
     "cancel": "Cancel",
     "recipientsLabel": "Who?",
     "recipientsPlaceholder": "Select people or channels",
-    "reasonLabel": "Why?",
+    "textLabel": "Why?",
     "optionsLabel": "More options",
     "optionsAnonymousLabel": "Anonymous",
     "optionsAnonymousDescription": "If checked, the mentioned people will receive a thank you from a someone anonymously",
-    "whereLabel": "Do you want it to be published on a channel?",
-    "whereDescription": "* It is optional and the bot has to belong to the channel",
-    "wherePlaceholder": "Channel"
+    "channelLabel": "Do you want it to be published on a channel?",
+    "channelDescription": "* It is optional and the bot has to belong to the channel",
+    "channelPlaceholder": "Channel"
   }
 }

@@ -12,7 +12,7 @@ describe('Service MongoDB: ', () => {
   const mongodb = new MongoDB(instance)
 
   beforeEach(() => {
-    config.mongodb = {
+    config.database.mongodb = {
       database, 
       uri,
     }
@@ -20,6 +20,8 @@ describe('Service MongoDB: ', () => {
     instance.isConnected = jest.fn(() => true)
   })
 
+  it.todo('should get communities')
+  it.todo('should register a community')
   it.todo('should save thanks')
   it.todo('should get a list of thanks from last week')
 }) 

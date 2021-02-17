@@ -5,12 +5,18 @@ import { EndpointInstance, Endpoints } from './endpoints';
 import { Emojis } from '../../models/emojis';
 import { Slack } from '../platform/slack/slack';
 import { Platform } from '../platform/platform';
+import { Community } from '../../models/database/community';
+import { Database } from '../database/database';
 
-const getPlatformData = (request: any, getProps: any) => {
-  if (Slack.getToken(request) === config.slack.signingSecret) {
-    const platform: Platform = new Slack()
+const getPlatformData = async (request: any, getProps: any) => {
+  const db = Database.make()
+
+  if (Slack.getToken(request) === config.platform.slack.signingSecret) {
+    const platform: Platform = Slack.getInstance()
     const data = Slack.getBody(request)
     const props = getProps(platform, data)
+    const community: Community = { id: data.team_id, platform: "slack" }
+    await db.registerCommunity(community)
 
     return { platform, props }
   }
@@ -27,7 +33,7 @@ export class API {
 
     Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
       this.instance.post(name, async (request: any, response: any) => {
-        const data = getPlatformData(request, getProps)
+        const data = await getPlatformData(request, getProps)
         
         if (config.maintenance) {
           return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)

@@ -1,20 +1,20 @@
-import { Thanks } from "../../../models/database/thanks";
+import { GratitudeMessage } from "../../../models/database/gratitude-message";
 import { Id } from "../../../models/slack/id";
 
-export const ThanksBuilder = ({
-  anonymous = false,
+export const GratitudeMessageBuilder = ({
+  communityId = "irrelevant-community-id",
+  sender = new Id("irrelevant-sender-id"),
+  recipient = new Id("irrelevant-recipient-id"),
+  channel = new Id("irrelevant-channel-id"),
+  text = "irrelevant-text",
+  isAnonymous = false,
   createdAt = new Date(),
-  from = new Id("irrelevant-from-id"),
-  to = new Id("irrelevant-to-id"),
-  reason = "irrelevant-reason",
-  team = new Id("irrelevant-team-id"),
-  where = new Id("irrelevant-where-id"),
-}: Partial<Thanks>): Thanks => new Thanks(
-  team, 
-  from, 
-  to, 
-  where, 
-  reason, 
-  anonymous, 
+}: Partial<GratitudeMessage>): GratitudeMessage => new GratitudeMessage(
+  communityId, 
+  sender, 
+  recipient, 
+  channel, 
+  text, 
+  isAnonymous, 
   createdAt
 )

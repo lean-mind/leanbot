@@ -1,43 +1,43 @@
 export type Type = 
-    "thanks" | 
-    "thanksView" | 
-    "thanksSummary"
+    "gratitudeMessage" | 
+    "gratitudeMessageView" | 
+    "gratitudeMessageSummary"
 
 export interface Keys {
-  thanks: ThanksKeys
-  thanksView: ThanksViewKeys
-  thanksSummary: ThanksSummaryKeys
+  gratitudeMessage: GratitudeMessageKeys
+  gratitudeMessageView: GratitudeMessageViewKeys
+  gratitudeMessageSummary: GratitudeMessageSummaryKeys
 }
 
-type ThanksKeys = 
+type GratitudeMessageKeys = 
     "anAnonymous" |
     "anonymously" |
-    "messageTo" |
-    "messageFrom" |
-    "messageWhere" |
+    "recipientMessage" |
+    "senderMessage" |
+    "channelMessage" |
     "error" |
-    "errorThanksItself" |
+    "errorMessageSelf" |
     "errorNothingToGive"
 
-type ThanksViewKeys = 
+type GratitudeMessageViewKeys = 
     "title" | 
     "submit" | 
     "cancel" | 
     "recipientsLabel" | 
     "recipientsPlaceholder" | 
-    "reasonLabel" | 
+    "textLabel" | 
     "optionsLabel" | 
     "optionsAnonymousLabel" | 
     "optionsAnonymousDescription" | 
-    "whereLabel" | 
-    "whereDescription" | 
-    "wherePlaceholder"
+    "channelLabel" | 
+    "channelDescription" | 
+    "channelPlaceholder"
 
-type ThanksSummaryKeys = 
+type GratitudeMessageSummaryKeys = 
     "title" | 
-    "given" | 
-    "noGiven" | 
-    "givenCount" | 
+    "sent" | 
+    "noSent" | 
+    "sentCount" | 
     "received" | 
     "noReceived" | 
     "receivedCount"

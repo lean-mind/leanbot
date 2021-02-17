@@ -38,7 +38,7 @@ export class I18n {
     return `${type}.${key}`
   }
 
-  thanks = this.get<Keys["thanks"]>("thanks")
-  thanksView = this.get<Keys["thanksView"]>("thanksView")
-  thanksSummary = this.get<Keys["thanksSummary"]>("thanksSummary")
+  gratitudeMessage = this.get<Keys["gratitudeMessage"]>("gratitudeMessage")
+  gratitudeMessageView = this.get<Keys["gratitudeMessageView"]>("gratitudeMessageView")
+  gratitudeMessageSummary = this.get<Keys["gratitudeMessageSummary"]>("gratitudeMessageSummary")
 }

@@ -4,7 +4,7 @@ import { ThanksPropsBuilder } from "../../tests/builders/actions/thanks-props-bu
 import { thanks, ThanksProps } from "./thanks";
 
 describe('Actions Thanks', () => {
-  const platform: Platform = new Slack()
+  const platform: Platform = Slack.getInstance()
     
   it('should open interactive in platform', () => {
     const props: ThanksProps = ThanksPropsBuilder({})

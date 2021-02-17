@@ -32,10 +32,10 @@ export const getSlackInteractiveProps = (body: SlackBody): InteractiveProps | un
 }
 
 const getThanksConfirmationProps = (body: SlackBody): ThanksConfirmationProps => ({
-  team: new Id(body.payload.team.id),
-  from: new Id(body.payload.user.id),
+  communityId: body.payload.team.id,
+  sender: new Id(body.payload.user.id),
   recipients: body.payload.view.state.values.recipients.action.selected_conversations.filter(removeDuplicates<string>()).map((toId: string) => new Id(toId)),
-  reason: body.payload.view.state.values.reason.action.value.split("\n").join("\n>"),
-  anonymous: body.payload.view.state.values.options.action.selected_options.some(({ value }) => value === "anonymous"),
-  where: new Id(body.payload.view.state.values.where.action.selected_conversation),
+  channel: new Id(body.payload.view.state.values.channel.action.selected_conversation),
+  text: body.payload.view.state.values.text.action.value.split("\n").join("\n>"),
+  isAnonymous: body.payload.view.state.values.options.action.selected_options.some(({ value }) => value === "anonymous"),
 })

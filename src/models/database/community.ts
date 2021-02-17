@@ -1,6 +1,9 @@
 import { PlatformName } from "../../services/platform/platform";
 
-export interface Community {
-  id: string,
-  platform: PlatformName,
+export class Community {
+  constructor(
+    public id: string,
+    public platform: PlatformName,
+    public deletedAt?: Date,
+  ) { }
 }

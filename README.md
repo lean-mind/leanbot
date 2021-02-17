@@ -8,7 +8,6 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 - [Instalación](#instalación)
   - [Variables de entorno](#variables-de-entorno)
   - [Bot](#bot)
-  - [MongoDB](#mongodb)
   - [TheCatAPI](#thecatapi)
 - [Scripts](#scripts)
 - [Trabajo en local](#trabajo-en-local)
@@ -36,11 +35,7 @@ MAINTENANCE            // Si está en true, las peticiones que se hagan a la Api
 
 # Slack
 SLACK_SIGNING_SECRET   // El 'Signing secret' de slack, sin este secret no se ejecutará ningún comando
-
-# Bot
-BOT_TOKEN              // Token de la aplicación de Slack (Bot Clasico) empieza por "xoxb"
-BOT_NAME               // Nombre que tendrá el Bot por defecto
-BOT_DISCONNECT         // El estado del bot, on u off, por defecto false, es decir, conectado
+SLACK_TOKEN            // Token de la aplicación de Slack empieza por "xoxb"
 
 # MongoDB
 MONGODB_DATABASE       // El nombre de la base de datos que se utilizará en mongodb
@@ -124,10 +119,12 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
   - **file**: Es el servicio que se encargará de escribir en ficheros
   - **i18n**: Aquí se encontrará todo lo relacionado con los textos y traducciones de la aplicación
   - **logger**: Aquí están todos los logs para tener un control de lo que va sucediendo en la aplicación
+  - **platform**: Aquí están todas las plataformas en las que se utiliza o se podría utilizar el bot
+    - **slack**: Es el que conecta con slack a través de los endpoints
+      - **methods**: Aquí estarán todos los métodos que utilizaremos de slack
+      - **props**: Son los métodos para recuperar las propiedades de cada acción
+      - **views**: Son objetos que slack reconocerá como vistas
   - **schedule**: Es donde se crearán las fechas o intervalos de las acciones programadas
-  - **slack**: Es el que conecta con slack a través de los endpoints
-    - **methods**: Aquí estarán todos los métodos que utilizaremos de slack
-    - **views**: Son objetos que slack reconocerá como vistas
 - **tests**: Aquí están principalmente los builders de los tests que están con sus respectivos servicios
 
 ----------------

@@ -8,16 +8,27 @@ import { getSlackThanksProps } from "./props/thanks-props"
 
 export type Request = AxiosInstance
 
-export class Slack implements Platform {
-  constructor(
+export class Slack extends Platform {
+  private static instance: Slack
+
+  static getInstance = (api?: any) => {
+    if (!Slack.instance || api) {
+      Slack.instance = new Slack(api)
+    }
+    return Slack.instance
+  }
+
+  private constructor(
     private api = axios.create({
       baseURL: "https://slack.com/api",
       headers: {
         "Content-type": "application/json; charset=utf-8",
-        "Authorization": `Bearer ${config.slack.token}`
+        "Authorization": `Bearer ${config.platform.slack.token}`
       }
     })
-  ) { }
+  ) { 
+    super()
+  }
 
   static getBody = (data: any) => {
     const payload = data.body.payload ? JSON.parse(data.body.payload) : {}
@@ -48,3 +59,5 @@ export class Slack implements Platform {
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps
 }
+
+Platform.dictionary["slack"] = Slack.getInstance()

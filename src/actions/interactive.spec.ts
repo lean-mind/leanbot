@@ -8,7 +8,7 @@ jest.mock('./thanks')
 jest.mock('../services/platform/slack/slack')
 
 describe('Actions Interactive', () => {
-  const platform: Platform = new Slack()
+  const platform: Platform = Slack.getInstance()
 
   it('without matching', () => {
     const props: InteractiveProps = InteractivePropsBuilder({})

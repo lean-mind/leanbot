@@ -7,7 +7,7 @@ describe('Service Logger: ', () => {
   let info: any
   let error: any
   let now: any
-  const date = new Date(1990, 12, 31, 0, 0, 0, 0)
+  const date = new Date(1990, 12, 31)
 
   beforeAll(() => {
     info = jest.spyOn(console, "info").mockImplementation(() => {})

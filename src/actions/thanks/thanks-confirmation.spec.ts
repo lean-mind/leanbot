@@ -1,6 +1,5 @@
 import { Emojis } from "../../models/emojis"
 import { Database } from "../../services/database/database"
-import { MongoDB } from "../../services/database/mongo/mongo"
 import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
@@ -9,17 +8,17 @@ import { thanksConfirmation, ThanksConfirmationProps } from "./thanks-confirmati
 
 describe('Actions Thanks Confirmation', () => {
   const fromId = "U-from-id"
-  const reason = "reason"
+  const text = "text"
   const i18n = new I18n()
 
   let db: Database
   let platform: Platform
 
   beforeEach(() => {
-    db = new MongoDB()
-    db.saveThanks = jest.fn()
+    db = Database.make()
+    db.saveGratitudeMessage = jest.fn()
 
-    platform = new Slack()
+    platform = Slack.getInstance()
     platform.postMessage = jest.fn()
     platform.getMembersId = jest.fn(async () => (["U-member-id-1"]))
   })
@@ -27,13 +26,13 @@ describe('Actions Thanks Confirmation', () => {
   it('should not give thanks to itself', async () => {
     const myselfId = "U-myself-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({
-      from: myselfId,
+      sender: myselfId,
       recipients: [myselfId]
     })
 
     await thanksConfirmation(platform, props, db)
     expect(platform.postMessage).toBeCalledTimes(1) 
-    expect(platform.postMessage).toBeCalledWith(myselfId, `${i18n.thanks("errorThanksItself")} ${Emojis.FacePalm}`)
+    expect(platform.postMessage).toBeCalledWith(myselfId, `${i18n.gratitudeMessage("errorMessageSelf")} ${Emojis.FacePalm}`)
   })
 
   it('should not give thanks to itself from channel', async () => {
@@ -41,9 +40,9 @@ describe('Actions Thanks Confirmation', () => {
     const anotherId = "U-another-id"
     const toId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: myselfId,
+      sender: myselfId,
       recipients: [toId],
-      reason,
+      text,
     })
      
     platform.getMembersId = jest.fn(async () => ([anotherId, myselfId]))
@@ -51,14 +50,14 @@ describe('Actions Thanks Confirmation', () => {
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(2)
-    expect(platform.postMessage).nthCalledWith(1, anotherId, i18n.thanks("messageTo", { from: `<@${myselfId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(2, myselfId, i18n.thanks("messageFrom", { to: `<#${toId}>`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, anotherId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${myselfId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(2, myselfId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${toId}>`, text }))
   })
 
   it('should not give thanks to an empty channel', async () => {
     const toId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [toId],
     })
      
@@ -68,16 +67,16 @@ describe('Actions Thanks Confirmation', () => {
 
     expect(platform.getMembersId).toBeCalledTimes(1)
     expect(platform.postMessage).toBeCalledTimes(1)
-    expect(platform.postMessage).toBeCalledWith(fromId, `${i18n.thanks("errorNothingToGive")} ${Emojis.Disappointed}`)
+    expect(platform.postMessage).toBeCalledWith(fromId, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
   })
 
   it('should not notify twice to a person', async () => {
     const toId = "U-to-id"
     const channelId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [toId, channelId],
-      reason
+      text
     })
      
     platform.getMembersId = jest.fn(async () => ([toId]))
@@ -85,25 +84,25 @@ describe('Actions Thanks Confirmation', () => {
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(2)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(2, fromId, i18n.thanks("messageFrom", { to: `<@${toId}>, <#${channelId}>`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(2, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>, <#${channelId}>`, text }))
   })
   
   it('should give thanks to many people', async () => {
     const personId1 = "U-to-id-1"
     const personId2 = "U-to-id-2"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [personId1, personId2],
-      reason
+      text
     })
 
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.thanks("messageFrom", { to: `<@${personId1}>, <@${personId2}>`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${personId1}>, <@${personId2}>`, text }))
   })
 
   it('should give thanks to all channel members', async () => {
@@ -111,9 +110,9 @@ describe('Actions Thanks Confirmation', () => {
     const personId2 = "U-to-id-2"
     const channelId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [channelId],
-      reason
+      text
     })
      
     platform.getMembersId = jest.fn(async () => ([personId1, personId2]))
@@ -121,45 +120,45 @@ describe('Actions Thanks Confirmation', () => {
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.thanks("messageFrom", { to: `<#${channelId}>`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${channelId}>`, text }))
   })
   
   it('should be able to publish in a channel', async () => {
     const toId = "U-to-id"
-    const channelWhereId = "C-channel-id"
+    const channelId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [toId],
-      where: channelWhereId,
-      reason,
+      channel: channelId,
+      text,
     })
 
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.thanks("messageTo", { from: `<@${fromId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(2, channelWhereId, i18n.thanks("messageWhere", { from: `<@${fromId}>`, to: `<@${toId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.thanks("messageFrom", { to: `<@${toId}>`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: `<@${fromId}>`, recipient: `<@${toId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>`, text }))
   })
 
   it('should be able to give thanks anonymously', async () => {
     const toId = "U-to-id"
-    const channelWhereId = "C-channel-id"
+    const channelId = "C-channel-id"
     const props: ThanksConfirmationProps = ThanksConfirmationPropsBuilder({ 
-      from: fromId,
+      sender: fromId,
       recipients: [toId],
-      anonymous: true,
-      where: channelWhereId,
-      reason,
+      isAnonymous: true,
+      channel: channelId,
+      text,
     })
 
     await thanksConfirmation(platform, props, db)
 
     expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.thanks("messageTo", { from: i18n.thanks("anAnonymous"), reason }))
-    expect(platform.postMessage).nthCalledWith(2, channelWhereId, i18n.thanks("messageWhere", { from: i18n.thanks("anAnonymous"), to: `<@${toId}>`, reason }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.thanks("messageFrom", { to: `<@${toId}>${i18n.thanks("anonymously")}`, reason }))
+    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: i18n.gratitudeMessage("anAnonymous"), text }))
+    expect(platform.postMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: i18n.gratitudeMessage("anAnonymous"), recipient: `<@${toId}>`, text }))
+    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>${i18n.gratitudeMessage("anonymously")}`, text }))
   })
 })

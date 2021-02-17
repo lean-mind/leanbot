@@ -5,15 +5,15 @@ type CallbackFunction = () => void;
 export class Schedule {
   private jobs: Job[] = []
 
-  constructor(
+  constructor (
     private schedule = scheduleJob
   ) { }
 
-  private add = (when: string) => (callback: CallbackFunction) => {
+  private add = (when: any) => (callback: CallbackFunction) => {
     this.jobs.push(this.schedule(when, callback))
   }
 
-  everyMonday = this.add('0 7 * * 1')
+  everyMonday = this.add('0 8 * * 1')
 
   finish = () => {
     this.jobs.forEach((job: Job) => job.cancel())

@@ -5,7 +5,7 @@ jest.mock('axios')
 
 describe('Service Slack:', () => {
   const axiosMock = axios
-  const slackMock = new Slack(axiosMock);
+  const slackMock = Slack.getInstance(axiosMock)
 
   describe('chat.postMessage method', () => {
     const endpoint = "/chat.postMessage"
