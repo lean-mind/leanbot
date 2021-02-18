@@ -50,10 +50,10 @@ describe('Service Logger: ', () => {
   })
 
   describe('should print error in console and save in file', () => {
-    const errorToTest =  Error("Irrelevant error")
+    const errorToTest = Error("Irrelevant error")
     
     it('onError', () => {
-      const messageExpected = `${getDateFormatted(date)} Oops! There was an error: ` + errorToTest
+      const messageExpected = `${getDateFormatted(date)} Oops! There was an error: ` + JSON.stringify(errorToTest)
       Logger.onError(errorToTest)
   
       expect(error).toBeCalledWith(messageExpected)
@@ -61,7 +61,7 @@ describe('Service Logger: ', () => {
     })
     
     it('onDbError', () => {
-      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing or readind database: ` + errorToTest
+      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing or readind database: ` + JSON.stringify(errorToTest)
       Logger.onDBError(errorToTest)
   
       expect(error).toBeCalledWith(messageExpected)
@@ -70,7 +70,7 @@ describe('Service Logger: ', () => {
     
     it('onFileReadError', () => {
       const file = "irrelevant-file.log"
-      const messageExpected = `${getDateFormatted(date)} Oops! There was an error reading ${file} file: ` + errorToTest
+      const messageExpected = `${getDateFormatted(date)} Oops! There was an error reading ${file} file: ` + JSON.stringify(errorToTest)
       Logger.onFileReadError(file, errorToTest)
   
       expect(error).toBeCalledWith(messageExpected)
@@ -79,7 +79,7 @@ describe('Service Logger: ', () => {
     
     it('onFileWriteError', () => {
       const file = "irrelevant-file.log"
-      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing ${file} file: ` + errorToTest
+      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing ${file} file: ` + JSON.stringify(errorToTest)
       Logger.onFileWriteError(file, errorToTest)
   
       expect(error).toBeCalledWith(messageExpected)

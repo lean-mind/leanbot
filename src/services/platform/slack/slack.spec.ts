@@ -7,6 +7,9 @@ describe('Service Slack:', () => {
   const axiosMock = axios
   const slackMock = Slack.getInstance(axiosMock)
 
+  it.todo('conversations.list method')
+  it.todo('users.info method')
+
   describe('chat.postMessage method', () => {
     const endpoint = "/chat.postMessage"
     const channel = "irrelevant-channel"
@@ -51,7 +54,7 @@ describe('Service Slack:', () => {
     const trigger_id = "irrelevant-trigger-id"
 
     it('with success response', () => {
-      slackMock.openInteractive(trigger_id, view)
+      slackMock.openInteractive(view, trigger_id)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { 
         view: JSON.stringify(view), 

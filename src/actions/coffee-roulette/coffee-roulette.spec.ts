@@ -1,6 +1,34 @@
+import { Platform } from "../../services/platform/platform"
+import { Slack } from "../../services/platform/slack/slack"
+import { CoffeeRoulettePropsBuilder } from "../../tests/builders/actions/coffee-roulette-props-builder"
+import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
+
 describe('Coffee roulette',() => {
+
+  let platform: Platform
+  let coffeeRouletteProps: CoffeeRouletteProps
+
+  const randomUserId = "irrelevant-random-user-id"
+
+  beforeEach(() => {
+    platform = Slack.getInstance()
+    platform.getUserInfo = jest.fn(async () => ({
+      id: randomUserId,
+      name: "irrelevant-name",
+      isBot: false
+    }))
+    platform.postMessage = jest.fn()
+    coffeeRouletteProps = CoffeeRoulettePropsBuilder({})
+  })
+
   describe('command', () => {
-    it.todo('should ask another user for a coffee')
+    it('should ask another user for a coffee', async () => {
+      await coffeeRoulette([randomUserId])(platform, coffeeRouletteProps)
+      expect(platform.postMessage).toBeCalledWith(
+        randomUserId, 
+        `<@${coffeeRouletteProps.userId}> te ha invitado a tomarte un café`
+      )
+    })
     it.todo('should ask another user for a coffee with message')    
     it.todo('should not ask the user/yourself for a coffee')
     it.todo('should inform you if no one is available')
