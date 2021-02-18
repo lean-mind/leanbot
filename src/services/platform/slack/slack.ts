@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { SlackBody } from "../../../models/slack/body"
 import { Platform } from "../platform"
-import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers } from "./methods"
+import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
@@ -57,17 +57,10 @@ export class Slack extends Platform {
     await chatPostMessage(this.api, this.headers.bot)(channelId, { blocks })
   }
 
-  getCommunityMembers = (communityId: string) => {
-    return getTeamMembers(this.api, this.headers.user)(communityId)
-  }
-
-  getMembersByChannelId = (channelId: string) => {
-    return getConversationMembers(this.api, this.headers.bot)(channelId)
-  }
-
-  openInteractive = async (channelId: string, view: any) => { 
-    await viewsOpen(this.api, this.headers.bot)(view, channelId)
-  }
+  getCommunityMembers = getTeamMembers(this.api, this.headers.bot)
+  getMembersByChannelId = getConversationMembers(this.api, this.headers.bot)
+  openInteractive = viewsOpen(this.api, this.headers.bot)
+  getUserInfo = getUserInfo(this.api, this.headers.bot)
 
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps

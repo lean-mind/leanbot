@@ -1,18 +1,22 @@
 import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
+import { getConversationMembers } from "./conversation-members"
 
 export const getTeamMembers = (request: Request, headers: any) => async (teamId: string): Promise<string[]> => {
-  const { data } = await request.get("/admin.users.list", {
+  const { data } = await request.get("/conversations.list", {
     headers,
     params: {
       team_id: teamId,
     },
   })
-  console.log(data)
- 
+
   if (data.ok) {
-    Logger.log(`/admin.users.list -> { team_id: "${teamId}" }`)
-    return data.users = data.users.filter((user) => !user.is_bot).map((user) => user.id)
+    Logger.log(`/conversations.list -> { team_id: "${teamId}" }`)
+    const generalChannelId: string = data.channels.find(({ is_general }) => is_general)?.id ?? ""
+    const teamMembers = getConversationMembers(request, headers)(generalChannelId)
+    return teamMembers
   }
+  Logger.onError(data)
+  // TODO: log !data.ok
   return []
 }

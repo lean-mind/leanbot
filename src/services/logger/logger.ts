@@ -13,7 +13,7 @@ export class Logger {
   }
 
   private static error = (message: String, error?: any) => {
-    const log = `${getDateFormatted()} ${message}` + (error ? `: ${error}` : "");
+    const log = `${getDateFormatted()} ${message}` + (error ? `: ${JSON.stringify(error)}` : "");
     console.error(log);
     File.write(log, LogFiles.error);
     Logger.info(`${message} (see "${LogFiles.error}" file for more info)`, false);

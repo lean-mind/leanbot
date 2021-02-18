@@ -22,6 +22,7 @@ export abstract class Platform {
   abstract getCommunityMembers: (communityId: string) => Promise<string[]>
   abstract getMembersByChannelId: (channelId: string) => Promise<string[]>
   abstract openInteractive: (channelId: string, view: any) => Promise<void>
+  abstract getUserInfo: (userId: string) => Promise<any>
 
   abstract getThanksProps: (data: any) => ThanksProps
   abstract getInteractiveProps: (data: any) => InteractiveProps | undefined

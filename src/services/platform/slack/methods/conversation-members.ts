@@ -9,6 +9,10 @@ export const getConversationMembers = (request: Request, headers: any) => async 
     },
   })
 
-  Logger.log(`/conversations.members -> { channel: "${channel}" }`)
-  return data.ok ? data.members : []
+  if (data.ok) {
+    Logger.log(`/conversations.members -> { channel: "${channel}" }`)
+    return data.members
+  }
+  Logger.onError(data)
+  return []
 }
