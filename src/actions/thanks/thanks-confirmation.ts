@@ -27,7 +27,7 @@ const separateByType = (sender: Id) => (recipientsFiltered: any, currentRecipien
 }
 
 const getMembersFromChannel = (platform: Platform) => async (currentChannel: Id) => {
-  const members = await platform.getMembersId(currentChannel.id)
+  const members = await platform.getMembersByChannelId(currentChannel.id)
 
   return members.map((member: string) => new Id(member))
 }

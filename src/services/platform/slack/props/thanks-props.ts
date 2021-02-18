@@ -3,8 +3,8 @@ import { SlackBody } from "../../../../models/slack/body";
 import { ViewGratitudeMessage } from "../views";
 
 export const getSlackThanksProps = (body: SlackBody): ThanksProps => {
-  const view = ViewGratitudeMessage();
-  const channelId = body.trigger_id;
+  const view = ViewGratitudeMessage()
+  const channelId = body.trigger_id
 
   return {
     channelId,

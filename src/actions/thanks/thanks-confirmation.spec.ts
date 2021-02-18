@@ -20,7 +20,7 @@ describe('Actions Thanks Confirmation', () => {
 
     platform = Slack.getInstance()
     platform.postMessage = jest.fn()
-    platform.getMembersId = jest.fn(async () => (["U-member-id-1"]))
+    platform.getMembersByChannelId = jest.fn(async () => (["U-member-id-1"]))
   })
 
   it('should not give thanks to itself', async () => {
@@ -45,7 +45,7 @@ describe('Actions Thanks Confirmation', () => {
       text,
     })
      
-    platform.getMembersId = jest.fn(async () => ([anotherId, myselfId]))
+    platform.getMembersByChannelId = jest.fn(async () => ([anotherId, myselfId]))
 
     await thanksConfirmation(platform, props, db)
 
@@ -61,11 +61,11 @@ describe('Actions Thanks Confirmation', () => {
       recipients: [toId],
     })
      
-    platform.getMembersId = jest.fn(async () => ([]))
+    platform.getMembersByChannelId = jest.fn(async () => ([]))
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.getMembersId).toBeCalledTimes(1)
+    expect(platform.getMembersByChannelId).toBeCalledTimes(1)
     expect(platform.postMessage).toBeCalledTimes(1)
     expect(platform.postMessage).toBeCalledWith(fromId, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
   })
@@ -79,7 +79,7 @@ describe('Actions Thanks Confirmation', () => {
       text
     })
      
-    platform.getMembersId = jest.fn(async () => ([toId]))
+    platform.getMembersByChannelId = jest.fn(async () => ([toId]))
 
     await thanksConfirmation(platform, props, db)
 
@@ -115,7 +115,7 @@ describe('Actions Thanks Confirmation', () => {
       text
     })
      
-    platform.getMembersId = jest.fn(async () => ([personId1, personId2]))
+    platform.getMembersByChannelId = jest.fn(async () => ([personId1, personId2]))
 
     await thanksConfirmation(platform, props, db)
 
