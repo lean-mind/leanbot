@@ -13,12 +13,13 @@ export const coffeeRoulette = (communityMembers: string[] = []) => async (platfo
   }
   console.log("-------->", communityMembers)
 
-  const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)]
-
-  const randomUserInfo = platform.getUserInfo(randomUserId)
+  const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)] 
+  console.log("userid:", randomUserId)
+  const randomUserInfo = await platform.getUserInfo(randomUserId)
   // get info del random user
   // si es bot || soy yo
-  if (randomUserInfo.isBot || randomUserId === data.userId) {
+  console.log(randomUserInfo)
+  if (randomUserInfo?.isBot || randomUserId === data.userId) {
     communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
     return coffeeRoulette(communityMembers)(platform, data)
   }

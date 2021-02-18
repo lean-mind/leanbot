@@ -2,6 +2,7 @@ import { CoffeeRouletteProps } from "../../actions/coffee-roulette/coffee-roulet
 import { InteractiveProps } from "../../actions/interactive"
 import { ThanksProps } from "../../actions/thanks/thanks"
 import { Logger } from "../logger/logger"
+import { UserInfo } from "./slack/methods/get-user-info"
 
 export type PlatformName = "slack"
 
@@ -22,7 +23,7 @@ export abstract class Platform {
   abstract getCommunityMembers: (communityId: string) => Promise<string[]>
   abstract getMembersByChannelId: (channelId: string) => Promise<string[]>
   abstract openInteractive: (channelId: string, view: any) => Promise<void>
-  abstract getUserInfo: (userId: string) => Promise<any>
+  abstract getUserInfo: (userId: string) => Promise<UserInfo | undefined>
 
   abstract getThanksProps: (data: any) => ThanksProps
   abstract getInteractiveProps: (data: any) => InteractiveProps | undefined
