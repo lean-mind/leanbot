@@ -19,12 +19,20 @@ export class Slack extends Platform {
     return Slack.instance
   }
 
+  private headers = {
+    bot: {
+      Authorization: `Bearer ${config.platform.slack.token}` 
+    },
+    user: {
+      Authorization: `Bearer ${config.platform.slack.userToken}` 
+    }
+  }
+  
   private constructor(
     private api = axios.create({
       baseURL: "https://slack.com/api",
       headers: {
         "Content-type": "application/json; charset=utf-8",
-        "Authorization": `Bearer ${config.platform.slack.token}`
       }
     })
   ) { 
@@ -42,23 +50,23 @@ export class Slack extends Platform {
   }
 
   postMessage = async (channelId: string, message: string) => {
-    await chatPostMessage(this.api)(channelId, { text: message })
+    await chatPostMessage(this.api, this.headers.bot)(channelId, { text: message })
   }
 
   postBlocks = async (channelId: string, blocks: any[]) => {
-    await chatPostMessage(this.api)(channelId, { blocks })
+    await chatPostMessage(this.api, this.headers.bot)(channelId, { blocks })
   }
 
-  getCommunityMembers = async (communityId: string) => {
-    return getTeamMembers(this.api)(communityId)
+  getCommunityMembers = (communityId: string) => {
+    return getTeamMembers(this.api, this.headers.user)(communityId)
   }
 
   getMembersByChannelId = (channelId: string) => {
-    return getConversationMembers(this.api)(channelId)
+    return getConversationMembers(this.api, this.headers.bot)(channelId)
   }
 
   openInteractive = async (channelId: string, view: any) => { 
-    await viewsOpen(this.api)(view, channelId)
+    await viewsOpen(this.api, this.headers.bot)(view, channelId)
   }
 
   getThanksProps = getSlackThanksProps

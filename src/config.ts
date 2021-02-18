@@ -14,6 +14,7 @@ interface Config {
 
 interface PlatformConfig {
   readonly token: string
+  readonly userToken: string
   readonly signingSecret: string
 }
 
@@ -29,6 +30,7 @@ export const config: Config = {
   platform: {
     slack: {
       token: process.env.SLACK_TOKEN || "xoxb-unknown",
+      userToken: process.env.SLACK_USER_TOKEN || "xoxp-unknown",
       signingSecret: process.env.SLACK_SIGNING_SECRET || "secret-unknown",
     }
   },
