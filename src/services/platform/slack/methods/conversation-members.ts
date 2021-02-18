@@ -1,7 +1,7 @@
 import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
 
-export const conversationsMembers = (request: Request) => async (channel: string): Promise<string[]> => {
+export const getConversationMembers = (request: Request) => async (channel: string): Promise<string[]> => {
   const { data } = await request.get("/conversations.members", {
     params: {
       channel,

@@ -28,7 +28,7 @@ describe('Service Slack:', () => {
       axiosMock.get = jest.fn(async (_, __): Promise<any> => ({ 
         data: { ok: true, members: membersExpected } 
       }))
-      const members = await slackMock.getMembersId(channel)
+      const members = await slackMock.getMembersByChannelId(channel)
   
       expect(axiosMock.get).toBeCalledWith(endpoint, { params: { channel }})
       expect(members.length).toBe(membersExpected.length)
@@ -38,14 +38,14 @@ describe('Service Slack:', () => {
       axiosMock.get = jest.fn(async (_, __): Promise<any> => ({ 
         data: { ok: false } 
       }))
-      const members = await slackMock.getMembersId(channel)
+      const members = await slackMock.getMembersByChannelId(channel)
       
       expect(axiosMock.get).toBeCalledWith(endpoint, { params: { channel }})
       expect(members.length).toBe(0)
     })
   })
   
-  describe('views.open method', () => {
+  describe('views-open method', () => {
     const endpoint = "/views.open"
     const view = { irrelevant: "value" }
     const trigger_id = "irrelevant-trigger-id"

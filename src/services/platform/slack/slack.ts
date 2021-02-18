@@ -2,7 +2,8 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { SlackBody } from "../../../models/slack/body"
 import { Platform } from "../platform"
-import { conversationsMembers, chatPostMessage, viewsOpen } from "./methods"
+import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers } from "./methods"
+import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
 
@@ -48,8 +49,12 @@ export class Slack extends Platform {
     await chatPostMessage(this.api)(channelId, { blocks })
   }
 
-  getMembersId = async (channelId: string) => {
-    return await conversationsMembers(this.api)(channelId)
+  getCommunityMembers = async (communityId: string) => {
+    return getTeamMembers(this.api)(communityId)
+  }
+
+  getMembersByChannelId = (channelId: string) => {
+    return getConversationMembers(this.api)(channelId)
   }
 
   openInteractive = async (channelId: string, view: any) => { 
@@ -58,6 +63,7 @@ export class Slack extends Platform {
 
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps
+  getCoffeeRouletteProps = getSlackCoffeeRouletteProps
 }
 
 Platform.dictionary["slack"] = Slack.getInstance()
