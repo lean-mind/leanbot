@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { Message, View, InteractiveView } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
+import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
 import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
@@ -10,13 +11,40 @@ import { getSlackThanksProps } from "./props/thanks-props"
 
 export type Request = AxiosInstance
 
-export interface SlackView extends View {
-  blocks: any[]
+// TODO: move to a different file
+export class SlackView extends View {
+  constructor(
+    public blocks: any[]
+  ) { 
+    super()
+  }
 }
 
-export interface SlackInteractiveView extends InteractiveView {
-  type: string,
-  blocks: any[]
+// TODO: move to a different file
+export class SlackInteractiveView extends InteractiveView {
+  public type: string
+  public external_id: string
+  public title: any
+  public submit: any
+  public close: any
+  public blocks: any[]
+
+  constructor({
+    type = "",
+    externalId = "",
+    title = {},
+    submit = {},
+    close = {},
+    blocks = [] as any[],
+  }) { 
+    super()
+    this.type = type
+    this.external_id = externalId
+    this.title = title
+    this.submit = submit
+    this.close = close
+    this.blocks = blocks
+  }
 }
 
 export class Slack extends Platform {
@@ -67,11 +95,8 @@ export class Slack extends Platform {
     } else if (message instanceof InteractiveView) {
       await viewsOpen(this.api, Slack.headers.bot)(message as SlackInteractiveView, channelId)
     } else {
-      console.log("NO ENTRO EN NINGUN LADO :(")
+      Logger.onError('Unidentifiable message type')
     }
-    console.log("--> message is string? ", typeof message === "string")
-    console.log("--> message is View? ", message instanceof View)
-    console.log("--> message is InteractiveView? ", message instanceof InteractiveView)
   }
 
   getCommunityMembers = getTeamMembers(this.api, Slack.headers.bot)

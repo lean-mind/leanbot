@@ -1,6 +1,7 @@
 import { GratitudeSummaryMessage } from "../../../../models/database/gratitude-message";
 import { I18n } from "../../../i18n/i18n";
 import { getDateFormatted } from "../../../logger/logger";
+import { SlackView } from "../slack";
 
 interface ViewGratitudeSummaryProps {
   image: string,
@@ -12,11 +13,11 @@ const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
   return `• *${users.map(({ id }) => `<@${id}>`).join(", ")}* \`${getDateFormatted(createdAt)}\`: ${text}`;
 }
 
-export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSummaryProps, i18n: I18n = new I18n()) => {
+export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSummaryProps, i18n: I18n = new I18n()): SlackView => {
   const hasSent = sent !== undefined && sent.length > 0
   const hasReceived = received !== undefined && received.length > 0
 
-  return [
+  const blocks = [
     {
       type: "image",
       image_url: image,
@@ -64,4 +65,6 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       ]
     }
   ]
+
+  return new SlackView(blocks)
 }

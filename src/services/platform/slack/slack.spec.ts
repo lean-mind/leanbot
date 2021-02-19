@@ -5,7 +5,7 @@ import { SlackBodyBuilder } from './../../../tests/builders/models/slack/slack-b
 import { CoffeeRouletteProps } from './../../../actions/coffee-roulette/coffee-roulette';
 import { getSlackThanksConfirmationProps, getSlackThanksProps } from './props/thanks-props';
 import { UserInfo } from './methods/get-user-info';
-import { Slack, SlackView } from "./slack"
+import { Slack, SlackInteractiveView, SlackView } from "./slack"
 import axios from 'axios'
 import { getSlackCoffeeRouletteProps } from './props/coffee-roulette-props';
 import { ThanksProps } from '../../../actions/thanks/thanks';
@@ -34,7 +34,7 @@ describe('Slack service:', () => {
   describe('sendBlocks method', () => {
     const endpoint = "/chat.postMessage"
     const channel = "irrelevant-channel"
-    const view: View = { blocks: [{ message: "irrelevant-text2" }]}
+    const view: View = new SlackView([{ message: "irrelevant-text2" }])
 
     it('should send a message with blocks', () => {
       slackMock.sendMessage(channel, view)
@@ -104,7 +104,9 @@ describe('Slack service:', () => {
   // describe('sendInteractiveBlocks method', () => {
   describe('openInteractive method', () => {
     const endpoint = "/views.open"
-    const view = { irrelevant: "value" }
+    const view: SlackInteractiveView = new SlackInteractiveView({
+      blocks: [{value: "irrelevant-value"}]
+    })
     const trigger_id = "irrelevant-trigger-id"
 
     it('with success response', () => {

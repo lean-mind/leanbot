@@ -1,21 +1,22 @@
 import { I18n } from "../../../i18n/i18n";
+import { SlackInteractiveView } from "../slack";
 
-export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
-  type: "modal",
-  external_id: "thanks-confirmation",
-  title: {
+export const ViewGratitudeMessage = (i18n: I18n = new I18n()): SlackInteractiveView => {
+  const type = "modal"
+  const externalId = "thanks-confirmation"
+  const title = {
     type: "plain_text",
     text: i18n.gratitudeMessageView("title")
-  },
-  submit: {
+  }
+  const submit = {
     type: "plain_text",
     text: i18n.gratitudeMessageView("submit")
-  },
-  close: {
+  }
+  const close = {
     type: "plain_text",
     text: i18n.gratitudeMessageView("cancel")
-  },
-  blocks: [
+  }
+  const blocks = [
     {
       type: "section",
       block_id: "recipients",
@@ -95,4 +96,13 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
       }
     }
   ]
-})
+  
+  return new SlackInteractiveView({
+    type,
+    externalId,
+    title,
+    submit,
+    close,
+    blocks,
+  })
+}
