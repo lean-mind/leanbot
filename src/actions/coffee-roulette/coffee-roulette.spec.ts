@@ -17,14 +17,14 @@ describe('Coffee roulette',() => {
       name: "irrelevant-name",
       isBot: false
     }))
-    platform.postMessage = jest.fn()
+    platform.sendMessage = jest.fn()
     coffeeRouletteProps = CoffeeRoulettePropsBuilder({})
   })
 
   describe('command', () => {
     it('should ask another user for a coffee', async () => {
       await coffeeRoulette([randomUserId])(platform, coffeeRouletteProps)
-      expect(platform.postMessage).toBeCalledWith(
+      expect(platform.sendMessage).toBeCalledWith(
         randomUserId, 
         `<@${coffeeRouletteProps.userId}> te ha invitado a tomarte un café`
       )

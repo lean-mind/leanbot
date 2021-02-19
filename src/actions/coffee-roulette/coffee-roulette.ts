@@ -17,5 +17,5 @@ export const coffeeRoulette = (communityMembers: string[] = []) => async (platfo
     communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
     return coffeeRoulette(communityMembers)(platform, data)
   }
-  platform.postMessage(randomUserId, `<@${data.userId}> te ha invitado a tomarte un café`)
+  platform.sendMessage(randomUserId, `<@${data.userId}> te ha invitado a tomarte un café`)
 }

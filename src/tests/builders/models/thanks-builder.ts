@@ -1,5 +1,5 @@
 import { GratitudeMessage } from "../../../models/database/gratitude-message";
-import { Id } from "../../../models/slack/id";
+import { Id } from "../../../models/platform/slack/id";
 
 export const GratitudeMessageBuilder = ({
   communityId = "irrelevant-community-id",

@@ -6,5 +6,5 @@ export interface ThanksProps {
 }
 
 export const thanks = (platform: Platform, {channelId, block}: ThanksProps) => {
-  platform.openInteractive(channelId, block)
+  platform.sendMessage(channelId, block)
 }

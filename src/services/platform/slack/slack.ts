@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
-import { SlackBody } from "../../../models/slack/body"
+import { Message, View, InteractiveView } from "../../../models/platform/message"
+import { SlackBody } from "../../../models/platform/slack/body"
 import { Platform } from "../platform"
 import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
@@ -8,6 +9,15 @@ import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
 
 export type Request = AxiosInstance
+
+export interface SlackView extends View {
+  blocks: any[]
+}
+
+export interface SlackInteractiveView extends InteractiveView {
+  type: string,
+  blocks: any[]
+}
 
 export class Slack extends Platform {
   private static instance: Slack
@@ -19,7 +29,7 @@ export class Slack extends Platform {
     return Slack.instance
   }
 
-  private headers = {
+  static headers = {
     bot: {
       Authorization: `Bearer ${config.platform.slack.token}` 
     },
@@ -49,18 +59,24 @@ export class Slack extends Platform {
     return body.token ?? body.payload?.token
   }
 
-  postMessage = async (channelId: string, message: string) => {
-    await chatPostMessage(this.api, this.headers.bot)(channelId, { text: message })
+  sendMessage = async (channelId: string, message: Message) => {
+    if (typeof message === "string") {
+      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { text: message })
+    } else if (message instanceof View) {
+      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackView).blocks })
+    } else if (message instanceof InteractiveView) {
+      await viewsOpen(this.api, Slack.headers.bot)(message as SlackInteractiveView, channelId)
+    } else {
+      console.log("NO ENTRO EN NINGUN LADO :(")
+    }
+    console.log("--> message is string? ", typeof message === "string")
+    console.log("--> message is View? ", message instanceof View)
+    console.log("--> message is InteractiveView? ", message instanceof InteractiveView)
   }
 
-  postBlocks = async (channelId: string, blocks: any[]) => {
-    await chatPostMessage(this.api, this.headers.bot)(channelId, { blocks })
-  }
-
-  getCommunityMembers = getTeamMembers(this.api, this.headers.bot)
-  getMembersByChannelId = getConversationMembers(this.api, this.headers.bot)
-  openInteractive = viewsOpen(this.api, this.headers.bot)
-  getUserInfo = getUserInfo(this.api, this.headers.bot)
+  getCommunityMembers = getTeamMembers(this.api, Slack.headers.bot)
+  getMembersByChannelId = getConversationMembers(this.api, Slack.headers.bot)
+  getUserInfo = getUserInfo(this.api, Slack.headers.bot)
 
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps

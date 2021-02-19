@@ -1,4 +1,4 @@
-import { Id } from "../../slack/id";
+import { Id } from "../../platform/slack/id";
 import { GratitudeMessage } from "../gratitude-message"
 import { GratitudeMessageDto } from "./gratitude-message-dto"
 

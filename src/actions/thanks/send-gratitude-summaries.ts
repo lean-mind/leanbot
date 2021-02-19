@@ -56,11 +56,11 @@ export const sendGratitudeSummaries = async (
     }, [])
     
     summaries.forEach(({ communityId, user, sent, received }: GratitudeSummary) => {
-      const blocks = ViewGratitudeSummary({ image: catImage.url, sent, received })
+      const blocks = { blocks: ViewGratitudeSummary({ image: catImage.url, sent, received })}
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {
-        Platform.getInstance(platformName).postBlocks(user.id, blocks)
+        Platform.getInstance(platformName).sendMessage(user.id, blocks)
       }
     })
   } catch(e) {

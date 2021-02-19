@@ -1,6 +1,6 @@
 import { GratitudeMessage } from "../../models/database/gratitude-message"
 import { Emojis } from "../../models/emojis"
-import { Id, IdType } from "../../models/slack/id"
+import { Id, IdType } from "../../models/platform/slack/id"
 import { Database } from "../../services/database/database"
 import { I18n } from "../../services/i18n/i18n"
 import { Logger } from "../../services/logger/logger"
@@ -45,7 +45,7 @@ const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeM
     const senderName = isAnonymous ? i18n.gratitudeMessage("anAnonymous") : `<@${sender.id}>`
     const recipientMessage = i18n.gratitudeMessage("recipientMessage", { sender: senderName, text: text.toString() })
   
-    platform.postMessage(recipient.id, recipientMessage)
+    platform.sendMessage(recipient.id, recipientMessage)
   })
 }
 
@@ -57,13 +57,13 @@ const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipien
   const channelMessage = i18n.gratitudeMessage("channelMessage", { sender: senderName, recipient: `${allRecipients}`, text })
 
   if (channel.type !== IdType.unknown) {
-    platform.postMessage(channel.id, channelMessage)
+    platform.sendMessage(channel.id, channelMessage)
   }
-  platform.postMessage(sender.id, senderMessage)
+  platform.sendMessage(sender.id, senderMessage)
 }
 
 const sendMessage = async (platform: Platform, id: string, message: string): Promise<void> => {
-  await platform.postMessage(id, message)
+  await platform.sendMessage(id, message)
 }
 
 export const thanksConfirmation = async (

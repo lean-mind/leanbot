@@ -1,4 +1,4 @@
-import { Id } from "../slack/id";
+import { Id } from "../platform/slack/id";
 
 export class GratitudeMessage {
   constructor(

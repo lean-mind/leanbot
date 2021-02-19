@@ -1,5 +1,5 @@
 import { JsonData } from "../../json-data"
-import { Id } from "../../slack/id"
+import { Id } from "../../platform/slack/id"
 import { GratitudeMessage } from "../gratitude-message"
 
 export class GratitudeMessageDto {

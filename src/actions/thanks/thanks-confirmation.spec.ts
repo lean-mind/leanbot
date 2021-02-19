@@ -19,7 +19,7 @@ describe('Actions Thanks Confirmation', () => {
     db.saveGratitudeMessage = jest.fn()
 
     platform = Slack.getInstance()
-    platform.postMessage = jest.fn()
+    platform.sendMessage = jest.fn()
     platform.getMembersByChannelId = jest.fn(async () => (["U-member-id-1"]))
   })
 
@@ -31,8 +31,8 @@ describe('Actions Thanks Confirmation', () => {
     })
 
     await thanksConfirmation(platform, props, db)
-    expect(platform.postMessage).toBeCalledTimes(1) 
-    expect(platform.postMessage).toBeCalledWith(myselfId, `${i18n.gratitudeMessage("errorMessageSelf")} ${Emojis.FacePalm}`)
+    expect(platform.sendMessage).toBeCalledTimes(1) 
+    expect(platform.sendMessage).toBeCalledWith(myselfId, `${i18n.gratitudeMessage("errorMessageSelf")} ${Emojis.FacePalm}`)
   })
 
   it('should not give thanks to itself from channel', async () => {
@@ -49,9 +49,9 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(2)
-    expect(platform.postMessage).nthCalledWith(1, anotherId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${myselfId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(2, myselfId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${toId}>`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(2)
+    expect(platform.sendMessage).nthCalledWith(1, anotherId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${myselfId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(2, myselfId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${toId}>`, text }))
   })
 
   it('should not give thanks to an empty channel', async () => {
@@ -66,8 +66,8 @@ describe('Actions Thanks Confirmation', () => {
     await thanksConfirmation(platform, props, db)
 
     expect(platform.getMembersByChannelId).toBeCalledTimes(1)
-    expect(platform.postMessage).toBeCalledTimes(1)
-    expect(platform.postMessage).toBeCalledWith(fromId, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
+    expect(platform.sendMessage).toBeCalledTimes(1)
+    expect(platform.sendMessage).toBeCalledWith(fromId, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
   })
 
   it('should not notify twice to a person', async () => {
@@ -83,9 +83,9 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(2)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(2, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>, <#${channelId}>`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(2)
+    expect(platform.sendMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(2, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>, <#${channelId}>`, text }))
   })
   
   it('should give thanks to many people', async () => {
@@ -99,10 +99,10 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${personId1}>, <@${personId2}>`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(3)
+    expect(platform.sendMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${personId1}>, <@${personId2}>`, text }))
   })
 
   it('should give thanks to all channel members', async () => {
@@ -119,10 +119,10 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${channelId}>`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(3)
+    expect(platform.sendMessage).nthCalledWith(1, personId1, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(2, personId2, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<#${channelId}>`, text }))
   })
   
   it('should be able to publish in a channel', async () => {
@@ -137,10 +137,10 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: `<@${fromId}>`, recipient: `<@${toId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(3)
+    expect(platform.sendMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: `<@${fromId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: `<@${fromId}>`, recipient: `<@${toId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>`, text }))
   })
 
   it('should be able to give thanks anonymously', async () => {
@@ -156,9 +156,9 @@ describe('Actions Thanks Confirmation', () => {
 
     await thanksConfirmation(platform, props, db)
 
-    expect(platform.postMessage).toBeCalledTimes(3)
-    expect(platform.postMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: i18n.gratitudeMessage("anAnonymous"), text }))
-    expect(platform.postMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: i18n.gratitudeMessage("anAnonymous"), recipient: `<@${toId}>`, text }))
-    expect(platform.postMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>${i18n.gratitudeMessage("anonymously")}`, text }))
+    expect(platform.sendMessage).toBeCalledTimes(3)
+    expect(platform.sendMessage).nthCalledWith(1, toId, i18n.gratitudeMessage("recipientMessage", { sender: i18n.gratitudeMessage("anAnonymous"), text }))
+    expect(platform.sendMessage).nthCalledWith(2, channelId, i18n.gratitudeMessage("channelMessage", { sender: i18n.gratitudeMessage("anAnonymous"), recipient: `<@${toId}>`, text }))
+    expect(platform.sendMessage).nthCalledWith(3, fromId, i18n.gratitudeMessage("senderMessage", { recipient: `<@${toId}>${i18n.gratitudeMessage("anonymously")}`, text }))
   })
 })
