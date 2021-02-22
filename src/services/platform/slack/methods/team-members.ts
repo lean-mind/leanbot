@@ -3,20 +3,19 @@ import { Request } from "../slack"
 import { getConversationMembers } from "./conversation-members"
 
 export const getTeamMembers = (request: Request, headers: any) => async (teamId: string): Promise<string[]> => {
-  const { data } = await request.get("/conversations.list", {
+  const endpoint = "/conversations.list"
+  Logger.onRequest(endpoint, { teamId })
+  const { data, status } = await request.get("/conversations.list", {
     headers,
     params: {
       team_id: teamId,
     },
   })
+  Logger.onResponse(endpoint, { status, error: data.error })
 
   if (data.ok) {
-    Logger.log(`/conversations.list -> { team_id: "${teamId}" }`)
     const generalChannelId: string = data.channels.find(({ is_general }) => is_general)?.id ?? ""
-    const teamMembers = getConversationMembers(request, headers)(generalChannelId)
-    return teamMembers
+    return getConversationMembers(request, headers)(generalChannelId)
   }
-  // TODO: log !data.ok
-  Logger.onError(data)
   return []
 }
