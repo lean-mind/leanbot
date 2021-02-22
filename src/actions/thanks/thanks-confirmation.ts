@@ -93,7 +93,6 @@ export const thanksConfirmation = async (
     }
   } catch(e) {
     sendMessage(platform, sender.id, `${i18n.gratitudeMessage("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
-    Logger.onDBError(e)
   }
 }
 

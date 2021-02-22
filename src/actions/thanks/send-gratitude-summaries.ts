@@ -45,6 +45,7 @@ export const sendGratitudeSummaries = async (
   db: Database = Database.make(),
   cat: Cat = new Cat()
 ) => {
+  Logger.log("Sending gratitude summaries...")
   try {
     const catImage = await cat.getRandomImage({})
     const communities = await db.getCommunities()
@@ -55,14 +56,18 @@ export const sendGratitudeSummaries = async (
       return summary
     }, [])
     
+    let messagesSent = 0
     summaries.forEach(({ communityId, user, sent, received }: GratitudeSummary) => {
+      // TODO: change to new View()
       const blocks = { blocks: ViewGratitudeSummary({ image: catImage.url, sent, received })}
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {
         Platform.getInstance(platformName).sendMessage(user.id, blocks)
+        messagesSent++
       }
     })
+    Logger.log(`${messagesSent} summary messages sent`)
   } catch(e) {
     Logger.onError(e)
   }

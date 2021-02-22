@@ -54,29 +54,26 @@ export class MongoDB extends Database {
   registerCommunity = async (community: Community): Promise<void> => {
     const response = await this.on(async () => {
       if (!community.id) return
-
+      
       const collection = this.instance.db(this.database).collection(Collection.communities)
       const existsCommunity = await collection.findOne({ id: community.id })
       
       if (!existsCommunity) {
+        Logger.onDBAction("Registering community")
         const communityJson = CommunityDto.fromModel(community).toJson()
         await collection.insertOne(communityJson)
-
-        collection.find
       }
     })
-    
-    if (!response.ok) throw Error(response.error)
   }
   
   getCommunities = async (): Promise<Community[]> => {
     const response = await this.on(async () => {
+      Logger.onDBAction("Getting communities")
       const cursor = await this.instance.db(this.database).collection(Collection.communities).find({}).toArray()
       return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
     });
     
-    if (!response.ok) throw Error(response.error)
-    return response.data
+    return response.ok ? response.data : []
   }
 
   saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
@@ -84,6 +81,7 @@ export class MongoDB extends Database {
       const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) => GratitudeMessageDto.fromModel(gratitudeMessage).toJson())
 
       if (gratitudeMessagesJson.length > 0) {
+        Logger.onDBAction("Saving gratitude messages")
         await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
       }
     });
@@ -104,6 +102,7 @@ export class MongoDB extends Database {
         }
       }
 
+      Logger.onDBAction("Getting gratitude messages")
       const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
       return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
     })

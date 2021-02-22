@@ -5,6 +5,7 @@ export enum LogFiles {
   error = "errors.log"
 }
 
+// TODO: maybe add colors in logs
 export class Logger {
   private static info = (message: String, showInConsole: boolean = true) => {
     const log = `${getDateFormatted()} ${message}`;
@@ -22,6 +23,9 @@ export class Logger {
   static log = Logger.info;
   static onApiStart = (port: number) => Logger.info(`API started in port ${port}`);
   static onScheduleStart = () => Logger.info(`Scheduler started`);
+  static onDBAction = (message: string) => Logger.info(`Database action: ${message}`);
+  static onRequest = (endpoint: string, data: any) => Logger.info(`${endpoint} -> ${JSON.stringify(data)}`)
+  static onResponse = (endpoint: string, data: any) => Logger.info(`${endpoint} <- ${JSON.stringify(data)}`)
 
   static onError = (error: any) => Logger.error(`Oops! There was an error`, error);
   static onDBError = (error: any) => Logger.error(`Oops! There was an error writing or readind database`, error);

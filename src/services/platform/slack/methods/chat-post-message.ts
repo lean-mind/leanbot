@@ -7,15 +7,18 @@ interface ChatPostMessageProps {
 }
 
 export const chatPostMessage = (request: Request, headers: any) => async (channel: string, { text, blocks }: ChatPostMessageProps) => {
-  if (!text && !blocks) throw Error("Param text or blocks required");
-  
-  Logger.log(`/chat.postMessage -> { channel: "${channel}", text: "${text?.split("\n").join(" ")}", blocks: "${blocks}"}`)
-  const { data } = await request.post("/chat.postMessage", {
-    channel,
-    text: blocks ? null : text,
-    blocks,
-  }, { 
-    headers 
-  })
-  console.log(data);
+  const endpoint = "/chat.postMessage"  
+  Logger.onRequest(endpoint, { channel, text, blocks })
+  if (text || blocks) {
+    const { data, status } = await request.post(endpoint, {
+      channel,
+      text: blocks ? null : text,
+      blocks,
+    }, { 
+      headers 
+    })
+    Logger.onResponse(endpoint, { status, error: data.error })
+  } else {
+    Logger.onError("Param text or blocks required")
+  }
 }

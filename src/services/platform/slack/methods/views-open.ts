@@ -2,13 +2,15 @@ import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
 
 export const viewsOpen = (request: Request, headers: any) => async (view: any, trigger_id: string) => {
-  await request.post("/views.open", {
+  const endpoint = "/views.open"
+  // TODO: change to show view class in logger (not the contents)
+  Logger.onRequest(endpoint, { view, trigger_id })
+  const { data, status } = await request.post(endpoint, {
     view: JSON.stringify(view),
     trigger_id,
     submit_disabled: true,
   }, {
     headers,
   })
-
-  Logger.log(`/views.open -> { trigger_id: "${trigger_id}", view: "${view}" }`)
+  Logger.onResponse(endpoint, { status, error: data.error })
 }

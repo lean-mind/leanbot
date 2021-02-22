@@ -9,7 +9,9 @@ export interface InteractiveProps {
 }
 
 export const interactive = (platform: Platform, props: InteractiveProps) => {
+  const endpoint = "/interactive"
   if (props) {
+    Logger.onRequest(endpoint, props)
     const { nextStep, accept, data } = props
     const mapper = {
       ["thanks-confirmation"]: thanksConfirmation,
@@ -17,8 +19,10 @@ export const interactive = (platform: Platform, props: InteractiveProps) => {
     const command = mapper[nextStep];
     
     if (command && accept) {
-      Logger.log(`/interactive -> { nextStep : "${nextStep}", accept: "${accept}", data: "${data}" }`)
+      Logger.onResponse(endpoint, { status: 200 })
       command(platform, data)
+    } else {
+      Logger.onResponse(endpoint, { status: 418, error: !command ? "Command not found" : "Command not accepted" })
     }
   }
 }
