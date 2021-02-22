@@ -19,6 +19,7 @@ describe('Slack service:', () => {
   const slackMock: Slack = Slack.getInstance(axiosMock)
   const headers = Slack.headers.bot
 
+  // TODO: Group sendMessage tests
   describe('sendMessage method', () => {
     const endpoint = "/chat.postMessage"
     const channel = "irrelevant-channel"
@@ -31,6 +32,7 @@ describe('Slack service:', () => {
     })
   })
   
+  // TODO: Group sendMessage tests
   describe('sendBlocks method', () => {
     const endpoint = "/chat.postMessage"
     const channel = "irrelevant-channel"
@@ -101,7 +103,7 @@ describe('Slack service:', () => {
     })
   })
   
-  // describe('sendInteractiveBlocks method', () => {
+  // TODO: Group sendMessage tests
   describe('openInteractive method', () => {
     const endpoint = "/views.open"
     const view: SlackInteractiveView = new SlackInteractiveView({

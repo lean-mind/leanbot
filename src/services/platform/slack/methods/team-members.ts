@@ -16,7 +16,7 @@ export const getTeamMembers = (request: Request, headers: any) => async (teamId:
     const teamMembers = getConversationMembers(request, headers)(generalChannelId)
     return teamMembers
   }
-  Logger.onError(data)
   // TODO: log !data.ok
+  Logger.onError(data)
   return []
 }

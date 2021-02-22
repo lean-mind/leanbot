@@ -41,4 +41,8 @@ export class I18n {
   gratitudeMessage = this.get<Keys["gratitudeMessage"]>("gratitudeMessage")
   gratitudeMessageView = this.get<Keys["gratitudeMessageView"]>("gratitudeMessageView")
   gratitudeMessageSummary = this.get<Keys["gratitudeMessageSummary"]>("gratitudeMessageSummary")
+  // TODO: create coffee roulette texts
+  // coffeeRoulette = this.get<Keys["coffeeRoulette"]>("coffeeRoulette")
+  
+  // TODO: maybe refactor this?!
 }
