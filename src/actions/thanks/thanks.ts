@@ -5,6 +5,6 @@ export interface ThanksProps {
   block: any,
 }
 
-export const thanks = (platform: Platform, {channelId, block}: ThanksProps) => {
+export const thanks = (platform: Platform, { channelId, block }: ThanksProps) => {
   platform.sendMessage(channelId, block)
 }
