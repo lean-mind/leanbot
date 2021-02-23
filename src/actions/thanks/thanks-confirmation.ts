@@ -3,7 +3,6 @@ import { Emojis } from "../../models/emojis"
 import { Id, IdType } from "../../models/platform/slack/id"
 import { Database } from "../../services/database/database"
 import { I18n } from "../../services/i18n/i18n"
-import { Logger } from "../../services/logger/logger"
 import { Platform } from "../../services/platform/platform"
 
 export interface ThanksConfirmationProps {
