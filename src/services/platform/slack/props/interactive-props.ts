@@ -11,7 +11,7 @@ interface Dictionary<T> {
   [key: string]: T
 }
 
-export const getSlackInteractiveProps = (body: SlackBody): InteractiveProps | undefined => {
+export const getSlackInteractiveProps = (body: SlackBody): InteractiveProps => {
   const mapper: Dictionary<Action> = {
     ["thanks-confirmation"]: {
       getProps: getSlackThanksConfirmationProps,
@@ -21,11 +21,9 @@ export const getSlackInteractiveProps = (body: SlackBody): InteractiveProps | un
   const actionId = body.payload?.view?.external_id
   const action = mapper[actionId]
 
-  if (action?.getProps && action.accept) {
-    return {
-      nextStep: actionId,
-      accept: action.accept,
-      data: action.getProps(body) ?? {}
-    }
+  return {
+    nextStep: actionId,
+    accept: action?.accept ?? false,
+    data: action?.accept ? action.getProps(body) : {}
   }
 }

@@ -178,19 +178,24 @@ describe('Slack service:', () => {
         teamId,
       })
 
-      const interactiveProps: InteractiveProps | undefined = getSlackInteractiveProps(body)
+      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
 
-      expect(interactiveProps?.nextStep).toBe(externalId)
-      expect(interactiveProps?.accept).toBe(true)
-      expect(interactiveProps?.data?.communityId).toBe(teamId)
+      expect(interactiveProps.nextStep).toBe(externalId)
+      expect(interactiveProps.accept).toBe(true)
+      expect(interactiveProps.data.communityId).toBe(teamId)
     })
     
     it('body -> undefined', () => {
-      const body = SlackBodyBuilder ({})
+      const externalId = "command-nonexistent"
+      const body = SlackBodyBuilder ({
+        externalId
+      })
 
-      const interactiveProps: InteractiveProps | undefined = getSlackInteractiveProps(body)
+      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
 
-      expect(interactiveProps).toBe(undefined)
+      expect(interactiveProps.nextStep).toBe(externalId)
+      expect(interactiveProps.accept).toBe(false)
+      expect(JSON.stringify(interactiveProps.data)).toBe("{}")
     })
   })
 
