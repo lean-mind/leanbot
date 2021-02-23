@@ -1,7 +1,7 @@
 import { I18n } from "../../../i18n/i18n";
 import { SlackInteractiveView } from "../slack";
 
-// TODO: Change name to InteractiveView[Blank]
+// TODO: Change name to [Blank]InteractiveView
 export const ViewGratitudeMessage = (i18n: I18n = new I18n()): SlackInteractiveView => {
   const type = "modal"
   const externalId = "thanks-confirmation"

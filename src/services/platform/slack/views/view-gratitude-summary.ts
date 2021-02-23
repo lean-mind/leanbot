@@ -13,6 +13,7 @@ const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
   return `• *${users.map(({ id }) => `<@${id}>`).join(", ")}* \`${getDateFormatted(createdAt)}\`: ${text}`;
 }
 
+// TODO: Change name to [Blank]View
 export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSummaryProps, i18n: I18n = new I18n()): SlackView => {
   const hasSent = sent !== undefined && sent.length > 0
   const hasReceived = received !== undefined && received.length > 0

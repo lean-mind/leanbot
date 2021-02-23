@@ -1,5 +1,6 @@
 import { Community } from "../../models/database/community";
 import { GratitudeMessage, GratitudeSummary, GratitudeSummaryMessage } from "../../models/database/gratitude-message";
+import { View } from "../../models/platform/message";
 import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
@@ -58,8 +59,11 @@ export const sendGratitudeSummaries = async (
     
     let messagesSent = 0
     summaries.forEach(({ communityId, user, sent, received }: GratitudeSummary) => {
-      // TODO: change to new View()
-      const blocks = { blocks: ViewGratitudeSummary({ image: catImage.url, sent, received })}
+      // TODO: Get view from platform
+      // type Views = "gratitude-summary"
+      // type InteractiveViews = "gratitude-message"
+      // Platform.getInstance(platform).getView("gratitude-summary")
+      const blocks: View = ViewGratitudeSummary({ image: catImage.url, sent, received })
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {

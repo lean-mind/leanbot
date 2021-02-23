@@ -3,7 +3,6 @@ import { Request } from "../slack"
 
 export const viewsOpen = (request: Request, headers: any) => async (view: any, trigger_id: string) => {
   const endpoint = "/views.open"
-  // TODO: change to show view class in logger (not the contents)
   Logger.onRequest(endpoint, { view, trigger_id })
   const { data, status } = await request.post(endpoint, {
     view: JSON.stringify(view),
