@@ -29,14 +29,14 @@ const updateListIfNeeds = (list: GratitudeSummaryMessage[], currentThanks: Grati
 const update = (summary: GratitudeSummary[], currentGratitudeMessage: GratitudeMessage, who: "sender" | "recipient") => {
   const isSender = who === "sender"
   const user = currentGratitudeMessage[who]
-  const grattudeSummaryMessage = getGratitudeSummaryMessageFrom(currentGratitudeMessage, isSender)
+  const gratitudeSummaryMessage = getGratitudeSummaryMessageFrom(currentGratitudeMessage, isSender)
   const existingGratitudeSummary = summary.find((value) => value.user.id === user.id)
   const gratitudeSummary: GratitudeSummary = existingGratitudeSummary ?? { communityId: currentGratitudeMessage.communityId, user, sent: [], received: [] }
   
   if (isSender) {
-    updateListIfNeeds(gratitudeSummary.sent, grattudeSummaryMessage)
+    updateListIfNeeds(gratitudeSummary.sent, gratitudeSummaryMessage)
   } else {
-    updateListIfNeeds(gratitudeSummary.received, grattudeSummaryMessage)
+    updateListIfNeeds(gratitudeSummary.received, gratitudeSummaryMessage)
   }
   
   if (!existingGratitudeSummary) summary.push(gratitudeSummary)
