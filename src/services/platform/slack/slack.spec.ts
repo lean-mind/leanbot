@@ -19,29 +19,41 @@ describe('Slack service:', () => {
   const slackMock: Slack = Slack.getInstance(axiosMock)
   const headers = Slack.headers.bot
 
-  // TODO: Group sendMessage tests
   describe('sendMessage method', () => {
-    const endpoint = "/chat.postMessage"
-    const channel = "irrelevant-channel"
-    const text = "irrelevant-text"
+    it('should send a simple text message', () => {
+      const endpoint = "/chat.postMessage"
+      const channel = "irrelevant-channel"
+      const text = "irrelevant-text"
 
-    it('should send a message with text', () => {
       slackMock.sendMessage(channel, text)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { channel, blocks: undefined, text }, { headers })
     })
-  })
-  
-  // TODO: Group sendMessage tests
-  describe('sendBlocks method', () => {
-    const endpoint = "/chat.postMessage"
-    const channel = "irrelevant-channel"
-    const view: View = new SlackView([{ message: "irrelevant-text2" }])
 
-    it('should send a message with blocks', () => {
+    it('should send a view', () => {
+      const endpoint = "/chat.postMessage"
+      const channel = "irrelevant-channel"
+      const view: View = new SlackView([{ message: "irrelevant-text2" }])
+
       slackMock.sendMessage(channel, view)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { channel, blocks: (view as SlackView).blocks, text: null }, { headers })
+    })
+
+    it('should send an interactive view', () => {
+      const endpoint = "/views.open"
+      const view: SlackInteractiveView = new SlackInteractiveView({
+        blocks: [{value: "irrelevant-value"}]
+      })
+      const trigger_id = "irrelevant-trigger-id"
+
+      slackMock.sendMessage(trigger_id, view)
+  
+      expect(axiosMock.post).toBeCalledWith(endpoint, { 
+        view: JSON.stringify(view), 
+        trigger_id, 
+        submit_disabled: true
+      }, { headers })
     })
   })
 
@@ -49,7 +61,7 @@ describe('Slack service:', () => {
     const endpointToGetChannels = "/conversations.list"
     const endpointToGetMembersByChannel = "/conversations.members"
     
-    it('should retrieve the community members', async () => {
+    it('should retrieve all community members', async () => {
       const teamId = "irrelevant-team-id"
       const channelId = "irrelevant-channel-id"
       const memberId = "irrelevant-member-id"
@@ -102,25 +114,6 @@ describe('Slack service:', () => {
       expect(members).toHaveLength(0)
     })
   })
-  
-  // TODO: Group sendMessage tests
-  describe('openInteractive method', () => {
-    const endpoint = "/views.open"
-    const view: SlackInteractiveView = new SlackInteractiveView({
-      blocks: [{value: "irrelevant-value"}]
-    })
-    const trigger_id = "irrelevant-trigger-id"
-
-    it('with success response', () => {
-      slackMock.sendMessage(trigger_id, view)
-  
-      expect(axiosMock.post).toBeCalledWith(endpoint, { 
-        view: JSON.stringify(view), 
-        trigger_id, 
-        submit_disabled: true
-      }, { headers })
-    })
-  })
 
   describe('getUserInfo method', () => {
     const endpoint = "/users.info"
@@ -131,7 +124,7 @@ describe('Slack service:', () => {
       is_bot: false
     }
     
-    it('with success response', async () => {
+    it('should retrieve user info', async () => {
       axiosMock.get = jest.fn(async (_, __): Promise<any> => ({ 
         data: { ok: true, user: userInfoJson }
       }))
@@ -150,7 +143,7 @@ describe('Slack service:', () => {
       expect(userInfoReceived?.isBot).toBe(userInfoJson.is_bot)
     })
     
-    it('with error response', async () => {
+    it('should handle responses with no data', async () => {
       axiosMock.get = jest.fn(async (_, __): Promise<any> => ({ 
         data: { ok: false }
       }))
@@ -164,12 +157,12 @@ describe('Slack service:', () => {
         }, 
       })
 
-      expect(userInfoReceived).toBe(undefined)
+      expect(userInfoReceived).toBeUndefined()
     })
   })
 
   describe('getInteractiveProps', () => {
-    it('body -> InteractiveProps (de ThanksConfirmation)', () => {
+    it('should extract relevant data for thanks confirmation interactivity', () => {
       const externalId = "thanks-confirmation"
       const teamId = "communityId"
       const body = SlackBodyBuilder({
@@ -182,10 +175,28 @@ describe('Slack service:', () => {
 
       expect(interactiveProps.nextStep).toBe(externalId)
       expect(interactiveProps.accept).toBe(true)
-      expect(interactiveProps.data.communityId).toBe(teamId)
+      expect(JSON.stringify(interactiveProps.data)).not.toBe("{}")
     })
     
-    it('body -> undefined', () => {
+    it('should reject incorrect submissions for thanks confirmation interactivity', () => {
+      const externalId = "thanks-confirmation"
+      const teamId = "communityId"
+      const body = SlackBodyBuilder({
+        externalId,
+        type: "another_type",
+        teamId,
+      })
+      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
+
+      expect(interactiveProps.nextStep).toBe(externalId)
+      expect(interactiveProps.accept).toBe(false)
+      expect(JSON.stringify(interactiveProps.data)).toBe("{}")
+    })
+
+    // TODO: add test to retrieve relevant data for coffee roulette interactivity
+    // TODO: MAYBE add test to reject incorrect submissions for coffee roulette interactivity
+
+    it('should reject nonexistent commands', () => {
       const externalId = "command-nonexistent"
       const body = SlackBodyBuilder ({
         externalId
@@ -199,7 +210,7 @@ describe('Slack service:', () => {
     })
   })
 
-  describe('getThanksProps', () => {
+  describe('Thanks command props methods', () => {
     const teamId = "irrelevant-team-id"
     const userId = "irrelevant-user-id"
     const recipientsId = ["irrelevant-recipients-id"]
@@ -208,7 +219,7 @@ describe('Slack service:', () => {
     const isAnonymous = false
     const triggerId = "irrelevant-trigger-id"
 
-    it('body -> ThanksProps', () => {
+    it('should provide props for thanks command', () => {
       const view = ViewGratitudeMessage()
       const body = SlackBodyBuilder({ triggerId })
 
@@ -219,7 +230,7 @@ describe('Slack service:', () => {
       expect(view.external_id).toBe(thanksProps.block.external_id)
     })
     
-    it('body -> ThanksConfirmationProps', () => {
+    it('shoud retrieve thanks confirmation props from the request body', () => {
       const body = SlackBodyBuilder({
         teamId,
         userId,
@@ -240,13 +251,13 @@ describe('Slack service:', () => {
     })
   })
   
-  describe('getCoffeeRouletteProps', () => {
+  describe('Coffee roulette methods', () => {
     const triggerId = "irrelevant-trigger-id"
     const teamId = "irrelevant-team-id"
     const userId = "irrelevant-user-id"
     const text = "irrelevant-text"
 
-    it('body -> CoffeeRouletteProps', () => {
+    it('should retrieve coffee roulette command props from the request body', () => {
       const body = SlackBodyBuilder({
         triggerId,
         teamId,
@@ -261,5 +272,7 @@ describe('Slack service:', () => {
       expect(userId).toBe(coffeeRouletteProps.userId)
       expect(text).toBe(coffeeRouletteProps.text)
     })
+
+    // TODO: add test to get what button was clicked
   })
 })
