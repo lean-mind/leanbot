@@ -69,7 +69,7 @@ export class MongoDB extends Database {
   getCommunities = async (): Promise<Community[]> => {
     const response = await this.on(async () => {
       Logger.onDBAction("Getting communities")
-      const cursor = await this.instance.db(this.database).collection(Collection.communities).find({}).toArray()
+      const cursor = await this.instance.db(this.database).collection(Collection.communities).find({deletedAtTime: null}).toArray()
       return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
     });
     
