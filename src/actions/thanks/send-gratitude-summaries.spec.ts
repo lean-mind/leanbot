@@ -11,7 +11,7 @@ import { sendGratitudeSummaries } from "./send-gratitude-summaries"
 jest.mock('../../services/database/mongo/mongo')
 jest.mock('../../services/cat/cat')
 
-describe('Action Send Thanks Summary', () => {
+describe('Action Send Gratitude Summary', () => {
   const platformName: PlatformName = "slack" 
   const communityId = "irrelevant-community-id"
   const senderId = "irrelevant-sender-id"
@@ -86,14 +86,14 @@ describe('Action Send Thanks Summary', () => {
       text: gratitudeMessage.text,
       createdAt: gratitudeMessage.createdAt
     }
-    const senderBlock = GratitudeSummaryViewBuilder({
+    const senderBlock = await GratitudeSummaryViewBuilder({
       image: catImage,
       sent: [GratitudeSummaryMessageBuilder({
         users: [new Id(firstRecipientId), new Id(secondRecipientId)],
         ...gratitudeSummaryMessage
       })]
     })
-    const recipientBlock = GratitudeSummaryViewBuilder({
+    const recipientBlock = await GratitudeSummaryViewBuilder({
       image: catImage,
       received: [GratitudeSummaryMessageBuilder({
         users: [new Id(senderId)],

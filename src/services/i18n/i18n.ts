@@ -1,48 +1,36 @@
-import { Logger } from "../logger/logger";
-import { Keys, Type } from "./i18n-keys";
-import { I18nLanguages } from "./i18n-languages";
+//import * as i18next, { i18n, InitOptions, StringMap } from "i18next";
+import * as i18next from "i18next"
+const esCan = require("./translations/es.can.json")
+const es = require("./translations/es.json")
+const en = require("./translations/en.json")
+// import es from "./translations/es.json"
+// import en from "./translations/en.json"
 
-interface Values {
-  [key: string]: string
-}
-
+// TODO: create coffee roulette texts 
 export class I18n {
-  constructor(
-    private language = I18nLanguages.canary
-  ) { }
-
-  private transformKeyToValue = (text: string, values: Values = {}) => {
-    return text.split(" ").reduce((messages: string[], currentWord: string) => {
-      if (currentWord.indexOf('${') >= 0){
-        const currentKey = currentWord.substring(currentWord.indexOf('{') + 1, currentWord.indexOf('}'));
-        const value = currentWord.replace('${' + currentKey + '}', values[currentKey])
-        return [...messages, value]
-      }
-      return [...messages, currentWord]
-    }, []).join(" ")
-  }
-
-  private get = <T>(type: Type) => (key: T, values: Values = {}) => {
-    try {
-      const file = require(`./translations/${this.language}.json`)
-      const textTranslated = file[type][key];
-
-      if (textTranslated){
-        return this.transformKeyToValue(textTranslated, values)
-      } else {
-        Logger.onMissingTranslation(`${this.language}.json`, type, `${key}`)
-      }
-    } catch(e) {
-      Logger.onError(e)
+  private static instance: i18next.i18n = i18next
+  private static options: i18next.InitOptions = {
+    debug: true,
+    lng: "es-can",
+    resources: {
+      "es-can": esCan,
+      es,
+      en
+    },
+    interpolation: {
+      prefix: "${",
+      suffix: "}" 
     }
-    return `${type}.${key}`
   }
 
-  gratitudeMessage = this.get<Keys["gratitudeMessage"]>("gratitudeMessage")
-  gratitudeMessageView = this.get<Keys["gratitudeMessageView"]>("gratitudeMessageView")
-  gratitudeMessageSummary = this.get<Keys["gratitudeMessageSummary"]>("gratitudeMessageSummary")
-  // TODO: create coffee roulette texts
-  // coffeeRoulette = this.get<Keys["coffeeRoulette"]>("coffeeRoulette")
-  
-  // TODO: maybe refactor this?!
+  private constructor() {} 
+
+  static getInstance = async (): Promise<I18n> => {
+    if (!I18n.instance.isInitialized) {
+      await I18n.instance.init(I18n.options)
+    }
+    return new I18n()
+  }
+
+  translate = (key: string, values: i18next.StringMap = {}): string => I18n.instance.t(key, values)
 }

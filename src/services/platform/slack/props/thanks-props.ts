@@ -4,8 +4,8 @@ import { SlackBody } from "../../../../models/platform/slack/body";
 import { Id } from "../../../../models/platform/slack/id";
 import { ViewGratitudeMessage } from "../views";
 
-export const getSlackThanksProps = (body: SlackBody): ThanksProps => {
-  const view = ViewGratitudeMessage()
+export const getSlackThanksProps = async (body: SlackBody): Promise<ThanksProps> => {
+  const view = await ViewGratitudeMessage()
   const channelId = body.trigger_id
 
   return {

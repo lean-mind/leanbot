@@ -58,19 +58,19 @@ export const sendGratitudeSummaries = async (
     }, [])
     
     let messagesSent = 0
-    summaries.forEach(({ communityId, user, sent, received }: GratitudeSummary) => {
+    await Promise.all(summaries.map(async ({ communityId, user, sent, received }: GratitudeSummary) => {
       // TODO: Get view from platform
       // type Views = "gratitude-summary"
       // type InteractiveViews = "gratitude-message"
       // Platform.getInstance(platform).getView("gratitude-summary")
-      const blocks: View = ViewGratitudeSummary({ image: catImage.url, sent, received })
+      const blocks: View = await ViewGratitudeSummary({ image: catImage.url, sent, received })
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {
         Platform.getInstance(platformName).sendMessage(user.id, blocks)
         messagesSent++
       }
-    })
+    }))
     Logger.log(`${messagesSent} summary messages sent`)
   } catch(e) {
     Logger.onError(e)

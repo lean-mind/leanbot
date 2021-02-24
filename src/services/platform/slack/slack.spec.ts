@@ -219,11 +219,11 @@ describe('Slack service:', () => {
     const isAnonymous = false
     const triggerId = "irrelevant-trigger-id"
 
-    it('should provide props for thanks command', () => {
-      const view = ViewGratitudeMessage()
+    it('should provide props for thanks command', async () => {
+      const view = await ViewGratitudeMessage()
       const body = SlackBodyBuilder({ triggerId })
 
-      const thanksProps: ThanksProps = getSlackThanksProps(body)
+      const thanksProps: ThanksProps = await getSlackThanksProps(body)
 
       expect(triggerId).toBe(thanksProps.channelId)
       expect(view.type).toBe(thanksProps.block.type)

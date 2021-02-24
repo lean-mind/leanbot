@@ -15,7 +15,8 @@ const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
 
 // TODO: Change name to [Blank]View
 // TODO: maybe add tests
-export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSummaryProps, i18n: I18n = new I18n()): SlackView => {
+export const ViewGratitudeSummary = async ({ image, sent, received }: ViewGratitudeSummaryProps): Promise<SlackView> => {
+  const i18n = await I18n.getInstance()
   const hasSent = sent !== undefined && sent.length > 0
   const hasReceived = received !== undefined && received.length > 0
 
@@ -29,7 +30,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "header",
       text: {
         type: "plain_text",
-        text: i18n.gratitudeMessageSummary("title"), 
+        text: i18n.translate("gratitudeMessageSummary.title"), 
         emoji: true
       }
     },
@@ -38,7 +39,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasSent ? `*${i18n.gratitudeMessageSummary("sent")}*\n` + sent?.map(toMessage).join("\n") : i18n.gratitudeMessageSummary("noSent")
+        text: hasSent ? `*${i18n.translate("gratitudeMessageSummary.sent")}*\n` + sent?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noSent")
       }
     },
     { type: "divider" },
@@ -46,7 +47,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasReceived ? `*${i18n.gratitudeMessageSummary("received")}*\n` + received?.map(toMessage).join("\n") : i18n.gratitudeMessageSummary("noReceived")
+        text: hasReceived ? `*${i18n.translate("gratitudeMessageSummary.received")}*\n` + received?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noReceived")
       }
     },
     { type: "divider" },
@@ -60,9 +61,9 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
         },
         {
           type: "mrkdwn",
-          text: (hasSent ? i18n.gratitudeMessageSummary("sentCount", { count: (sent?.length ?? 0) + ""}) : '') +
+          text: (hasSent ? i18n.translate("gratitudeMessageSummary.sentCount", { count: (sent?.length ?? 0) + ""}) : '') +
             (hasSent && hasReceived ? `. ` : '') +
-            (hasReceived ? i18n.gratitudeMessageSummary("receivedCount", { count: (received?.length ?? 0) + ""}) : '')
+            (hasReceived ? i18n.translate("gratitudeMessageSummary.receivedCount", { count: (received?.length ?? 0) + ""}) : '')
         }
       ]
     }

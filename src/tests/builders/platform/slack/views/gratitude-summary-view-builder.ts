@@ -5,7 +5,7 @@ export const GratitudeSummaryViewBuilder = ({
   image = "image-url",
   sent = [],
   received = []
-}: Partial<ViewGratitudeSummaryProps>): SlackView => ViewGratitudeSummary({
+}: Partial<ViewGratitudeSummaryProps>): Promise<SlackView> => ViewGratitudeSummary({
   image,
   sent,
   received
