@@ -18,7 +18,13 @@ describe('Action Send Thanks Summary', () => {
   const recipientId = "irrelevant-recipient-id"
   const text = "irrelevant-text"
   const catImage = "cat-image-url"
-
+  const gratitudeMessage = { 
+    communityId, 
+    text,
+    createdAt: new Date(),
+    sender: new Id(senderId)
+  }
+  
   const mockCat = new Cat()
   const mockDb = new MongoDB()
   const slack = Slack.getInstance()
@@ -28,22 +34,19 @@ describe('Action Send Thanks Summary', () => {
     slack.sendMessage = jest.fn()
     
     mockCat.getRandomImage = jest.fn(async () => ({ url: catImage }))
-  })
-
-  it('should send a summary message to everyone that gave or received gratitude', async () => {
-
     mockDb.getCommunities = jest.fn(async () => ([
       {
         id: communityId,
         platform: platformName
       }
     ]))
+  })
+
+  it('should send a summary message to everyone that gave or received gratitude', async () => {
     mockDb.getGratitudeMessages = jest.fn(async () => ([
       GratitudeMessageBuilder({ 
-        communityId, 
-        sender: new Id(senderId), 
-        recipient: new Id(recipientId), 
-        text  
+        ...gratitudeMessage, 
+        recipient: new Id(recipientId)
       })
     ]))
 
@@ -67,19 +70,7 @@ describe('Action Send Thanks Summary', () => {
   it('should group messages that were sent to several people with the same gratitude text and date', async () => {
     const firstRecipientId = "first-recipient-id"
     const secondRecipientId = "second-recipient-id"
-    const gratitudeMessage = { 
-      communityId, 
-      text,
-      createdAt: new Date(),
-      sender: new Id(senderId)
-    }
 
-    mockDb.getCommunities = jest.fn(async () => ([
-      {
-        id: communityId,
-        platform: platformName
-      }
-    ]))
     mockDb.getGratitudeMessages = jest.fn(async () => ([
       GratitudeMessageBuilder({  
           ...gratitudeMessage,
@@ -95,7 +86,6 @@ describe('Action Send Thanks Summary', () => {
       text: gratitudeMessage.text,
       createdAt: gratitudeMessage.createdAt
     }
-
     const senderBlock = GratitudeSummaryViewBuilder({
       image: catImage,
       sent: [GratitudeSummaryMessageBuilder({
