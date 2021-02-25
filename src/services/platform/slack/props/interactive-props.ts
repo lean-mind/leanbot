@@ -11,7 +11,7 @@ interface Dictionary<T> {
   [key: string]: T
 }
 
-export const getSlackInteractiveProps = (body: SlackBody): InteractiveProps => {
+export const getSlackInteractiveProps = async (body: SlackBody): Promise<InteractiveProps> => {
   const mapper: Dictionary<Action> = {
     ["thanks-confirmation"]: {
       getProps: getSlackThanksConfirmationProps,

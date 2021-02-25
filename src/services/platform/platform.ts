@@ -26,6 +26,6 @@ export abstract class Platform {
   abstract getUserInfo: (userId: string) => Promise<UserInfo | undefined>
 
   abstract getThanksProps: (data: any) => Promise<ThanksProps>
-  abstract getInteractiveProps: (data: any) => InteractiveProps | undefined
-  abstract getCoffeeRouletteProps: (data: any) => CoffeeRouletteProps
+  abstract getInteractiveProps: (data: any) => Promise<InteractiveProps | undefined>
+  abstract getCoffeeRouletteProps: (data: any) => Promise<CoffeeRouletteProps>
 }

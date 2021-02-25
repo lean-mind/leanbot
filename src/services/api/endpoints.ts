@@ -7,7 +7,7 @@ import { Platform } from "../platform/platform"
 export interface EndpointInstance {
   name: Endpoint,
   action: (platform: Platform, data: any) => void
-  getProps: (platform: Platform, data: any) => any
+  getProps: (platform: Platform, data: any) => Promise<any>
 } 
 
 export enum Endpoint {
@@ -21,7 +21,7 @@ export const Endpoints: EndpointInstance[] = [
   { 
     name: Endpoint.interactive,
     action: interactive,
-    getProps: (platform, data) => platform.getInteractiveProps(data) ?? {}
+    getProps: (platform, data) => platform.getInteractiveProps(data)
   },
   { 
     name: Endpoint.thanks,
@@ -36,6 +36,6 @@ export const Endpoints: EndpointInstance[] = [
   { 
     name: Endpoint.sendSummary,
     action: (_) => sendGratitudeSummaries(),
-    getProps: () => {}
+    getProps: async () => {}
   }
 ]

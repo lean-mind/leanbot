@@ -162,7 +162,7 @@ describe('Slack service:', () => {
   })
 
   describe('getInteractiveProps', () => {
-    it('should extract relevant data for thanks confirmation interactivity', () => {
+    it('should extract relevant data for thanks confirmation interactivity', async () => {
       const externalId = "thanks-confirmation"
       const teamId = "communityId"
       const body = SlackBodyBuilder({
@@ -171,14 +171,14 @@ describe('Slack service:', () => {
         teamId,
       })
 
-      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
+      const interactiveProps: InteractiveProps = await getSlackInteractiveProps(body)
 
       expect(interactiveProps.nextStep).toBe(externalId)
       expect(interactiveProps.accept).toBe(true)
       expect(JSON.stringify(interactiveProps.data)).not.toBe("{}")
     })
     
-    it('should reject incorrect submissions for thanks confirmation interactivity', () => {
+    it('should reject incorrect submissions for thanks confirmation interactivity', async () => {
       const externalId = "thanks-confirmation"
       const teamId = "communityId"
       const body = SlackBodyBuilder({
@@ -186,7 +186,7 @@ describe('Slack service:', () => {
         type: "another_type",
         teamId,
       })
-      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
+      const interactiveProps: InteractiveProps = await getSlackInteractiveProps(body)
 
       expect(interactiveProps.nextStep).toBe(externalId)
       expect(interactiveProps.accept).toBe(false)
@@ -196,13 +196,13 @@ describe('Slack service:', () => {
     // TODO: add test to retrieve relevant data for coffee roulette interactivity
     // TODO: MAYBE add test to reject incorrect submissions for coffee roulette interactivity
 
-    it('should reject nonexistent commands', () => {
+    it('should reject nonexistent commands', async () => {
       const externalId = "command-nonexistent"
       const body = SlackBodyBuilder ({
         externalId
       })
 
-      const interactiveProps: InteractiveProps = getSlackInteractiveProps(body)
+      const interactiveProps: InteractiveProps = await getSlackInteractiveProps(body)
 
       expect(interactiveProps.nextStep).toBe(externalId)
       expect(interactiveProps.accept).toBe(false)
@@ -257,7 +257,7 @@ describe('Slack service:', () => {
     const userId = "irrelevant-user-id"
     const text = "irrelevant-text"
 
-    it('should retrieve coffee roulette command props from the request body', () => {
+    it('should retrieve coffee roulette command props from the request body', async () => {
       const body = SlackBodyBuilder({
         triggerId,
         teamId,
@@ -265,7 +265,7 @@ describe('Slack service:', () => {
         text,
       })
 
-      const coffeeRouletteProps: CoffeeRouletteProps = getSlackCoffeeRouletteProps(body)
+      const coffeeRouletteProps: CoffeeRouletteProps = await getSlackCoffeeRouletteProps(body)
 
       expect(triggerId).toBe(coffeeRouletteProps.channelId)
       expect(teamId).toBe(coffeeRouletteProps.communityId)

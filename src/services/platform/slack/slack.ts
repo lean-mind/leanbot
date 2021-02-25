@@ -90,9 +90,9 @@ export class Slack extends Platform {
   sendMessage = async (channelId: string, message: Message) => {
     if (typeof message === "string") {
       await chatPostMessage(this.api, Slack.headers.bot)(channelId, { text: message })
-    } else if (message instanceof View) {
+    } else if (message instanceof SlackView) {
       await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackView).blocks })
-    } else if (message instanceof InteractiveView) {
+    } else if (message instanceof SlackInteractiveView) {
       await viewsOpen(this.api, Slack.headers.bot)(message as SlackInteractiveView, channelId)
     } else {
       Logger.onError('Unidentifiable message type')
