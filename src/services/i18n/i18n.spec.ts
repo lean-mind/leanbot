@@ -1,5 +1,4 @@
-import { I18n } from "./i18n"
-import i18next from "i18next";
+import { I18n } from "./i18n";
 
 describe('Service I18n', () => {
   let i18n: I18n
@@ -14,6 +13,7 @@ describe('Service I18n', () => {
   })
 
   it('should get "key" if the translation does not exist', () => {
-    expect(i18n.translate("irrelevant.i.do.not.exist")).toEqual("irrelevant.i.do.not.exist")
+    const nonexistentKey = "irrelevant.i.do.not.exist"
+    expect(i18n.translate(nonexistentKey)).toEqual(nonexistentKey)
   })
 })

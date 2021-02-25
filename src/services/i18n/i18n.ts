@@ -1,15 +1,13 @@
-//import * as i18next, { i18n, InitOptions, StringMap } from "i18next";
-import * as i18next from "i18next"
+import i18next from "i18next";
+import { i18n, InitOptions, StringMap } from "i18next";
 const esCan = require("./translations/es.can.json")
 const es = require("./translations/es.json")
 const en = require("./translations/en.json")
-// import es from "./translations/es.json"
-// import en from "./translations/en.json"
 
 // TODO: create coffee roulette texts 
 export class I18n {
-  private static instance: i18next.i18n = i18next
-  private static options: i18next.InitOptions = {
+  private static instance: i18n = i18next
+  private static options: InitOptions = {
     debug: true,
     lng: "es-can",
     resources: {
@@ -32,5 +30,5 @@ export class I18n {
     return new I18n()
   }
 
-  translate = (key: string, values: i18next.StringMap = {}): string => I18n.instance.t(key, values)
+  translate = (key: string, values: StringMap = {}): string => I18n.instance.t(key, values)
 }
