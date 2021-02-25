@@ -52,8 +52,9 @@ describe('Action Send Gratitude Summary', () => {
 
     await sendGratitudeSummaries(mockDb, mockCat)
 
-    expect(slack.sendMessage).nthCalledWith(1, senderId, expect.anything())
-    expect(slack.sendMessage).nthCalledWith(2, recipientId, expect.anything())
+    expect(slack.sendMessage).toBeCalledWith(senderId, expect.anything())
+    expect(slack.sendMessage).toBeCalledWith(recipientId, expect.anything())
+    expect(slack.sendMessage).toBeCalledTimes(2)
   })
   
   it('should only send summaries to registered communities', async () => {
@@ -103,8 +104,9 @@ describe('Action Send Gratitude Summary', () => {
 
     await sendGratitudeSummaries(mockDb, mockCat)
 
-    expect(slack.sendMessage).nthCalledWith(1, senderId, senderBlock)
-    expect(slack.sendMessage).nthCalledWith(2, firstRecipientId, recipientBlock)
-    expect(slack.sendMessage).nthCalledWith(3, secondRecipientId, recipientBlock)
+    expect(slack.sendMessage).toBeCalledWith(senderId, senderBlock)
+    expect(slack.sendMessage).toBeCalledWith(firstRecipientId, recipientBlock)
+    expect(slack.sendMessage).toBeCalledWith(secondRecipientId, recipientBlock)
+    expect(slack.sendMessage).toBeCalledTimes(3)
   })
 })
