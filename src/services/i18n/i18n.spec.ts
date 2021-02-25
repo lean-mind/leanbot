@@ -4,7 +4,7 @@ describe('Service I18n', () => {
   let i18n: I18n
   const esCan = require("./translations/es.can.json")
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     i18n = await I18n.getInstance()
   })
     

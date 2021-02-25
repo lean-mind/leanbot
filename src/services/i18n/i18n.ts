@@ -1,5 +1,6 @@
-import i18next from "i18next";
 import { i18n, InitOptions, StringMap } from "i18next";
+
+const i18next = require('i18next')
 const esCan = require("./translations/es.can.json")
 const es = require("./translations/es.json")
 const en = require("./translations/en.json")
@@ -8,12 +9,17 @@ const en = require("./translations/en.json")
 export class I18n {
   private static instance: i18n = i18next
   private static options: InitOptions = {
-    debug: true,
     lng: "es-can",
     resources: {
-      "es-can": esCan,
-      es,
-      en
+      "es-can": {
+        translation: esCan
+      },
+      "es": {
+        translation: es
+      },
+      "en": {
+        translation: en
+      }
     },
     interpolation: {
       prefix: "${",
