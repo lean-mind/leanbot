@@ -15,7 +15,8 @@ export type Request = AxiosInstance
 export class SlackView extends View {
   constructor(
     public blocks: any[]
-  ) { 
+  ) 
+  { 
     super()
   }
 }

@@ -1,29 +1,32 @@
 import { i18n, InitOptions, StringMap } from "i18next";
 
 const i18next = require('i18next')
-const esCan = require("./translations/es.can.json")
-const es = require("./translations/es.json")
 const en = require("./translations/en.json")
+const es = require("./translations/es.json")
+const esCan = require("./translations/es.can.json")
 
 // TODO: create coffee roulette texts 
 export class I18n {
+  private static namespace: string = "leanbot"
   private static instance: i18n = i18next
   private static options: InitOptions = {
-    lng: "es-can",
+    lng: "es-CAN",
+    defaultNS: I18n.namespace,
     resources: {
-      "es-can": {
-        translation: esCan
+      "en-US": {
+        [I18n.namespace]: en
       },
       "es": {
-        translation: es
+        [I18n.namespace]: es
       },
-      "en": {
-        translation: en
-      }
+      "es-CAN": {
+        [I18n.namespace]: esCan
+      },
     },
     interpolation: {
       prefix: "${",
-      suffix: "}" 
+      suffix: "}",
+      escapeValue: false
     }
   }
 
@@ -34,6 +37,13 @@ export class I18n {
       await I18n.instance.init(I18n.options)
     }
     return new I18n()
+  }
+
+  changeLanguage = async (languageCode: string, translations?: any) => {
+    if (translations) {
+      I18n.instance.addResourceBundle(languageCode, I18n.namespace, translations)
+    }
+    await I18n.instance.changeLanguage(languageCode)
   }
 
   translate = (key: string, values: StringMap = {}): string => I18n.instance.t(key, values)
