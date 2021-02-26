@@ -36,7 +36,8 @@ MAINTENANCE            # Si está en true, las peticiones que se hagan a la Api,
 
 # Slack
 SLACK_SIGNING_SECRET   # El 'Signing secret' de slack, sin este secret no se ejecutará ningún comando
-SLACK_TOKEN            # Token de la aplicación de Slack empieza por "xoxb"
+SLACK_TOKEN            # Token de la aplicación de Slack, empieza por "xoxb"
+SLACK_USER_TOKEN       # Token de usuario de la aplicación de Slack, empieza por "xoxp"
 
 # MongoDB
 MONGODB_DATABASE       # El nombre de la base de datos que se utilizará en mongodb
@@ -56,6 +57,8 @@ Method   | Bot Scopes
 ---------|-----------
 [`/chat.postMessage`](https://api.slack.com/methods/chat.postMessage) | `chat:write`
 [`/conversations.members`](https://api.slack.com/methods/conversations.members) | `channels:read`, `groups:read`, `im:read`, `mpim:read`
+[`/conversations.list`](https://api.slack.com/methods/conversations.list) | `channels:read`, `groups:read`, `im:read`, `mpim:read`
+[`/users.info`](https://api.slack.com/methods/users.info) | `users:read`
 [`/views.open`](https://api.slack.com/methods/views.open) | _No scope required_
 
 Una vez tengamos los _scopes_ actualizados, podremos instalar el bot en nuestro _workspace_, podremos hacerlo al principio de la misma página donde actualizaste los _scopes_. Ya tendrémos disponible el token del bot que debería comenzar por `xoxb`.
@@ -84,33 +87,36 @@ test         # Lanza los tests
 test:watch   # Lanza los tests y se relanzarán al guardar 
 ```
 
-Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <script>` siendo script uno de los anteriores mencionados
+Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <script>` siendo script uno de los anteriores mencionados.
 
 ----------------
 
 ## Trabajo en local
 
 1. Clonar el repositorio
-1. Configurar el `.env` haciendo una copia de `.env.sample` y actualizando las variables.
-1. Instalar los paquetes de node con `npm install`
-1. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))
-1. Actualizar los slash commands y el endpoint de interactive con la url que te da `ngrok`
-1. Levantar la base de datos con docker `docker-compose up database` (no tiene seguridad user-pass)
-1. Arrancar la aplicación en watch `npm run start:dev`
+2. Configurar el `.env` haciendo una copia de `.env.sample` y actualizando las variables.
+3. Instalar los paquetes de node con `npm install`
+4. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))
+5. Actualizar los slash commands y el endpoint de interactive en la aplicación de Slack con la url que te da `ngrok`
+6. Levantar la base de datos con docker `docker-compose up database` (no tiene seguridad user-pass)
+
+    > :bulb: **IMPORTANTE**: El puerto de MongoDB (por defecto 27017) debe estar protegido mediante un firewall, y **NO SE DEBE EXPONER**.
+
+7. Arrancar la aplicación en watch `npm run start:dev`
 
 ----------------
 
 ## Despliegue
 
 1. Clonar el repositorio
-1. Configurar el `.env.prod`
-1. Levantar todo con docker `docker-compose up`
+2. Configurar el `.env.prod`
+3. Levantar todo con docker `docker-compose up`
 
 ----------------
 
 ## Estructura
 
-- **actions**: Las acciones programadas, los endpoints y la interactividad harán las acciones que hay en esta carpeta, dependiendo de la acción
+- **actions**: Las acciones programadas, los endpoints y la interactividad lanzarán las acciones de esta carpeta
 - **models**: Aquí están los Modelos de datos, DTOs e Interfaces
 - **scheduler**: Aquí es donde se realizarán las acciones programadas
 - **services**
@@ -119,11 +125,11 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
   - **database**: Es donde se accederá a la base de datos
     - **mongodb**: Es la implementación de la base de datos que estamos utilizando actualmente
   - **file**: Es el servicio que se encargará de escribir en ficheros
-  - **i18n**: Aquí se encontrará todo lo relacionado con los textos y traducciones de la aplicación
+  - **i18n**: Proporciona los textos y traducciones de la aplicación
   - **logger**: Aquí están todos los logs para tener un control de lo que va sucediendo en la aplicación
   - **platform**: Aquí están todas las plataformas en las que se utiliza o se podría utilizar el bot
-    - **slack**: Es el que conecta con slack a través de los endpoints
-      - **methods**: Aquí estarán todos los métodos que utilizaremos de slack
+    - **slack**: Es el que conecta con Slack a través de los endpoints
+      - **methods**: Aquí estarán todos los métodos que utilizaremos de Slack
       - **props**: Son los métodos para recuperar las propiedades de cada acción
       - **views**: Son objetos que slack reconocerá como vistas
   - **schedule**: Es donde se crearán las fechas o intervalos de las acciones programadas
