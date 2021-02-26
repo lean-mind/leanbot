@@ -139,6 +139,8 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 
 ## Recursos
 
-- [Slack API](https://api.slack.com/)
+- [Slack API](https://api.slack.com)
   - [Methods](https://api.slack.com/methods)
-- [Emojis para Slack (nombres)](https://emojipedia.org/slack)
+  - [Block Kit Builder](https://app.slack.com/block-kit-builder)
+- [Emojis para Slack](https://emojipedia.org/slack)
+- [La guía de emojis para commits que seguimos en Leanbot](https://gitmoji.dev)
