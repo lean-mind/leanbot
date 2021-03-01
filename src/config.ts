@@ -2,6 +2,7 @@ require('dotenv').config()
 
 interface Config {
   maintenance: boolean
+  test: boolean
   apiPort: string
   catToken: string
   platform: {
@@ -25,6 +26,7 @@ interface DatabaseConfig {
 
 export const config: Config = {
   maintenance: process.env.MAINTENANCE === "true" || false,
+  test: process.env.TEST === "true" || false,
   apiPort: process.env.API_PORT || "5051",
   catToken: process.env.CAT_TOKEN || "token-unknown",
   platform: {
@@ -36,8 +38,8 @@ export const config: Config = {
   },
   database: {
     mongodb: {
-      uri: process.env.MONGODB_URI || "mongodb://localhost:27017",
-      database: process.env.MONGODB_DATABASE || "db-unknown"
+      uri: (process.env.TEST === "true" ? process.env.TEST_MONGODB_URI : process.env.MONGODB_URI) || "mongodb://localhost:27017",
+      database: (process.env.TEST === "true" ? process.env.TEST_MONGODB_DATABASE : process.env.MONGODB_DATABASE) || "db_undefined"
     }
   }
 };
