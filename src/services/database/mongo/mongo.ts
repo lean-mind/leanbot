@@ -51,7 +51,7 @@ export class MongoDB extends Database {
     }
   }
 
-  registerCommunity = async (community: Community): Promise<void> => {
+  registerCommunity = async (community: Community): Promise<any> => {
     const response = await this.on(async () => {
       if (!community.id) return
       
@@ -64,6 +64,7 @@ export class MongoDB extends Database {
         await collection.insertOne(communityJson)
       }
     })
+    return response
   }
   
   getCommunities = async (): Promise<Community[]> => {
@@ -76,7 +77,7 @@ export class MongoDB extends Database {
     return response.ok ? response.data : []
   }
 
-  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
+  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<any> => {
     const response = await this.on(async () => {
       const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) => GratitudeMessageDto.fromModel(gratitudeMessage).toJson())
 
@@ -87,6 +88,7 @@ export class MongoDB extends Database {
     });
     
     if (!response.ok) throw Error(response.error)
+    return response
   }
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
@@ -108,5 +110,11 @@ export class MongoDB extends Database {
     })
 
     return response.ok ? response.data : []
+  }
+
+  removeCollections = async () => {
+    if (process.env.TEST) {
+      await this.on(() => this.instance.db(this.database).dropDatabase())
+    }
   }
 }

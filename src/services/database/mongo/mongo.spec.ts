@@ -1,32 +1,90 @@
+import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
+import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
+import { DatabaseResponse } from './../database';
+import { Community } from './../../../models/database/community';
 import { MongoClient } from "mongodb"
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
+import { GratitudeMessage } from '../../../models/database/gratitude-message';
 
 describe('Service MongoDB: ', () => {
-  const mongodbConfig = config.database.mongodb
-  const database = "test"
   let db: MongoDB
   
-  beforeAll(() => {
-    config.database.mongodb = {
-      database,
-      uri: mongodbConfig.uri
-    }
+  beforeEach(() => {
     db = new MongoDB()
-    // poblar la bd de test
+  })
+
+  afterEach(() => {
+    db.removeCollections()
+  })
+
+  it('should save communities', async () => {
+    const community: Community = {
+      id: "irrelevant-community-id",
+      platform: "slack"
+    }
+
+    const response: DatabaseResponse = await db.registerCommunity(community)
+        
+    expect(response.ok).toBe(true)
+    expect(response.error).toBeUndefined()
   })
   
-  beforeEach(() => {
+  it('should save gratitude messages', async () => {
+    const gratitudeMessage: GratitudeMessage = GratitudeMessageBuilder({})
+
+    const response: DatabaseResponse = await db.saveGratitudeMessage([gratitudeMessage])
+
+    expect(response.ok).toBe(true)
+    expect(response.error).toBeUndefined()
+  })
+  
+  it('should retrieve all registered communities', async () => {
+    const communities: Community[] = [
+      CommunityBuilder({ id: "first-community-id"}), 
+      CommunityBuilder({ id: "second-community-id"})
+    ]
+    await db.registerCommunity(communities[0])
+    await db.registerCommunity(communities[1])
+    
+    const retrievedCommunities: Community[] = await db.getCommunities()
+    
+    expect(retrievedCommunities).toContainEqual(communities[0])
+    expect(retrievedCommunities).toContainEqual(communities[1])
+    expect(retrievedCommunities).toHaveLength(2)
   })
 
-  afterAll(() => {
-    // vaciar la bd de test
-    config.database.mongodb = mongodbConfig
-  })
+  it('should retrieve all gratitude messages', async () => {
+    const gratitudeMessages: GratitudeMessage[] = [
+      GratitudeMessageBuilder({ text: "message 1" }),
+      GratitudeMessageBuilder({ text: "message 2" }),
+      GratitudeMessageBuilder({ text: "message 3" })
+    ]
+    await db.saveGratitudeMessage(gratitudeMessages)
 
-  it.todo('should retrieve all registered communities')
-  it.todo('should register a community')
-  it.todo('should save gratitude messages')
-  it.todo('should retrieve all gratitude messages')
-  it.todo('should retrieve gratitude messages from a given number of days')
+    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
+
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
+    expect(retrievedMessages).toHaveLength(3)
+  })
+  
+  it('should retrieve gratitude messages from a given number of days', async () => {
+    const today = new Date()
+    const fiveDaysAgo = new Date()
+    fiveDaysAgo.setDate(today.getDate() - 5)
+
+    const gratitudeMessages: GratitudeMessage[] = [
+      GratitudeMessageBuilder({ createdAt: today }),
+      GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
+    ]
+    await db.saveGratitudeMessage(gratitudeMessages)
+
+    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
+
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).toHaveLength(1)
+  })
 }) 
