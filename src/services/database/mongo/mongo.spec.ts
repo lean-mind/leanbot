@@ -9,37 +9,27 @@ import { GratitudeMessage } from '../../../models/database/gratitude-message';
 
 describe('Service MongoDB: ', () => {
   let db: MongoDB
-  
+  const oldConfig = config.database
+
   beforeEach(() => {
+    config.database = {
+      mongodb: {
+        uri: process.env.TEST_MONGODB_URI || "",
+        database: process.env.TEST_MONGODB_DATABASE || "test"
+      }
+    }
     db = new MongoDB()
   })
 
   afterEach(() => {
     db.removeCollections()
   })
-
-  it('should save communities', async () => {
-    const community: Community = {
-      id: "irrelevant-community-id",
-      platform: "slack"
-    }
-
-    const response: DatabaseResponse = await db.registerCommunity(community)
-        
-    expect(response.ok).toBe(true)
-    expect(response.error).toBeUndefined()
-  })
   
-  it('should save gratitude messages', async () => {
-    const gratitudeMessage: GratitudeMessage = GratitudeMessageBuilder({})
-
-    const response: DatabaseResponse = await db.saveGratitudeMessage([gratitudeMessage])
-
-    expect(response.ok).toBe(true)
-    expect(response.error).toBeUndefined()
+  afterAll(() => {
+    config.database = oldConfig
   })
-  
-  it('should retrieve all registered communities', async () => {
+
+  it('should save and retrieve communities', async () => {
     const communities: Community[] = [
       CommunityBuilder({ id: "first-community-id"}), 
       CommunityBuilder({ id: "second-community-id"})
@@ -52,9 +42,9 @@ describe('Service MongoDB: ', () => {
     expect(retrievedCommunities).toContainEqual(communities[0])
     expect(retrievedCommunities).toContainEqual(communities[1])
     expect(retrievedCommunities).toHaveLength(2)
-  })
+  }) 
 
-  it('should retrieve all gratitude messages', async () => {
+  it('should save and retrieve gratitude messages', async () => {
     const gratitudeMessages: GratitudeMessage[] = [
       GratitudeMessageBuilder({ text: "message 1" }),
       GratitudeMessageBuilder({ text: "message 2" }),

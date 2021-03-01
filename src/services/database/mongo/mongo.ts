@@ -37,7 +37,7 @@ export class MongoDB extends Database {
     await this.close()
     return { ok: true, data }
   }
-
+  
   private connect = async (): Promise<void> => {
     if (!this.instance.isConnected()) {
       await this.instance.connect()
@@ -50,9 +50,13 @@ export class MongoDB extends Database {
       this.instance = MongoDB.getClient()
     }
   }
-
-  registerCommunity = async (community: Community): Promise<any> => {
-    const response = await this.on(async () => {
+  
+  removeCollections = async () => {
+    await this.on(() => this.instance.db(this.database).dropDatabase())
+  }
+  
+  registerCommunity = async (community: Community): Promise<void> => {
+    await this.on(async () => {
       if (!community.id) return
       
       const collection = this.instance.db(this.database).collection(Collection.communities)
@@ -64,7 +68,6 @@ export class MongoDB extends Database {
         await collection.insertOne(communityJson)
       }
     })
-    return response
   }
   
   getCommunities = async (): Promise<Community[]> => {
@@ -77,7 +80,7 @@ export class MongoDB extends Database {
     return response.ok ? response.data : []
   }
 
-  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<any> => {
+  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
     const response = await this.on(async () => {
       const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) => GratitudeMessageDto.fromModel(gratitudeMessage).toJson())
 
@@ -88,7 +91,6 @@ export class MongoDB extends Database {
     });
     
     if (!response.ok) throw Error(response.error)
-    return response
   }
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
@@ -110,11 +112,5 @@ export class MongoDB extends Database {
     })
 
     return response.ok ? response.data : []
-  }
-
-  removeCollections = async () => {
-    if (process.env.TEST) {
-      await this.on(() => this.instance.db(this.database).dropDatabase())
-    }
   }
 }
