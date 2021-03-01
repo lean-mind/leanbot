@@ -9,7 +9,8 @@
     "build": "tsc --build src/tsconfig.json",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon",
-    "test": "jest --silent",
+    "test": "jest",
+    "test:silent": "jest --silent",
     "test:watch": "jest --watch --silent"
   },
   "dependencies": {
