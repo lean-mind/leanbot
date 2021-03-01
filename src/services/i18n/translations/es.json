@@ -31,5 +31,8 @@
     "received": "Recibidos:",
     "noReceived": "No has recibido gracias esta semana",
     "receivedCount": "Te han dado las gracias *${count} veces*"
+  },
+  "coffeeRoulette": {
+    "recipientMessage": "${sender} te ha invitado a tomarte un café"
   }
 }

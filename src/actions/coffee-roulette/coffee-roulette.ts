@@ -1,3 +1,4 @@
+import { I18n } from './../../services/i18n/i18n';
 import { Platform } from "../../services/platform/platform";
 
 export interface CoffeeRouletteProps {
@@ -8,6 +9,7 @@ export interface CoffeeRouletteProps {
 }
 
 export const coffeeRoulette = (communityMembers: string[] = []) => async (platform: Platform, data: CoffeeRouletteProps) => {
+  const i18n = await I18n.getInstance()
   if (communityMembers.length === 0){
     communityMembers = await platform.getCommunityMembers(data.communityId)
   }
@@ -17,5 +19,5 @@ export const coffeeRoulette = (communityMembers: string[] = []) => async (platfo
     communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
     return coffeeRoulette(communityMembers)(platform, data)
   }
-  platform.sendMessage(randomUserId, `<@${data.userId}> te ha invitado a tomarte un café`)
+  platform.sendMessage(randomUserId, i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${data.userId}>` }))
 }
