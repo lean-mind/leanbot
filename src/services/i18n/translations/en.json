@@ -33,7 +33,8 @@
     "receivedCount": "You have received gratitude messages *${count} times*"
   },
   "coffeeRoulette": {
-    "recipientMessage": "${sender} has invited you to have a coffee",
+    "recipientMessage": "${sender} has invited you to have a coffee:\n> ${message}",
+    "recipientMessageWithText": "$t(coffeeRoulette.recipientMessage):\n> ${text}",
     "noOneAvailable": "Sorry, there is no one available for a coffee"
   }
 }

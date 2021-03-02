@@ -28,14 +28,27 @@ describe('Coffee roulette', () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
       
       await coffeeRoulette(platform, coffeeRouletteProps)
-
+      
       expect(platform.sendMessage).toBeCalledWith(
         randomUserId, 
         i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${coffeeRouletteProps.userId}>` })
+        )
+      })
+      
+    it('should ask another user for a coffee with message', async () => {
+      const coffeeRoulettePropsWithText = CoffeeRoulettePropsBuilder({ text: "irrelevant-text" })
+      platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
+      
+      await coffeeRoulette(platform, coffeeRoulettePropsWithText)
+      
+      expect(platform.sendMessage).toBeCalledWith(
+        randomUserId, 
+        i18n.translate("coffeeRoulette.recipientMessageWithText", { 
+          sender: `<@${coffeeRoulettePropsWithText.userId}>`,
+          text: coffeeRoulettePropsWithText.text
+        })
       )
-    })
-
-    it.todo('should ask another user for a coffee with message')
+     })
 
     it('should not ask the user/yourself for a coffee', async () => {
       const userMyself = "my-user-id"

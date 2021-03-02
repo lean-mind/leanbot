@@ -8,7 +8,6 @@ export interface CoffeeRouletteProps {
   text?: string
 }
 
-
 export const coffeeRoulette = async (platform: Platform, data: CoffeeRouletteProps) => {
   const communityMembers = await platform.getCommunityMembers(data.communityId)
   await coffeeRouletteRec(communityMembers)(platform, data)
@@ -25,5 +24,12 @@ const coffeeRouletteRec = (communityMembers: string[]) => async (platform: Platf
     communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
     return coffeeRouletteRec(communityMembers)(platform, data)
   }
-  platform.sendMessage(randomUserId, i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${data.userId}>` }))
+
+  let messageOptions = { sender: `<@${data.userId}>` }
+  let translation = "coffeeRoulette.recipientMessage"
+  if (data.text) {
+    messageOptions["text"] = data.text
+    translation = "coffeeRoulette.recipientMessageWithText"
+  }
+  platform.sendMessage(randomUserId, i18n.translate(translation, messageOptions))
 }

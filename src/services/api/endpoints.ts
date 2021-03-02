@@ -30,7 +30,7 @@ export const Endpoints: EndpointInstance[] = [
   },
   {
     name: Endpoint.coffeeRoulette,
-    action: coffeeRoulette(),
+    action: coffeeRoulette,
     getProps: (platform, data) => platform.getCoffeeRouletteProps(data)
   },
   { 
