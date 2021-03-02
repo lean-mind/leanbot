@@ -8,45 +8,9 @@ import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, get
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
+import { SlackInteractiveView, SlackView } from "./views"
 
 export type Request = AxiosInstance
-
-// TODO: move to a different file
-export class SlackView extends View {
-  constructor(
-    public blocks: any[]
-  ) 
-  { 
-    super()
-  }
-}
-
-// TODO: move to a different file
-export class SlackInteractiveView extends InteractiveView {
-  public type: string
-  public external_id: string
-  public title: any
-  public submit: any
-  public close: any
-  public blocks: any[]
-
-  constructor({
-    type = "",
-    externalId = "",
-    title = {},
-    submit = {},
-    close = {},
-    blocks = [] as any[],
-  }) { 
-    super()
-    this.type = type
-    this.external_id = externalId
-    this.title = title
-    this.submit = submit
-    this.close = close
-    this.blocks = blocks
-  }
-}
 
 export class Slack extends Platform {
   private static instance: Slack

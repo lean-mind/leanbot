@@ -1,7 +1,7 @@
 import { GratitudeSummaryMessage } from "../../../../models/database/gratitude-message";
 import { I18n } from "../../../i18n/i18n";
 import { getDateFormatted } from "../../../logger/logger";
-import { SlackView } from "../slack";
+import { SlackView } from ".";
 
 export interface GratitudeSummaryViewProps {
   image: string,

@@ -5,7 +5,8 @@ import { SlackBodyBuilder } from './../../../tests/builders/models/slack/slack-b
 import { CoffeeRouletteProps } from './../../../actions/coffee-roulette/coffee-roulette';
 import { getSlackThanksConfirmationProps, getSlackThanksProps } from './props/thanks-props';
 import { UserInfo } from './methods/get-user-info';
-import { Slack, SlackInteractiveView, SlackView } from "./slack"
+import { Slack } from "./slack"
+import { SlackInteractiveView, SlackView } from "./views"
 import axios from 'axios'
 import { getSlackCoffeeRouletteProps } from './props/coffee-roulette-props';
 import { ThanksProps } from '../../../actions/thanks/thanks';

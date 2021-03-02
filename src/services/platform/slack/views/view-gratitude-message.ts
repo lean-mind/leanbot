@@ -1,6 +1,7 @@
 import { I18n } from "../../../i18n/i18n";
-import { SlackInteractiveView } from "../slack";
+import { SlackInteractiveView } from ".";
 
+// TODO: turn into SlackInteractiveView method
 export const GratitudeMessageInteractiveView = async (i18n?: I18n): Promise<SlackInteractiveView> => {
   i18n = await I18n.getInstance()
   const type = "modal"

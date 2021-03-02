@@ -1,4 +1,4 @@
-import { SlackView } from "../../../../../services/platform/slack/slack";
+import { SlackView } from "../../../../../services/platform/slack/views";
 import { GratitudeSummaryView, GratitudeSummaryViewProps } from "../../../../../services/platform/slack/views/view-gratitude-summary";
 
 export const GratitudeSummaryViewBuilder = ({
