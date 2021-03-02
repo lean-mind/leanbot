@@ -1,16 +1,18 @@
+import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { CoffeeRoulettePropsBuilder } from "../../tests/builders/actions/coffee-roulette-props-builder"
 import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
 
-describe('Coffee roulette',() => {
-
+describe('Coffee roulette', () => {
+  let i18n: I18n
   let platform: Platform
   let coffeeRouletteProps: CoffeeRouletteProps
-
+  
   const randomUserId = "irrelevant-random-user-id"
-
-  beforeEach(() => {
+  
+  beforeEach(async () => {
+    i18n = await I18n.getInstance()
     platform = Slack.getInstance()
     platform.getUserInfo = jest.fn(async () => ({
       id: randomUserId,
@@ -23,14 +25,28 @@ describe('Coffee roulette',() => {
 
   describe('command', () => {
     it('should ask another user for a coffee', async () => {
-      await coffeeRoulette([randomUserId])(platform, coffeeRouletteProps)
+      platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
+      
+      await coffeeRoulette(platform, coffeeRouletteProps)
+
       expect(platform.sendMessage).toBeCalledWith(
         randomUserId, 
-        `<@${coffeeRouletteProps.userId}> te ha invitado a tomarte un café`
+        i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${coffeeRouletteProps.userId}>` })
       )
     })
-    it.todo('should ask another user for a coffee with message')    
-    it.todo('should not ask the user/yourself for a coffee')
+
+    it.todo('should ask another user for a coffee with message')
+
+    it('should not ask the user/yourself for a coffee', async () => {
+      const userMyself = "my-user-id"
+      const myselfCoffeeRouletteProps = CoffeeRoulettePropsBuilder({ userId: userMyself })
+      platform.getCommunityMembers = jest.fn(async () => ([userMyself]))
+
+      await coffeeRoulette(platform, myselfCoffeeRouletteProps)
+
+      expect(platform.sendMessage).toBeCalledWith(userMyself, i18n.translate("coffeeRoulette.noOneAvailable"))
+    })
+
     it.todo('should inform you if no one is available')
     it.todo('should inform the user if there is no response')
     it.todo('should try again if there is no response and the user wants to try again')

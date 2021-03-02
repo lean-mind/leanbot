@@ -33,6 +33,7 @@
     "receivedCount": "You have received gratitude messages *${count} times*"
   },
   "coffeeRoulette": {
-    "recipientMessage": "${sender} has invited you to have a coffee"
+    "recipientMessage": "${sender} has invited you to have a coffee",
+    "noOneAvailable": "Sorry, there is no one available for a coffee"
   }
 }
