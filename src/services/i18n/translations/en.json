@@ -22,5 +22,17 @@
     "channelLabel": "Do you want it to be published on a channel?",
     "channelDescription": "* It is optional and the bot has to belong to the channel",
     "channelPlaceholder": "Channel"
+  },
+  "gratitudeMessageSummary": {
+    "title": "Weekly summary :clap:",
+    "sent": "Given:",
+    "noSent": "You haven't expressed gratitude this week",
+    "sentCount": "You expressed your gratitude *${count} times*",
+    "received": "Received:",
+    "noReceived": "You haven't received any gratitude messages this week",
+    "receivedCount": "You have received gratitude messages *${count} times*"
+  },
+  "coffeeRoulette": {
+    "recipientMessage": "${sender} has invited you to have a coffee"
   }
 }
