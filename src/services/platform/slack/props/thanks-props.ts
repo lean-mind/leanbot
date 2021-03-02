@@ -2,10 +2,10 @@ import { ThanksProps } from "../../../../actions/thanks/thanks";
 import { removeDuplicates, ThanksConfirmationProps } from "../../../../actions/thanks/thanks-confirmation";
 import { SlackBody } from "../../../../models/platform/slack/body";
 import { Id } from "../../../../models/platform/slack/id";
-import { ViewGratitudeMessage } from "../views";
+import { GratitudeMessageInteractiveView } from "../views";
 
 export const getSlackThanksProps = async (body: SlackBody): Promise<ThanksProps> => {
-  const view = await ViewGratitudeMessage()
+  const view = await GratitudeMessageInteractiveView()
   const channelId = body.trigger_id
 
   return {

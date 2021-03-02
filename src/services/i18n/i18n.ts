@@ -5,7 +5,6 @@ const en = require("./translations/en.json")
 const es = require("./translations/es.json")
 const esCan = require("./translations/es.can.json")
 
-// TODO: create coffee roulette texts 
 export class I18n {
   private static namespace: string = "leanbot"
   private static instance: i18n = i18next

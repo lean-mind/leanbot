@@ -1,2 +1,2 @@
-export { ViewGratitudeMessage } from './view-gratitude-message'
-export { ViewGratitudeSummary } from './view-gratitude-summary'
+export { GratitudeMessageInteractiveView } from './view-gratitude-message'
+export { GratitudeSummaryView } from './view-gratitude-summary'

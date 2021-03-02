@@ -3,7 +3,7 @@ import { I18n } from "../../../i18n/i18n";
 import { getDateFormatted } from "../../../logger/logger";
 import { SlackView } from "../slack";
 
-export interface ViewGratitudeSummaryProps {
+export interface GratitudeSummaryViewProps {
   image: string,
   sent?: GratitudeSummaryMessage[],
   received?: GratitudeSummaryMessage[],
@@ -13,9 +13,8 @@ const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
   return `• *${users.map(({ id }) => `<@${id}>`).join(", ")}* \`${getDateFormatted(createdAt)}\`: ${text}`;
 }
 
-// TODO: Change name to [Blank]View
 // TODO: maybe add tests
-export const ViewGratitudeSummary = async ({ image, sent, received }: ViewGratitudeSummaryProps): Promise<SlackView> => {
+export const GratitudeSummaryView = async ({ image, sent, received }: GratitudeSummaryViewProps): Promise<SlackView> => {
   const i18n = await I18n.getInstance()
   const hasSent = sent !== undefined && sent.length > 0
   const hasReceived = received !== undefined && received.length > 0
