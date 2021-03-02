@@ -33,14 +33,14 @@ describe('Coffee roulette', () => {
         randomUserId, 
         i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${coffeeRouletteProps.userId}>` })
         )
-      })
+    })
       
     it('should ask another user for a coffee with message', async () => {
       const coffeeRoulettePropsWithText = CoffeeRoulettePropsBuilder({ text: "irrelevant-text" })
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
       
       await coffeeRoulette(platform, coffeeRoulettePropsWithText)
-      
+
       expect(platform.sendMessage).toBeCalledWith(
         randomUserId, 
         i18n.translate("coffeeRoulette.recipientMessageWithText", { 
@@ -48,7 +48,7 @@ describe('Coffee roulette', () => {
           text: coffeeRoulettePropsWithText.text
         })
       )
-     })
+    })
 
     it('should not ask the user/yourself for a coffee', async () => {
       const userMyself = "my-user-id"
@@ -57,10 +57,25 @@ describe('Coffee roulette', () => {
 
       await coffeeRoulette(platform, myselfCoffeeRouletteProps)
 
-      expect(platform.sendMessage).toBeCalledWith(userMyself, i18n.translate("coffeeRoulette.noOneAvailable"))
+      expect(platform.sendMessage).not.toBeCalledWith(
+        userMyself, 
+        i18n.translate("coffeeRoulette.recipientMessage", { 
+          sender: `<@${coffeeRouletteProps.userId}>` 
+        })
+      )
     })
 
-    it.todo('should inform you if no one is available')
+    it('should inform you if no one is available', async () => {
+      platform.getCommunityMembers = jest.fn(async () => ([]))
+
+      await coffeeRoulette(platform, coffeeRouletteProps)      
+
+      expect(platform.sendMessage).toBeCalledWith(
+        coffeeRouletteProps.userId, 
+        i18n.translate("coffeeRoulette.noOneAvailable")
+      )
+    })
+
     it.todo('should inform the user if there is no response')
     it.todo('should try again if there is no response and the user wants to try again')
   })
