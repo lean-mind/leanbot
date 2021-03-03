@@ -2,7 +2,6 @@ import { CommunityBuilder } from './../../../tests/builders/models/community-bui
 import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
 import { DatabaseResponse } from './../database';
 import { Community } from './../../../models/database/community';
-import { MongoClient } from "mongodb"
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
@@ -21,8 +20,8 @@ describe('Service MongoDB: ', () => {
     db = new MongoDB()
   })
 
-  afterEach(() => {
-    db.removeCollections()
+  afterEach(async () => {
+    await db.removeCollections()
   })
   
   afterAll(() => {
