@@ -10,7 +10,7 @@ import axios from 'axios'
 import { getSlackCoffeeRouletteProps } from './props/coffee-roulette-props';
 import { ThanksProps } from '../../../actions/thanks/thanks';
 import { View } from '../../../models/platform/message';
-import { SlackInteractiveView, SlackView } from '../../../models/platform/slack/views/views';
+import { SlackModal, SlackView } from '../../../models/platform/slack/views/views';
 
 jest.mock('axios')
 
@@ -42,7 +42,7 @@ describe('Slack service:', () => {
 
     it('should send an interactive view', () => {
       const endpoint = "/views.open"
-      const view: SlackInteractiveView = new SlackInteractiveView({
+      const view: SlackModal = new SlackModal({
         blocks: [{value: "irrelevant-value"}]
       })
       const trigger_id = "irrelevant-trigger-id"
@@ -220,7 +220,7 @@ describe('Slack service:', () => {
     const triggerId = "irrelevant-trigger-id"
 
     it('should provide props for thanks command', async () => {
-      const view: SlackInteractiveView = await SlackInteractiveView.gratitudeMessage()
+      const view: SlackModal = await SlackModal.gratitudeMessage()
       const body = SlackBodyBuilder({ triggerId })
 
       const thanksProps: ThanksProps = await getSlackThanksProps(body)

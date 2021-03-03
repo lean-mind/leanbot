@@ -1,10 +1,15 @@
 import { InteractiveView, View } from "../../message"
+import { CoffeeRouletteMessageView } from "./coffee-roulette-message-view"
 import { GratitudeMessageInteractiveView } from "./view-gratitude-message"
 import { GratitudeSummaryView } from "./view-gratitude-summary"
 
+export { GratitudeSummaryViewProps } from "./view-gratitude-summary"
 // TODO: maybe add tests
 
-export class SlackView extends View {
+export interface SlackBlock {
+  blocks: any[]
+}
+export class SlackView extends View implements SlackBlock {
   constructor(
     public blocks: any[]
     ) 
@@ -15,7 +20,17 @@ export class SlackView extends View {
   static gratitudeSummary = GratitudeSummaryView
 }
 
-export class SlackInteractiveView extends InteractiveView {
+export class SlackInteractiveBlock extends InteractiveView implements SlackBlock {
+  constructor(
+    public blocks: any[]
+    ) 
+    { 
+      super()
+    }
+
+  static coffeeRouletteMessage = CoffeeRouletteMessageView
+}
+export class SlackModal extends InteractiveView implements SlackBlock {
   public type: string
   public external_id: string
   public title: any
@@ -39,6 +54,6 @@ export class SlackInteractiveView extends InteractiveView {
     this.close = close
     this.blocks = blocks
   }
-
+  
   static gratitudeMessage = GratitudeMessageInteractiveView
 }

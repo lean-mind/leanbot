@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { Message, View, InteractiveView } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
-import { SlackInteractiveView, SlackView } from "../../../models/platform/slack/views/views"
+import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views/views"
 import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
 import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
@@ -55,10 +55,10 @@ export class Slack extends Platform {
   sendMessage = async (channelId: string, message: Message) => {
     if (typeof message === "string") {
       await chatPostMessage(this.api, Slack.headers.bot)(channelId, { text: message })
-    } else if (message instanceof SlackView) {
-      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackView).blocks })
-    } else if (message instanceof SlackInteractiveView) {
-      await viewsOpen(this.api, Slack.headers.bot)(message as SlackInteractiveView, channelId)
+    } else if (message instanceof SlackView || message instanceof SlackInteractiveBlock) {
+      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackBlock).blocks })
+    } else if (message instanceof SlackModal) {
+      await viewsOpen(this.api, Slack.headers.bot)(message as SlackModal, channelId)
     } else {
       Logger.onError('Unidentifiable message type')
     }

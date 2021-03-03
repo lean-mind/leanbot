@@ -1,7 +1,7 @@
-import { SlackInteractiveView } from "./views";
+import { SlackModal } from "./views";
 import { I18n } from "../../../../services/i18n/i18n";
 
-export const GratitudeMessageInteractiveView = async (): Promise<SlackInteractiveView> => {
+export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => {
   const i18n = await I18n.getInstance()
   const type = "modal"
   const externalId = "thanks-confirmation"
@@ -98,7 +98,7 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackInteractiv
     }
   ]
   
-  return new SlackInteractiveView({
+  return new SlackModal({
     type,
     externalId,
     title,
