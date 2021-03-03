@@ -2,13 +2,13 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { Message, View, InteractiveView } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
+import { SlackInteractiveView, SlackView } from "../../../models/platform/slack/views/views"
 import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
 import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
-import { SlackInteractiveView, SlackView } from "./views"
 
 export type Request = AxiosInstance
 

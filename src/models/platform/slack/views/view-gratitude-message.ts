@@ -1,9 +1,8 @@
-import { I18n } from "../../../i18n/i18n";
-import { SlackInteractiveView } from ".";
+import { SlackInteractiveView } from "./views";
+import { I18n } from "../../../../services/i18n/i18n";
 
-// TODO: turn into SlackInteractiveView method
-export const GratitudeMessageInteractiveView = async (i18n?: I18n): Promise<SlackInteractiveView> => {
-  i18n = await I18n.getInstance()
+export const GratitudeMessageInteractiveView = async (): Promise<SlackInteractiveView> => {
+  const i18n = await I18n.getInstance()
   const type = "modal"
   const externalId = "thanks-confirmation"
   const title = {

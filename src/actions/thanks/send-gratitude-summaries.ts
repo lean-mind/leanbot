@@ -5,7 +5,7 @@ import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
 import { Platform, PlatformName } from "../../services/platform/platform";
-import { GratitudeSummaryView } from "../../services/platform/slack/views/view-gratitude-summary";
+import { SlackView } from "../../models/platform/slack/views/views";
 
 const getGratitudeSummaryMessageFrom = (gratitudeMessage: GratitudeMessage, isSender: boolean): GratitudeSummaryMessage => ({
   users: isSender ? [gratitudeMessage.recipient] : [gratitudeMessage.sender],
@@ -63,7 +63,7 @@ export const sendGratitudeSummaries = async (
       // type Views = "gratitude-summary"
       // type InteractiveViews = "gratitude-message"
       // Platform.getInstance(platform).getView("gratitude-summary")
-      const blocks: View = await GratitudeSummaryView({ image: catImage.url, sent, received })
+      const blocks: View = await SlackView.gratitudeSummary({ image: catImage.url, sent, received })
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {

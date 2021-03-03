@@ -6,12 +6,11 @@ import { CoffeeRouletteProps } from './../../../actions/coffee-roulette/coffee-r
 import { getSlackThanksConfirmationProps, getSlackThanksProps } from './props/thanks-props';
 import { UserInfo } from './methods/get-user-info';
 import { Slack } from "./slack"
-import { SlackInteractiveView, SlackView } from "./views"
 import axios from 'axios'
 import { getSlackCoffeeRouletteProps } from './props/coffee-roulette-props';
 import { ThanksProps } from '../../../actions/thanks/thanks';
-import { GratitudeMessageInteractiveView } from './views';
 import { View } from '../../../models/platform/message';
+import { SlackInteractiveView, SlackView } from '../../../models/platform/slack/views/views';
 
 jest.mock('axios')
 
@@ -221,7 +220,7 @@ describe('Slack service:', () => {
     const triggerId = "irrelevant-trigger-id"
 
     it('should provide props for thanks command', async () => {
-      const view = await GratitudeMessageInteractiveView()
+      const view: SlackInteractiveView = await SlackInteractiveView.gratitudeMessage()
       const body = SlackBodyBuilder({ triggerId })
 
       const thanksProps: ThanksProps = await getSlackThanksProps(body)

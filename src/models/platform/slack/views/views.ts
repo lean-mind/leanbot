@@ -1,15 +1,18 @@
-import { InteractiveView, View } from '../../../../models/platform/message'
+import { InteractiveView, View } from "../../message"
+import { GratitudeMessageInteractiveView } from "./view-gratitude-message"
+import { GratitudeSummaryView } from "./view-gratitude-summary"
 
-export { GratitudeMessageInteractiveView } from './view-gratitude-message'
-export { GratitudeSummaryView } from './view-gratitude-summary'
+// TODO: maybe add tests
 
 export class SlackView extends View {
   constructor(
     public blocks: any[]
-  ) 
-  { 
-    super()
-  }
+    ) 
+    { 
+      super()
+    }
+
+  static gratitudeSummary = GratitudeSummaryView
 }
 
 export class SlackInteractiveView extends InteractiveView {
@@ -19,7 +22,7 @@ export class SlackInteractiveView extends InteractiveView {
   public submit: any
   public close: any
   public blocks: any[]
-
+  
   constructor({
     type = "",
     externalId = "",
@@ -37,5 +40,5 @@ export class SlackInteractiveView extends InteractiveView {
     this.blocks = blocks
   }
 
-  // TODO: add gratitudeMessageInteractiveView as method
+  static gratitudeMessage = GratitudeMessageInteractiveView
 }

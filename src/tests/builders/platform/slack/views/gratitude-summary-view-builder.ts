@@ -1,11 +1,11 @@
-import { SlackView } from "../../../../../services/platform/slack/views";
-import { GratitudeSummaryView, GratitudeSummaryViewProps } from "../../../../../services/platform/slack/views/view-gratitude-summary";
+import { SlackView } from "../../../../../models/platform/slack/views/views";
+import { GratitudeSummaryViewProps } from "../../../../../models/platform/slack/views/view-gratitude-summary";
 
 export const GratitudeSummaryViewBuilder = ({
   image = "image-url",
   sent = [],
   received = []
-}: Partial<GratitudeSummaryViewProps>): Promise<SlackView> => GratitudeSummaryView({
+}: Partial<GratitudeSummaryViewProps>): Promise<SlackView> => SlackView.gratitudeSummary({
   image,
   sent,
   received
