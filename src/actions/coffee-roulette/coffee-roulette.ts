@@ -13,6 +13,7 @@ export const coffeeRoulette = async (platform: Platform, data: CoffeeRoulettePro
   await coffeeRouletteRec(communityMembers)(platform, data)
 }
 
+// TODO: rename
 const coffeeRouletteRec = (communityMembers: string[]) => async (platform: Platform, data: CoffeeRouletteProps) => {
   const i18n = await I18n.getInstance()
   if (communityMembers.length === 0) {
