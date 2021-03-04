@@ -26,6 +26,7 @@ const coffeeRouletteRec = (communityMembers: string[]) => async (platform: Platf
     communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
     return coffeeRouletteRec(communityMembers)(platform, data)
   }
-
+  
+  platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.searching"))
   platform.sendMessage(randomUserId, await CoffeeRouletteMessageView(data))
 }

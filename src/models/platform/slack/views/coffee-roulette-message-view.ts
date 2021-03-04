@@ -4,7 +4,7 @@ import { I18n } from '../../../../services/i18n/i18n';
 
 export const CoffeeRouletteMessageView = async (data: CoffeeRouletteProps): Promise<SlackInteractiveBlock> => {
   const i18n = await I18n.getInstance()
-  const options = { sender: `<@${data.userId}>`}
+  const options = { sender: `<@${data.userId}>`, text: data.text }
   const blocks = [
 		{
 			"type": "section",
