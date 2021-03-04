@@ -12,7 +12,8 @@
     "test": "jest",
     "test:silent": "jest --silent",
     "test:watch": "jest --watch --silent",
-    "coverage": "jest --coverage --silent"
+    "coverage": "jest --coverage --silent",
+    "test:database": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1"
   },
   "dependencies": {
     "axios": "^0.21.1",
