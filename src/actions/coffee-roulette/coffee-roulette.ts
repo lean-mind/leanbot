@@ -1,5 +1,6 @@
 import { I18n } from './../../services/i18n/i18n';
 import { Platform } from "../../services/platform/platform";
+import { CoffeeRouletteMessageView } from '../../models/platform/slack/views/coffee-roulette-message-view';
 
 export interface CoffeeRouletteProps {
   channelId: string,
@@ -26,11 +27,5 @@ const coffeeRouletteRec = (communityMembers: string[]) => async (platform: Platf
     return coffeeRouletteRec(communityMembers)(platform, data)
   }
 
-  let messageOptions = { sender: `<@${data.userId}>` }
-  let translation = "coffeeRoulette.recipientMessage"
-  if (data.text) {
-    messageOptions["text"] = data.text
-    translation = "coffeeRoulette.recipientMessageWithText"
-  }
-  platform.sendMessage(randomUserId, i18n.translate(translation, messageOptions))
+  platform.sendMessage(randomUserId, await CoffeeRouletteMessageView(data))
 }

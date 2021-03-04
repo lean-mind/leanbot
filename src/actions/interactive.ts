@@ -1,5 +1,7 @@
 import { Logger } from "../services/logger/logger"
 import { Platform } from "../services/platform/platform"
+import { acceptCoffee } from "./coffee-roulette/accept-coffee"
+import { rejectCoffee } from "./coffee-roulette/reject-coffee"
 import { thanksConfirmation } from "./thanks"
 
 export interface InteractiveProps {
@@ -15,6 +17,8 @@ export const interactive = (platform: Platform, props: InteractiveProps) => {
     const { nextStep, accept, data } = props
     const mapper = {
       ["thanks-confirmation"]: thanksConfirmation,
+      ["accept-coffee"]: acceptCoffee,
+      ["reject-coffee"]: rejectCoffee
     }
     const command = mapper[nextStep];
     

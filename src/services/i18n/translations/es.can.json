@@ -35,7 +35,11 @@
   "coffeeRoulette": {
     "recipientMessage": "${sender} te ha invitado a tomarte un café",
     "recipientMessageWithText": "$t(coffeeRoulette.recipientMessage):\n> ${text}",
-    "noOneAvailable": "Lo sentimos, no hay nadie disponible para tomar un café"
+    "noOneAvailable": "Lo sentimos, no hay nadie disponible para tomar un café",
+    "acceptedOffer": "${user} ha aceptado tu café",
+    "rejectedOffer": "No han aceptado tu café :disappointed:",
+    "recipientAcceptedOffer": "Has aceptado el café de ${sender}",
+    "recipientRejectedOffer": "Has rechazado el café de ${sender}"
   },
   "button": {
     "accept": "Mándale",

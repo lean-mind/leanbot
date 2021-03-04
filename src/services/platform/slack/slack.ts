@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
-import { Message, View, InteractiveView } from "../../../models/platform/message"
+import { Message } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
 import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views/views"
 import { Logger } from "../../logger/logger"
@@ -9,6 +9,7 @@ import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, get
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
+import { chatUpdateMessage } from './methods/chat-update-message';
 
 export type Request = AxiosInstance
 
@@ -59,6 +60,16 @@ export class Slack extends Platform {
       await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackBlock).blocks })
     } else if (message instanceof SlackModal) {
       await viewsOpen(this.api, Slack.headers.bot)(message as SlackModal, channelId)
+    } else {
+      Logger.onError('Unidentifiable message type')
+    }
+  }
+
+  updateMessage = async (messageId: any, message: Message) => {
+    if (typeof message === "string") {
+      await chatUpdateMessage(messageId, { text: message })
+    } else if (message instanceof SlackView) {
+      await chatUpdateMessage(messageId, { blocks: (message as SlackBlock).blocks })
     } else {
       Logger.onError('Unidentifiable message type')
     }

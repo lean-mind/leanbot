@@ -4,15 +4,15 @@ import { I18n } from '../../../../services/i18n/i18n';
 
 export const CoffeeRouletteMessageView = async (data: CoffeeRouletteProps): Promise<SlackInteractiveBlock> => {
   const i18n = await I18n.getInstance()
+  const options = { sender: `<@${data.userId}>`}
   const blocks = [
 		{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
 				"text": data.text ? 
-          i18n.translate("coffeeRoulette.recipientMessageWithText") :
-          i18n.translate("coffeeRoulette.recipientMessage"),
-				"emoji": true
+          i18n.translate("coffeeRoulette.recipientMessageWithText", options ) :
+          i18n.translate("coffeeRoulette.recipientMessage", options),
 			}
 		},
 		{
@@ -20,21 +20,23 @@ export const CoffeeRouletteMessageView = async (data: CoffeeRouletteProps): Prom
 			"elements": [
 				{
 					"type": "button",
+          "style": "primary",
 					"text": {
-						"type": "plain_text",
+            "type": "plain_text",
 						"text": i18n.translate("button.accept"),
 					},
-					//"value": "click_me_123",
-					"action_id": "accept"
+					"value": data.userId,
+					"action_id": "accept-coffee"
 				},
 				{
-					"type": "button",
+          "type": "button",
+          "style": "danger",
 					"text": {
 						"type": "plain_text",
 						"text": i18n.translate("button.reject"),
 					},
-					//"value": "click_me_123",
-					"action_id": "reject"
+					"value": data.userId,
+					"action_id": "reject-coffee"
 				}
 			]
 		}

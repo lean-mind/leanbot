@@ -20,6 +20,7 @@ export abstract class Platform {
   }
 
   abstract sendMessage: (channelId: string, message: Message) => Promise<void>
+  abstract updateMessage: (messageId: any, message: Message) => Promise<void>
   
   abstract getCommunityMembers: (communityId: string) => Promise<string[]>
   abstract getMembersByChannelId: (channelId: string) => Promise<string[]>
