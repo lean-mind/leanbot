@@ -6,7 +6,6 @@ export interface View {
   [key: string]: any,
 }
 
-// TODO: Preguntarle a Michael por esto
 export interface SlackPayload {
   type: string,
   token: string,
