@@ -1,3 +1,4 @@
+import { SlackInteractiveBlock } from "../../models/platform/slack/views/views"
 import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
@@ -24,15 +25,28 @@ describe('Coffee roulette', () => {
   })
 
   describe('command', () => {
+    it('should inform the user that the command worked', async () => {
+      platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
+
+      await coffeeRoulette(platform, coffeeRouletteProps)
+
+      expect(platform.sendMessage).nthCalledWith(
+        1, 
+        coffeeRouletteProps.userId,
+        i18n.translate("coffeeRoulette.searching")
+      )
+    })
+
     it('should ask another user for a coffee', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
       
       await coffeeRoulette(platform, coffeeRouletteProps)
       
-      expect(platform.sendMessage).toBeCalledWith(
+      expect(platform.sendMessage).nthCalledWith(
+        2,
         randomUserId, 
-        i18n.translate("coffeeRoulette.recipientMessage", { sender: `<@${coffeeRouletteProps.userId}>` })
-        )
+        await SlackInteractiveBlock.coffeeRouletteMessage(coffeeRouletteProps)
+      )
     })
       
     it('should ask another user for a coffee with message', async () => {
@@ -41,12 +55,10 @@ describe('Coffee roulette', () => {
       
       await coffeeRoulette(platform, coffeeRoulettePropsWithText)
 
-      expect(platform.sendMessage).toBeCalledWith(
+      expect(platform.sendMessage).nthCalledWith(
+        2,
         randomUserId, 
-        i18n.translate("coffeeRoulette.recipientMessageWithText", { 
-          sender: `<@${coffeeRoulettePropsWithText.userId}>`,
-          text: coffeeRoulettePropsWithText.text
-        })
+        await SlackInteractiveBlock.coffeeRouletteMessage(coffeeRoulettePropsWithText)
       )
     })
 

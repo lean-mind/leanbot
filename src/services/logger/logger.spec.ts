@@ -61,7 +61,7 @@ describe('Service Logger: ', () => {
     })
     
     it('onDbError', () => {
-      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing or readind database: ` + JSON.stringify(errorToTest)
+      const messageExpected = `${getDateFormatted(date)} Oops! There was an error writing or reading database: ` + JSON.stringify(errorToTest)
       Logger.onDBError(errorToTest)
   
       expect(error).toBeCalledWith(messageExpected)

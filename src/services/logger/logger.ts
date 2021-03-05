@@ -28,7 +28,7 @@ export class Logger {
   static onResponse = (endpoint: string, data: any) => Logger.info(`${endpoint} <- ${JSON.stringify(data)}`)
 
   static onError = (error: any) => Logger.error(`Oops! There was an error`, error);
-  static onDBError = (error: any) => Logger.error(`Oops! There was an error writing or readind database`, error);
+  static onDBError = (error: any) => Logger.error(`Oops! There was an error writing or reading database`, error);
   static onFileReadError = (file: string, error: any) => Logger.error(`Oops! There was an error reading ${file} file`, error);
   static onFileWriteError = (file: string, error: any) => Logger.error(`Oops! There was an error writing ${file} file`, error);
   static onMissingTranslation = (file: string, type: string, key: string) => Logger.error(`Oops! There was an error in ${file} file: { "${type}": { "${key}": "MISSING TRANSLATION" } }`);
