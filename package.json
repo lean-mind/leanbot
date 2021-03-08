@@ -13,7 +13,13 @@
     "test:silent": "jest --silent",
     "test:watch": "jest --watch --silent",
     "coverage": "jest --coverage --silent",
-    "test:database": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1"
+    "test:database": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": ["build"],
+    "preset": "ts-jest"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -33,6 +39,9 @@
     "@types/mongodb": "^3.6.3",
     "@types/node": "^13.7.5",
     "@types/node-schedule": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
     "jest": "^25.1.0",
     "nodemon": "^2.0.7",
     "ts-jest": "^25.3.0"
