@@ -5,9 +5,12 @@ import { Platform } from './../../services/platform/platform';
 import { Database } from '../../services/database/database';
 import { CoffeeBreak } from '../../models/database/coffee-break';
 
-export const acceptCoffee = async (platform: Platform, data: CoffeeButtonActionProps): Promise<void> => {
+export const acceptCoffee = async (
+  platform: Platform, 
+  data: CoffeeButtonActionProps, 
+  db: Database = Database.make()
+): Promise<void> => {
   const i18n: I18n = await I18n.getInstance()
-  const db: Database = Database.make()
   const createdAt = new Date()
 
   const coffeeBreak: CoffeeBreak = new CoffeeBreak(data.communityId, data.sender, data.userId, createdAt)
