@@ -1,3 +1,5 @@
+import { CoffeeBreakBuilder } from './../../../tests/builders/models/coffee-break-builder';
+import { CoffeeBreak } from './../../../models/database/coffee-break';
 import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
 import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
 import { DatabaseResponse } from './../database';
@@ -75,5 +77,10 @@ describe('Service MongoDB: ', () => {
     expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
     expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
     expect(retrievedMessages).toHaveLength(1)
+  })
+
+  it('should save coffee breaks', async () => {
+    const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
+    await db.saveCoffeeBreak(coffeeBreak)
   })
 }) 
