@@ -9,7 +9,7 @@ export interface CoffeeRouletteProps {
   text?: string
 }
 
-export const coffeeRoulette = async (platform: Platform, data: CoffeeRouletteProps) => {
+export const coffeeRoulette = async (platform: Platform, data: CoffeeRouletteProps): Promise<void> => {
   const communityMembers = await platform.getCommunityMembers(data.communityId)
   await coffeeRouletteRec(communityMembers)(platform, data)
 }

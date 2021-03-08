@@ -69,7 +69,7 @@ export const thanksConfirmation = async (
   platform: Platform,
   { communityId, sender, recipients, text, isAnonymous, channel }: ThanksConfirmationProps,
   db: Database = Database.make(),
-) => {
+): Promise<void> => {
   i18n = await I18n.getInstance()
   const createdAt = new Date()
 

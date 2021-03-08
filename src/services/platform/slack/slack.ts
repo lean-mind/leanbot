@@ -53,7 +53,7 @@ export class Slack extends Platform {
     return body.token ?? body.payload?.token
   }
 
-  sendMessage = async (channelId: string, message: Message) => {
+  sendMessage = async (channelId: string, message: Message): Promise<void> => {
     if (typeof message === "string") {
       await chatPostMessage(this.api, Slack.headers.bot)(channelId, { text: message })
     } else if (message instanceof SlackView || message instanceof SlackInteractiveBlock) {
@@ -65,7 +65,7 @@ export class Slack extends Platform {
     }
   }
 
-  updateMessage = async (messageId: any, message: Message) => {
+  updateMessage = async (messageId: any, message: Message): Promise<void> => {
     if (typeof message === "string") {
       await chatUpdateMessage(messageId, { text: message })
     } else if (message instanceof SlackView) {

@@ -6,11 +6,11 @@ import { thanksConfirmation } from "./thanks"
 
 export interface InteractiveProps {
   nextStep: string,
-  data: any,
+  data,
   accept: boolean,
 }
 
-export const interactive = (platform: Platform, props: InteractiveProps) => {
+export const interactive = (platform: Platform, props: InteractiveProps): void => {
   const endpoint = "/interactive"
   if (props) {
     Logger.onRequest(endpoint, props)
