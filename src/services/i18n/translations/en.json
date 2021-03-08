@@ -40,7 +40,8 @@
     "acceptedOffer": "${user} has accepted your coffee",
     "rejectedOffer": "Your coffee was not accepted :disappointed:",
     "recipientAcceptedOffer": "You accepted ${sender}'s coffee",
-    "recipientRejectedOffer": "You rejected ${sender}'s coffee"
+    "recipientRejectedOffer": "You rejected ${sender}'s coffee",
+    "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
   },
   "button": {
     "accept": "Accept",

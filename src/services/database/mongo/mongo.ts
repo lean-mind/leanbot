@@ -1,3 +1,4 @@
+import { CoffeeBreak } from './../../../models/database/coffee-break';
 import { MongoClient } from 'mongodb'
 import { JsonData } from '../../../models/json-data';
 import { Database, DatabaseResponse } from '../database';
@@ -8,6 +9,7 @@ import { Community } from '../../../models/database/community';
 import { CommunityDto } from '../../../models/database/dtos/community-dto';
 import { GratitudeMessage, GratitudeMessageOptions } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
+import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -51,7 +53,7 @@ export class MongoDB extends Database {
     }
   }
   
-  removeCollections = async () => {
+  removeCollections = async (): Promise<void> => {
     await this.on(() => this.instance.db(this.database).dropDatabase())
   }
   
@@ -112,5 +114,17 @@ export class MongoDB extends Database {
     })
 
     return response.ok ? response.data : []
+  }
+
+  saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
+    const response = await this.on(async () => {
+      if (coffeeBreak) {
+        const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
+        Logger.onDBAction("Saving coffee break")
+        await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+      }
+    })
+
+    if (!response.ok) throw Error(response.error)
   }
 }

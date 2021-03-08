@@ -1,15 +1,18 @@
 import { SlackBody } from "../../../../models/platform/slack/body";
+import { Id } from "../../../../models/platform/slack/id";
 
 export interface CoffeeButtonActionProps {
-  userId: string, 
+  communityId: string,
+  userId: Id, 
   responseUrl: string,
   action: string,
-  sender: string
+  sender: Id
 }
 
 export const getSlackButtonAction = (body: SlackBody): CoffeeButtonActionProps => ({
-  userId: body.payload.user.id,
+  communityId: body.payload.team.id,
+  userId: new Id(body.payload.user.id),
   responseUrl: body.payload.response_url,
   action: body.payload.actions[0].action_id,
-  sender: body.payload.actions[0].value,
+  sender: new Id(body.payload.actions[0].value),
 })
