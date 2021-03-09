@@ -26,6 +26,7 @@ export class API {
   private port: number = parseInt(config.apiPort)
 
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     private instance = require('express')()
   ) {
     this.instance.use(json())

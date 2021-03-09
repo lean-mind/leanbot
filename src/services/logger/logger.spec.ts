@@ -10,8 +10,8 @@ describe('Service Logger: ', () => {
   const date = new Date(1990, 12, 31)
 
   beforeAll(() => {
-    info = jest.spyOn(console, "info").mockImplementation(() => {})
-    error = jest.spyOn(console, "error").mockImplementation(() => {})
+    info = jest.spyOn(console, "info").mockImplementation(() => undefined)
+    error = jest.spyOn(console, "error").mockImplementation(() => undefined)
     now = jest.spyOn(Date, "now").mockImplementation(() => date.getTime())
   })
 

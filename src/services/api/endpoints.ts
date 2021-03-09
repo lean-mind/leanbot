@@ -36,6 +36,6 @@ export const Endpoints: EndpointInstance[] = [
   { 
     name: Endpoint.sendSummary,
     action: (_) => sendGratitudeSummaries(),
-    getProps: async () => {}
+    getProps: async () => undefined
   }
 ]

@@ -6,16 +6,16 @@ export class GratitudeMessage {
     public sender: Id,
     public recipient: Id,
     public channel: Id,
-    public text: String,
-    public isAnonymous: Boolean,
+    public text: string,
+    public isAnonymous: boolean,
     public createdAt: Date,
   ) { }
 }
 
 export interface GratitudeSummaryMessage {
   users: Id[],
-  text: String,
-  isAnonymous: Boolean,
+  text: string,
+  isAnonymous: boolean,
   createdAt: Date,
 }
 

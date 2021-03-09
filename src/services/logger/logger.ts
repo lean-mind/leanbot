@@ -7,13 +7,13 @@ export enum LogFiles {
 
 // TODO: maybe add colors in logs
 export class Logger {
-  private static info = (message: String, showInConsole: boolean = true) => {
+  private static info = (message: string, showInConsole = true) => {
     const log = `${getDateFormatted()} ${message}`;
     if (showInConsole) console.info(log);
     File.write(log, LogFiles.log);
   }
 
-  private static error = (message: String, error?: any) => {
+  private static error = (message: string, error?: any) => {
     const log = `${getDateFormatted()} ${message}` + (error ? `: ${JSON.stringify(error)}` : "");
     console.error(log);
     File.write(log, LogFiles.error);

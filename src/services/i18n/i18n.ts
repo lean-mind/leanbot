@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { i18n, InitOptions, StringMap } from "i18next";
 
 const i18next = require('i18next')
@@ -6,7 +7,7 @@ const es = require("./translations/es.json")
 const esCan = require("./translations/es.can.json")
 
 export class I18n {
-  private static namespace: string = "leanbot"
+  private static namespace = "leanbot"
   private static instance: i18n = i18next
   private static options: InitOptions = {
     lng: "es-CAN",

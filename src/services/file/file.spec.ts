@@ -4,6 +4,7 @@ import { File } from './file';
 jest.mock('fs')
 
 describe('Service File: ', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const fs = require('fs')
 
   it('should write in file if exists', () => {

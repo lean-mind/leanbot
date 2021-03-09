@@ -15,6 +15,7 @@ export abstract class Database {
   static make = (databaseName: DatabaseName = "mongo"): Database => {
     const dictionary = {
       ["mongo"]: (): Database => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { MongoDB } = require('./mongo/mongo')
         return new MongoDB()
       }

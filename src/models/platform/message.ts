@@ -4,10 +4,10 @@ import { GratitudeSummaryViewProps } from "./slack/views/views"
 export type Message = string | View | InteractiveView
 
 export abstract class View {
-  static gratitudeSummary = (props: GratitudeSummaryViewProps) => {}
+  static gratitudeSummary = (props: GratitudeSummaryViewProps) => undefined
 }
 
 export abstract class InteractiveView {
-  static gratitudeMessage = () => {}
-  static coffeeRouletteMessage = (data: CoffeeRouletteProps) => {}
+  static gratitudeMessage = () => undefined
+  static coffeeRouletteMessage = (data: CoffeeRouletteProps) => undefined
 }
