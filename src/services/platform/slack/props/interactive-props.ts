@@ -13,7 +13,7 @@ interface Dictionary<T> {
 }
 
 export const getSlackInteractiveProps = async (body: SlackBody): Promise<InteractiveProps> => {
-  const mapper: Dictionary<Action> = {
+  const mapper: Dictionary<Action> = { // TODO: Pendiente refactor 
     ["thanks-confirmation"]: {
       getProps: getSlackThanksConfirmationProps,
       accept: body.payload.type === "view_submission"
@@ -23,6 +23,14 @@ export const getSlackInteractiveProps = async (body: SlackBody): Promise<Interac
       accept: true
     },
     ["reject-coffee"]: {
+      getProps: getSlackButtonAction,
+      accept: true
+    },
+    ["try-again-coffee"]: {
+      getProps: getSlackButtonAction,
+      accept: true
+    },
+    ["stop-coffee"]: {
       getProps: getSlackButtonAction,
       accept: true
     }

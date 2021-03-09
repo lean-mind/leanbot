@@ -121,10 +121,14 @@ export class MongoDB extends Database {
       if (coffeeBreak) {
         const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
         Logger.onDBAction("Saving coffee break")
-        await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+        try {
+          await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+        } catch (e) {
+          throw Error(`saveCoffeeBreak insert error: ${e.message}`)
+        }
       }
     })
 
-    if (!response.ok) throw Error(response.error)
+    if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
   }
 }

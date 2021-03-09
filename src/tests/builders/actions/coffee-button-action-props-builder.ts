@@ -1,16 +1,16 @@
 import { Id } from "../../../models/platform/slack/id";
-import { CoffeeButtonActionProps } from "../../../services/platform/slack/props/button-props";
+import { ButtonActionProps } from "../../../services/platform/slack/props/button-props";
 
-export const CoffeeButtonActionPropsBuilder = ({
+export const ButtonActionPropsBuilder = ({
   communityId = "irrelevant-community-id",
   userId = "irrelevant-user-id",
-  sender = "irrelevant-sender-id",
+  value = "irrelevant-value",
   action = "irrelevant-action",
   responseUrl = "irrelevant-response-url",
-}): CoffeeButtonActionProps => ({
+}): ButtonActionProps => ({
   communityId,
   userId: new Id(userId),
-  sender: new Id(sender),
+  value,
   action,
   responseUrl
 })

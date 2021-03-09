@@ -1,5 +1,5 @@
 import { rejectCoffee } from './reject-coffee';
-import { CoffeeButtonActionPropsBuilder } from './../../tests/builders/actions/coffee-button-action-props-builder';
+import { ButtonActionPropsBuilder } from './../../tests/builders/actions/coffee-button-action-props-builder';
 import { acceptCoffee } from './accept-coffee';
 import { SlackInteractiveBlock } from "../../models/platform/slack/views/views"
 import { I18n } from "../../services/i18n/i18n"
@@ -7,7 +7,7 @@ import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { CoffeeRoulettePropsBuilder } from "../../tests/builders/actions/coffee-roulette-props-builder"
 import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
-import { CoffeeButtonActionProps } from '../../services/platform/slack/props/button-props';
+import { ButtonActionProps } from '../../services/platform/slack/props/button-props';
 import { Database } from '../../services/database/database';
 
 describe('Coffee roulette', () => {
@@ -111,9 +111,9 @@ describe('Coffee roulette', () => {
       const invitedUserId = "U-invited-user"
       const responseUrl = "response-url"
 
-      const coffeeProps: CoffeeButtonActionProps =  CoffeeButtonActionPropsBuilder({ 
+      const coffeeProps: ButtonActionProps =  ButtonActionPropsBuilder({ 
         userId: invitedUserId,
-        sender: senderId,
+        value: senderId,
         responseUrl
       }) 
 
@@ -135,9 +135,9 @@ describe('Coffee roulette', () => {
       const invitedUserId = "U-invited-user"
       const responseUrl = "response-url"
 
-      const coffeeProps: CoffeeButtonActionProps =  CoffeeButtonActionPropsBuilder({ 
+      const coffeeProps: ButtonActionProps =  ButtonActionPropsBuilder({ 
         userId: invitedUserId,
-        sender: senderId,
+        value: senderId,
         responseUrl
       }) 
 

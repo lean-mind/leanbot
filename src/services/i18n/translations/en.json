@@ -33,18 +33,22 @@
     "receivedCount": "You have received gratitude messages *${count} times*"
   },
   "coffeeRoulette": {
-    "searching": "We're looking for someone who'd like to have a coffee...",
+    "searching": "We're looking for someone who'd like to have a coffee... :coffee:",
+    "stop": "We're no longer looking for someone to have a coffee",
+    "tryAgain": "Let's try again :eyes:",
     "recipientMessage": "${sender} has invited you to have a coffee:\n> ${message}",
     "recipientMessageWithText": "$t(coffeeRoulette.recipientMessage):\n> ${text}",
     "noOneAvailable": "Sorry, there is no one available for a coffee",
     "acceptedOffer": "${user} has accepted your coffee",
-    "rejectedOffer": "Your coffee was not accepted :disappointed:",
+    "rejectedOffer": "Your coffee was not accepted :disappointed: Do you want to try again?",
     "recipientAcceptedOffer": "You accepted ${sender}'s coffee",
     "recipientRejectedOffer": "You rejected ${sender}'s coffee",
     "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
   },
   "button": {
     "accept": "Accept",
-    "reject": "Reject"
+    "reject": "Reject",
+    "yes": "Yes",
+    "no": "No"
   }
 }

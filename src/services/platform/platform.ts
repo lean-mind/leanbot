@@ -10,6 +10,8 @@ export type PlatformName = "slack"
 export abstract class Platform {
   static dictionary = {}
 
+  private tempUserData = {}
+
   static getInstance = (platformName: PlatformName): Platform => {
     const platform = Platform.dictionary[platformName]
     if (platform) return platform
@@ -17,6 +19,25 @@ export abstract class Platform {
     const errorMessage = `The ${platformName} platform is not implemented`
     Logger.onError(errorMessage)
     throw Error(errorMessage)
+  }
+
+  getTempUserData = (userId: string, key: string): string[] | undefined => {
+    return this.tempUserData[userId] ? this.tempUserData[userId][key] : undefined
+  }
+
+  updateTempUserData = (userId: string, key: string, value: string[]): void => {
+    const noUserTempData = !this.tempUserData[userId]
+    if (noUserTempData) {
+      this.tempUserData[userId] = {}
+    }
+    this.tempUserData[userId][key] = value
+  }
+
+  deleteTempUserData = (userId: string, key: string): void => {
+    const tempUserData = this.tempUserData[userId]
+    if (tempUserData) {
+      delete this.tempUserData[userId][key]  
+    }
   }
 
   abstract sendMessage: (channelId: string, message: Message) => Promise<void>
