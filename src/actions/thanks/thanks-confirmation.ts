@@ -41,6 +41,7 @@ const getGratitudeMessage = (communityId: string, sender: Id, recipient: Id, cha
 
 const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeMessage[]): void => {
   gratitudeMessages.forEach(({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
+    text = text.split("\n").join("\n>")
     const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
     const recipientMessage = i18n.translate("gratitudeMessage.recipientMessage", { sender: senderName, text: text.toString() })
   
@@ -49,6 +50,7 @@ const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeM
 }
 
 const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous = false): void => {
+  text = text.split("\n").join("\n>")
   const allRecipients = recipient.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
   const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
   const anonymously = isAnonymous ? i18n.translate("gratitudeMessage.anonymously") : ""

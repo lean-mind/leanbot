@@ -19,6 +19,6 @@ export const getSlackThanksConfirmationProps = (body: SlackBody): ThanksConfirma
   sender: new Id(body.payload.user.id),
   recipients: body.payload.view.state.values.recipients.action.selected_conversations.filter(removeDuplicates<string>()).map((toId: string) => new Id(toId)),
   channel: new Id(body.payload.view.state.values.channel.action.selected_conversation),
-  text: body.payload.view.state.values.text.action.value.split("\n").join("\n>"),
+  text: body.payload.view.state.values.text.action.value,
   isAnonymous: body.payload.view.state.values.options.action.selected_options.some(({ value }) => value === "anonymous"),
 })
