@@ -1,7 +1,7 @@
 import { Logger } from './../../services/logger/logger';
 import { I18n } from './../../services/i18n/i18n';
 import { Platform } from "../../services/platform/platform";
-import { CoffeeRouletteMessageView } from '../../models/platform/slack/views/coffee-roulette-message-view';
+import { SlackInteractiveBlock } from '../../models/platform/slack/views/views';
 
 export interface CoffeeRouletteProps {
   channelId?: string,
@@ -36,5 +36,5 @@ export const coffeeRouletteRec = (communityMembers: string[]) => async (platform
   Logger.log(`/coffee-roulette: { user: ${data.userId}, invitedUser: ${randomUserId} } `)
 
   platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.searching"))
-  platform.sendMessage(randomUserId, await CoffeeRouletteMessageView(data))
+  platform.sendMessage(randomUserId, await SlackInteractiveBlock.coffeeRouletteMessage(data))
 }

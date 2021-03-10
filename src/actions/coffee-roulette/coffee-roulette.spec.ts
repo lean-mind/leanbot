@@ -108,10 +108,10 @@ describe('Coffee roulette', () => {
     it('should try again if the user wants to try again', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([]))
       platform.getTempUserData = jest.fn((_userId, _key) => ([randomUserId]))
-      platform.updateTempUserData = jest.fn((_userId, _key, _value) => undefined)
-
+      platform.updateTempUserData = jest.fn()
+      
       await tryAgainCoffee(platform, coffeeButtonProps)
-
+      
       expect(platform.updateMessage).toBeCalledWith(
         coffeeButtonProps.responseUrl,
         i18n.translate("coffeeRoulette.tryAgain")  

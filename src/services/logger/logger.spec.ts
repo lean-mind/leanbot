@@ -9,13 +9,13 @@ describe('Service Logger: ', () => {
   let now: any
   const date = new Date(1990, 12, 31)
 
-  beforeAll(() => {
+  beforeEach(() => {
     info = jest.spyOn(console, "info").mockImplementation(() => undefined)
     error = jest.spyOn(console, "error").mockImplementation(() => undefined)
     now = jest.spyOn(Date, "now").mockImplementation(() => date.getTime())
   })
 
-  afterAll(() => {
+  afterEach(() => {
     info.mockReset()
     error.mockReset()
     now.mockReset()

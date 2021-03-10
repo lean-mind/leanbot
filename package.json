@@ -19,7 +19,8 @@
   "jest": {
     "verbose": true,
     "testPathIgnorePatterns": ["build"],
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "resetMocks": true
   },
   "dependencies": {
     "axios": "^0.21.1",
