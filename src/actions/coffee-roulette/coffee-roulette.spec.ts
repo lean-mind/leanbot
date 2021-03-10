@@ -145,7 +145,7 @@ describe('Coffee roulette', () => {
 
       expect(platform.sendMessage).toBeCalledWith(
         senderId, 
-        i18n.translate("coffeeRoulette.rejectedOffer", { user: `<@${invitedUserId}>` })
+        await SlackInteractiveBlock.tryAgainCoffeeMessage()
       )
       expect(platform.updateMessage).toBeCalledWith(
         responseUrl, 

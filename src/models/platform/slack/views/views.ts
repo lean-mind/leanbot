@@ -1,5 +1,6 @@
 import { InteractiveView, View } from "../../message"
 import { CoffeeRouletteMessageView } from "./coffee-roulette-message-view"
+import { CoffeeRouletteTryAgainView } from "./coffee-roulette-try-again"
 import { GratitudeMessageInteractiveView } from "./view-gratitude-message"
 import { GratitudeSummaryView } from "./view-gratitude-summary"
 
@@ -29,6 +30,8 @@ export class SlackInteractiveBlock extends InteractiveView implements SlackBlock
     }
 
   static coffeeRouletteMessage = CoffeeRouletteMessageView
+  static tryAgainCoffeeMessage = CoffeeRouletteTryAgainView
+
 }
 export class SlackModal extends InteractiveView implements SlackBlock {
   public type: string
