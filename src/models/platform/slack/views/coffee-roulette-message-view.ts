@@ -1,4 +1,3 @@
-import { i18n } from 'i18next';
 import { SlackInteractiveBlock } from './views';
 import { CoffeeRouletteProps } from '../../../../actions/coffee-roulette/coffee-roulette';
 import { I18n } from '../../../../services/i18n/i18n';
