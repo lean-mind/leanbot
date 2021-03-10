@@ -36,6 +36,10 @@ describe('Coffee roulette', () => {
     coffeeRouletteProps = CoffeeRoulettePropsBuilder({})
   })
 
+  afterEach(() => {
+    platform.deleteTempUserData(coffeeRouletteProps.userId, "coffeeMembers")
+  })
+
   describe('command', () => {
     it('should inform the user that the command worked', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
