@@ -1,3 +1,4 @@
+import { tryAgainCoffee } from './try-again-coffee';
 import { rejectCoffee } from './reject-coffee';
 import { ButtonActionPropsBuilder } from './../../tests/builders/actions/coffee-button-action-props-builder';
 import { acceptCoffee } from './accept-coffee';
@@ -15,9 +16,14 @@ describe('Coffee roulette', () => {
   let platform: Platform
   let coffeeRouletteProps: CoffeeRouletteProps
   let db: Database
+
+  const randomUserId = "irrelevant-random-user-id" 
+  const senderId = "U-sender"
+  const invitedUserId = "U-invited-user"
+  const responseUrl = "response-url"
   
-  const randomUserId = "irrelevant-random-user-id"
-  
+  let coffeeButtonProps: ButtonActionProps 
+
   beforeEach(async () => {
     i18n = await I18n.getInstance()
 
@@ -34,6 +40,12 @@ describe('Coffee roulette', () => {
     db.saveCoffeeBreak = jest.fn()
     
     coffeeRouletteProps = CoffeeRoulettePropsBuilder({})
+
+    coffeeButtonProps = ButtonActionPropsBuilder({ 
+      userId: invitedUserId,
+      value: senderId,
+      responseUrl
+    }) 
   })
 
   afterEach(() => {
@@ -52,7 +64,7 @@ describe('Coffee roulette', () => {
         i18n.translate("coffeeRoulette.searching")
       )
     })
-
+    
     it('should ask another user for a coffee', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
       
@@ -93,6 +105,24 @@ describe('Coffee roulette', () => {
       )
     })
 
+    it('should try again if the user wants to try again', async () => {
+      platform.getCommunityMembers = jest.fn(async () => ([]))
+      platform.getTempUserData = jest.fn((_userId, _key) => ([randomUserId]))
+      platform.updateTempUserData = jest.fn((_userId, _key, _value) => undefined)
+
+      await tryAgainCoffee(platform, coffeeButtonProps)
+
+      expect(platform.updateMessage).toBeCalledWith(
+        coffeeButtonProps.responseUrl,
+        i18n.translate("coffeeRoulette.tryAgain")  
+      )
+      expect(platform.getCommunityMembers).not.toBeCalled()
+      expect(platform.updateTempUserData).toBeCalledTimes(1)
+      expect(platform.sendMessage).toBeCalledTimes(2)
+    })
+
+    it.todo(`should stop if the user doesn't want to try again`)
+
     it('should inform you if no one is available', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([]))
 
@@ -104,24 +134,12 @@ describe('Coffee roulette', () => {
       )
     })
 
-    it.todo('should inform the user if there is no response')
     it.todo('should try again if there is no response and the user wants to try again')
   })
 
   describe('invited user', () => {
     it('should be able to accept a coffee and inform the OG user', async () => {
-      // Cuando el usuario invitado le da al botón de aceptar, pasan cosas que tienen que pasar
-      const senderId = "U-sender"
-      const invitedUserId = "U-invited-user"
-      const responseUrl = "response-url"
-
-      const coffeeProps: ButtonActionProps =  ButtonActionPropsBuilder({ 
-        userId: invitedUserId,
-        value: senderId,
-        responseUrl
-      }) 
-
-      await acceptCoffee(platform, coffeeProps, db)
+      await acceptCoffee(platform, coffeeButtonProps, db)
 
       expect(platform.sendMessage).toBeCalledWith(
         senderId, 
@@ -134,18 +152,8 @@ describe('Coffee roulette', () => {
       expect(db.saveCoffeeBreak).toBeCalled()
     })
 
-    it('should be able to reject a coffee and inform the OG user', async () => {
-      const senderId = "U-sender"
-      const invitedUserId = "U-invited-user"
-      const responseUrl = "response-url"
-
-      const coffeeProps: ButtonActionProps =  ButtonActionPropsBuilder({ 
-        userId: invitedUserId,
-        value: senderId,
-        responseUrl
-      }) 
-
-      await rejectCoffee(platform, coffeeProps)
+    it('should be able to reject a coffee and ask the OG user if they want to try again', async () => {
+      await rejectCoffee(platform, coffeeButtonProps)
 
       expect(platform.sendMessage).toBeCalledWith(
         senderId, 
