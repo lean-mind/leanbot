@@ -2,7 +2,6 @@ import { CoffeeBreakBuilder } from './../../../tests/builders/models/coffee-brea
 import { CoffeeBreak } from './../../../models/database/coffee-break';
 import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
 import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
-import { DatabaseResponse } from './../database';
 import { Community } from './../../../models/database/community';
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"

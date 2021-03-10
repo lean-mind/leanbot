@@ -2,9 +2,9 @@ import { Platform } from "../../services/platform/platform";
 
 export interface ThanksProps {
   channelId: string,
-  block: any,
+  block,
 }
 
-export const thanks = (platform: Platform, { channelId, block }: ThanksProps) => {
+export const thanks = (platform: Platform, { channelId, block }: ThanksProps): void => {
   platform.sendMessage(channelId, block)
 }

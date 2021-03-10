@@ -13,7 +13,7 @@ export class File {
     return existsSync(file)
   }
   
-  static write(message: string, file: string) {
+  static write(message: string, file: string): void {
     const filePath = join(fileDir, file)
     try {
       if (File.exists(filePath)) {

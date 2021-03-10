@@ -45,7 +45,7 @@ const update = (summary: GratitudeSummary[], currentGratitudeMessage: GratitudeM
 export const sendGratitudeSummaries = async (
   db: Database = Database.make(),
   cat: Cat = new Cat()
-) => {
+): Promise<void> => {
   Logger.log("Sending gratitude summaries...")
   try {
     const catImage = await cat.getRandomImage({})
@@ -59,7 +59,7 @@ export const sendGratitudeSummaries = async (
     
     let messagesSent = 0
     await Promise.all(summaries.map(async ({ communityId, user, sent, received }: GratitudeSummary) => {
-      // TODO: Get view from platform
+      // TODO: refactor get view from platform
       // type Views = "gratitude-summary"
       // type InteractiveViews = "gratitude-message"
       // Platform.getInstance(platform).getView("gratitude-summary")

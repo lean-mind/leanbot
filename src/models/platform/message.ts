@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CoffeeRouletteProps } from "../../actions/coffee-roulette/coffee-roulette"
 import { GratitudeSummaryViewProps } from "./slack/views/views"
 

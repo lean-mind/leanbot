@@ -35,7 +35,7 @@ export class SlackInteractiveBlock extends InteractiveView implements SlackBlock
 }
 export class SlackModal extends InteractiveView implements SlackBlock {
   public type: string
-  public external_id: string
+  public externalId: string
   public title: any
   public submit: any
   public close: any
@@ -48,10 +48,10 @@ export class SlackModal extends InteractiveView implements SlackBlock {
     submit = {},
     close = {},
     blocks = [] as any[],
-  }) { 
+  }: Partial<SlackModal>) { 
     super()
     this.type = type
-    this.external_id = externalId
+    this.externalId = externalId
     this.title = title
     this.submit = submit
     this.close = close

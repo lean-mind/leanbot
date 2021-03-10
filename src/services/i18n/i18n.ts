@@ -39,7 +39,7 @@ export class I18n {
     return new I18n()
   }
 
-  changeLanguage = async (languageCode: string, translations?: any) => {
+  changeLanguage = async (languageCode: string, translations?: any): Promise<void> => {
     if (translations) {
       I18n.instance.addResourceBundle(languageCode, I18n.namespace, translations)
     }

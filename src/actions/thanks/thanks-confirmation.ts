@@ -16,7 +16,7 @@ export interface ThanksConfirmationProps {
 
 let i18n: I18n
 
-const separateByType = (sender: Id) => (recipientsFiltered: any, currentRecipient: Id) => {
+const separateByType = (sender: Id) => (recipientsFiltered, currentRecipient: Id) => {
   if (currentRecipient.type == IdType.channel){
     recipientsFiltered.channels.push(currentRecipient)
   } else if (currentRecipient.id !== sender.id) {

@@ -227,7 +227,7 @@ describe('Slack service:', () => {
 
       expect(triggerId).toBe(thanksProps.channelId)
       expect(view.type).toBe(thanksProps.block.type)
-      expect(view.external_id).toBe(thanksProps.block.external_id)
+      expect(view.externalId).toBe(thanksProps.block.externalId)
     })
     
     it('shoud retrieve thanks confirmation props from the request body', () => {
