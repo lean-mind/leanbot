@@ -10,6 +10,7 @@ import { CoffeeRoulettePropsBuilder } from "../../tests/builders/actions/coffee-
 import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
 import { ButtonActionProps } from '../../services/platform/slack/props/button-props';
 import { Database } from '../../services/database/database';
+import { stopCoffee } from './stop-coffee';
 
 describe('Coffee roulette', () => {
   let i18n: I18n
@@ -121,7 +122,20 @@ describe('Coffee roulette', () => {
       expect(platform.sendMessage).toBeCalledTimes(2)
     })
 
-    it.todo(`should stop if the user doesn't want to try again`)
+    it(`should stop if the user doesn't want to try again`, async() => {
+      platform.deleteTempUserData = jest.fn()
+
+      await stopCoffee(platform, coffeeButtonProps)
+
+      expect(platform.updateMessage).toBeCalledWith(
+        coffeeButtonProps.responseUrl,
+        i18n.translate("coffeeRoulette.stop")
+      )
+      expect(platform.deleteTempUserData).toBeCalledWith(
+        coffeeButtonProps.userId.id,
+        "coffeeMembers"
+      )
+    })
 
     it('should inform you if no one is available', async () => {
       platform.getCommunityMembers = jest.fn(async () => ([]))
