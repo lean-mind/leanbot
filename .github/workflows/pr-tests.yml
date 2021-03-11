@@ -35,5 +35,8 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: npm run test:database-unix
 
+      - name: Check docker containers 
+        run: docker ps -a 
+        
       - name: Run tests
         run: npm run test
