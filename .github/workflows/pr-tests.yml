@@ -29,7 +29,8 @@ jobs:
           mongodb-version: ${{ matrix.mongodb-version }}
       - name: Install Packages
         run: npm install
-      - name: Check docker containers 
-        run: docker ps -a 
       - name: Run tests
         run: npm run test
+        env: 
+          TEST_MONGODB_DATABASE: test
+          TEST_MONGODB_URI: mongodb://localhost
