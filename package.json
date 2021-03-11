@@ -13,7 +13,8 @@
     "test:silent": "jest --silent",
     "test:watch": "jest --watch --silent",
     "coverage": "jest --coverage --silent",
-    "test:database": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
+    "test:database-windows": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
+    "test:database-unix": "bash ./src/services/database/mongo/test/mongo-script.sh",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "jest": {

@@ -18,11 +18,22 @@ jobs:
           - windows-latest
     steps:
       - uses: actions/checkout@v2
+      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install Packages
         run: npm install
+
+      - name: Execute docker test database script for windows
+        if: ${{ matrix.os == windows-latest }}
+        run: npm run test:database-windows
+
+      - name: Execute docker test database script for unix
+        if: ${{ matrix.os == ubuntu-latest }}
+        run: npm run test:database-unix
+
       - name: Run tests
         run: npm run test
