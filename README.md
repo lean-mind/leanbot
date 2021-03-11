@@ -6,15 +6,18 @@ Pet proyect de un bot para el Slack de LeanMind 💙
 
 ## Índice
 
-- [Instalación](#instalación)
-  - [Variables de entorno](#variables-de-entorno)
-  - [Bot](#bot)
-  - [TheCatAPI](#thecatapi)
-- [Scripts](#scripts)
-- [Trabajo en local](#trabajo-en-local)
-- [Despliegue](#despliegue)
-- [Estructura](#estructura)
-- [Recursos](#recursos)
+- [LeanBot para Slack](#leanbot-para-slack)
+  - [Índice](#índice)
+    - [**Docs**](#docs)
+  - [Instalación](#instalación)
+    - [**Variables de entorno**](#variables-de-entorno)
+    - [**Bot**](#bot)
+    - [**TheCatAPI**](#thecatapi)
+  - [Scripts](#scripts)
+  - [Trabajo en local](#trabajo-en-local)
+  - [Despliegue](#despliegue)
+  - [Estructura](#estructura)
+  - [Recursos](#recursos)
 
 ### **Docs**
 
@@ -45,6 +48,10 @@ MONGODB_URI            # La URI para conectar con la base de datos
 
 # TheCatAPI
 CAT_TOKEN              # El token de TheCatAPI para consumir imágenes de gatitos :3
+
+# Test database
+TEST_MONGODB_DATABASE  # El nombre de la base de datos de test
+TEST_MONGODB_URI       # La URI de la base de datos de test
 ```
 
 ### **Bot**
@@ -80,11 +87,18 @@ Estamos utilizando [TheCatAPI](https://thecatapi.com) para obtener imágenes ale
 Tenemos estos scripts:
 
 ```bash
-build        # Genera la carpeta dist
-start        # Arranca la app
-start:dev    # Arranca la app y se actualizará al guardar 
-test         # Lanza los tests 
-test:watch   # Lanza los tests y se relanzarán al guardar 
+build                 # Genera la carpeta dist
+start                 # Arranca la app
+start:dev             # Arranca la app y se actualizará al guardar 
+test                  # Lanza los tests 
+test:silent           # Lanza los tests sin mostrar la salida por consola
+test:watch            # Lanza los tests y se relanzarán al guardar
+coverage              # Genera el análisis de cubrimiento del código
+test:database-windows # Script para Windows que lanza un contenedor docker 
+                      # para la base de datos de test
+test:database-unix    # Script para UNIX que lanza un contenedor docker 
+                      # para la base de datos de test
+lint                  # Ejecuta ESLint 
 ```
 
 Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <script>` siendo script uno de los anteriores mencionados.
