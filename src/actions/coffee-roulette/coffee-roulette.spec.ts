@@ -184,7 +184,21 @@ describe('Coffee roulette', () => {
   })
   
   describe('errors', () => {
-    it.todo('should inform the user if there was an error')
-    it.todo('should inform the user if there was an error getting the users')
+    it('should inform the user if there was an error saving to db', async () => {
+      db.saveCoffeeBreak = jest.fn(() => { throw Error("irrelevant-db-error")})
+
+      await acceptCoffee(platform, coffeeButtonProps, db)
+
+      const errorMessage = i18n.translate("coffeeRoulette.error")
+
+      expect(platform.sendMessage).toBeCalledWith(
+        senderId,
+        errorMessage
+      )
+      expect(platform.updateMessage).toBeCalledWith(
+        coffeeButtonProps.responseUrl,
+        errorMessage
+      )
+    })
   })
 })

@@ -12,4 +12,5 @@ export const viewsOpen = (request: Request, headers: any) => async (view: any, t
     headers,
   })
   Logger.onResponse(endpoint, { status, error: data.error })
+  // TODO: handle errors
 }

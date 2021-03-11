@@ -17,6 +17,7 @@ export const chatPostMessage = (request: Request, headers: any) => async (channe
     }, { 
       headers 
     })
+    // TODO: handle errors
     Logger.onResponse(endpoint, { channel, status, error: data.error })
   } else {
     Logger.onError("Param text or blocks required")
