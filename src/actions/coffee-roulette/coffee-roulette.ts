@@ -15,11 +15,10 @@ export const coffeeRoulette = async (platform: Platform, data: CoffeeRoulettePro
   if (!communityMembers) {
     communityMembers = await platform.getCommunityMembers(data.communityId)
   }
-  await coffeeRouletteRec(communityMembers)(platform, data)
+  await coffeeRouletteRecursive(communityMembers)(platform, data)
 }
 
-// TODO: rename
-export const coffeeRouletteRec = (communityMembers: string[]) => async (platform: Platform, data: CoffeeRouletteProps): Promise<void> => {
+const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform: Platform, data: CoffeeRouletteProps): Promise<void> => {
   const i18n = await I18n.getInstance()
   if (communityMembers.length === 0) {
     platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.noOneAvailable"))
@@ -29,7 +28,7 @@ export const coffeeRouletteRec = (communityMembers: string[]) => async (platform
   communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
   const randomUserInfo = await platform.getUserInfo(randomUserId)
   if (randomUserInfo?.isBot || randomUserId === data.userId) {
-    return coffeeRouletteRec(communityMembers)(platform, data)
+    return coffeeRouletteRecursive(communityMembers)(platform, data)
   }
 
   platform.updateTempUserData(data.userId, "coffeeMembers", communityMembers)
