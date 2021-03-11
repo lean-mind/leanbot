@@ -114,7 +114,7 @@ export class SlackInteractiveBlock extends InteractiveView implements SlackBlock
 }
 export class SlackModal extends InteractiveView implements SlackBlock {
   public type: string
-  public externalId: string
+  public external_id: string
   public title: any
   public submit: any
   public close: any
@@ -122,7 +122,7 @@ export class SlackModal extends InteractiveView implements SlackBlock {
   
   constructor({
     type = "",
-    externalId = "",
+    external_id = "",
     title = {},
     submit = {},
     close = {},
@@ -130,7 +130,7 @@ export class SlackModal extends InteractiveView implements SlackBlock {
   }: Partial<SlackModal>) { 
     super()
     this.type = type
-    this.externalId = externalId
+    this.external_id = external_id
     this.title = title
     this.submit = submit
     this.close = close
