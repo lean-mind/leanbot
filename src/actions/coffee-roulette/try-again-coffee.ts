@@ -8,9 +8,11 @@ export const tryAgainCoffee = async (platform: Platform, data: ButtonActionProps
 
   await platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.tryAgain"))
 
+  const text = platform.getTempUserData(data.userId.id, "coffeeText")
   const coffeeProps: CoffeeRouletteProps = {
     communityId: data.communityId,
     userId: data.userId.id,
+    text: text ? text[0] : undefined
   }
 
   return coffeeRoulette(platform, coffeeProps)

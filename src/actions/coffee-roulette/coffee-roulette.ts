@@ -23,6 +23,7 @@ const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform:
   if (communityMembers.length === 0) {
     platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.noOneAvailable"))
     platform.deleteTempUserData(data.userId, "coffeeMembers")
+    platform.deleteTempUserData(data.userId, "coffeeText")
     return 
   }
   const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)] 
@@ -33,6 +34,9 @@ const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform:
   }
 
   platform.updateTempUserData(data.userId, "coffeeMembers", communityMembers)
+  if (data.text) {
+    platform.updateTempUserData(data.userId, "coffeeText", [data.text])
+  }
   Logger.log(`/coffee-roulette: { user: ${data.userId}, invitedUser: ${randomUserId} } `)
 
   platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.searching"))

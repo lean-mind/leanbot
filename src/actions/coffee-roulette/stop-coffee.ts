@@ -7,4 +7,5 @@ export const stopCoffee = async (platform: Platform, data: ButtonActionProps): P
 
   platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.stop"))
   platform.deleteTempUserData(data.userId.id, "coffeeMembers")
+  platform.deleteTempUserData(data.userId.id, "coffeeText")
 }
