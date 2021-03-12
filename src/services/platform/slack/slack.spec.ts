@@ -17,43 +17,72 @@ jest.mock('axios')
 describe('Slack service:', () => {
   const axiosMock = axios
   const slackMock: Slack = Slack.getInstance(axiosMock)
+  const responseUrl = "irrelevant-response-url"
   const headers = Slack.headers.bot
-
+  
+  beforeEach(() => {
+    axiosMock.post = jest.fn(async (_, __): Promise<any> => ({ 
+      data: { ok: true }, status: 200 
+    }))
+  })
+  
   describe('sendMessage method', () => {
-    it('should send a simple text message', () => {
+
+    it('should send a simple text message', async () => {
       const endpoint = "/chat.postMessage"
       const channel = "irrelevant-channel"
       const text = "irrelevant-text"
 
-      slackMock.sendMessage(channel, text)
+      await slackMock.sendMessage(channel, text)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { channel, blocks: undefined, text }, { headers })
     })
 
-    it('should send a view', () => {
+    it('should send a view', async () => {
       const endpoint = "/chat.postMessage"
       const channel = "irrelevant-channel"
       const view: View = new SlackView([{ message: "irrelevant-text2" }])
 
-      slackMock.sendMessage(channel, view)
+      await slackMock.sendMessage(channel, view)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { channel, blocks: (view as SlackView).blocks, text: null }, { headers })
     })
 
-    it('should send an interactive view', () => {
+    it('should send an interactive view', async () => {
       const endpoint = "/views.open"
       const view: SlackModal = new SlackModal({
         blocks: [{value: "irrelevant-value"}]
       })
       const trigger_id = "irrelevant-trigger-id"
 
-      slackMock.sendMessage(trigger_id, view)
+      await slackMock.sendMessage(trigger_id, view)
   
       expect(axiosMock.post).toBeCalledWith(endpoint, { 
         view: JSON.stringify(view), 
         trigger_id, 
         submit_disabled: true
       }, { headers })
+    })
+  })
+
+  describe('updateMessage method', () => {
+    const headers = { 
+      "Content-type": "application/json; charset=utf-8"
+    }
+
+    it('should update with a simple text message', async () => {
+      const text = "irrelevant-text"
+
+      await slackMock.updateMessage(responseUrl, text)
+
+      expect(axiosMock.post).toBeCalledWith(responseUrl, { replace_original: true, blocks: undefined, text }, { headers })
+    })
+    
+    it('should update with a view', async () => {
+      const view: View = new SlackView([{ message: "irrelevant-text2" }])
+      
+      await slackMock.updateMessage(responseUrl, view)
+      expect(axiosMock.post).toBeCalledWith(responseUrl, { replace_original: true, blocks: (view as SlackView).blocks, text: null }, { headers })
     })
   })
 
