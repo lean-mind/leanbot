@@ -192,9 +192,22 @@ describe('Slack service:', () => {
       expect(interactiveProps.accept).toBe(false)
       expect(JSON.stringify(interactiveProps.data)).toBe("{}")
     })
+    
+    it('should retrieve coffee roulette button action data', async () => {
+      const actionId = "accept-coffee"
+      const body = SlackBodyBuilder({
+        type: "block_actions",
+        actionId,
+      })
+      
+      const interactiveProps: InteractiveProps = await getSlackInteractiveProps(body)
+      
+      expect(interactiveProps.nextStep).toBe(actionId)
+      expect(interactiveProps.accept).toBe(true)
+      expect(JSON.stringify(interactiveProps.data)).not.toBe("{}")
+    })
 
-    // TODO: add test to retrieve relevant data for coffee roulette interactivity
-    // TODO: MAYBE add test to reject incorrect submissions for coffee roulette interactivity
+    it.todo('should reject incorrect submissions for coffee roulette interactivity')
 
     it('should reject nonexistent commands', async () => {
       const externalId = "command-nonexistent"
@@ -227,11 +240,13 @@ describe('Slack service:', () => {
 
       expect(triggerId).toBe(thanksProps.channelId)
       expect(view.type).toBe(thanksProps.block.type)
-      expect(view.externalId).toBe(thanksProps.block.externalId)
+      expect(view.external_id).toBe(thanksProps.block.external_id)
     })
     
     it('shoud retrieve thanks confirmation props from the request body', () => {
+      const externalId = "thanks-confirmation"
       const body = SlackBodyBuilder({
+        externalId,
         teamId,
         userId,
         recipientsId,
@@ -272,7 +287,5 @@ describe('Slack service:', () => {
       expect(userId).toBe(coffeeRouletteProps.userId)
       expect(text).toBe(coffeeRouletteProps.text)
     })
-
-    // TODO: add test to get what button was clicked
   })
 })

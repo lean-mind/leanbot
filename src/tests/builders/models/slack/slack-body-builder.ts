@@ -1,3 +1,4 @@
+import { SlackAction, SlackPayload, View } from './../../../../models/platform/slack/payload';
 import { SlackBody } from '../../../../models/platform/slack/body';
 import { SlackPayloadBuilder } from './slack-payload-builder';
 
@@ -6,12 +7,15 @@ export const SlackBodyBuilder = ({
   userId = "irrelevant-user-id",
   triggerId = "irrelevant-trigger-id",
   text = "irrelevant-text",
-  externalId = "irrelevant-external-id",
+  externalId = undefined,
   type = "irrelevant-type",
   recipientsId = ["irrelevant-recipients-id"],
   channelId = "irrelevant-channel-id",
-  isAnonymous = false
-}): SlackBody => ({
+  isAnonymous = false,
+  actionId,
+  actionType = "irrelevant-action-type",
+  actionValue = "irrelevant-action-value"
+}: Partial<SlackBody & SlackPayload & View & SlackAction>): SlackBody => ({
   token: "",
   team_id: teamId,
   team_domain: "",
@@ -29,7 +33,7 @@ export const SlackBodyBuilder = ({
     teamId,
     userId,
     type,
-    view: {
+    view: externalId ? {
       external_id: externalId,
       state: {
         values: {
@@ -57,6 +61,13 @@ export const SlackBodyBuilder = ({
           }
         }
       }
-    }
+    } : undefined,
+    actions: actionId ? [
+      {
+        type: actionType,
+        action_id: actionId,
+        value: actionValue
+      }
+    ] : undefined
   }),
 })

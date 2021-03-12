@@ -118,7 +118,7 @@ describe('Coffee roulette', () => {
         i18n.translate("coffeeRoulette.tryAgain")  
       )
       expect(platform.getCommunityMembers).not.toBeCalled()
-      expect(platform.updateTempUserData).toBeCalledTimes(1)
+      expect(platform.updateTempUserData).toBeCalledTimes(2)
       expect(platform.sendMessage).toBeCalledTimes(2)
     })
 

@@ -3,8 +3,9 @@ import { SlackPayload } from "../../../../models/platform/slack/payload";
 export const SlackPayloadBuilder = ({
   teamId = "irrelevant-team-id",
   userId = "irrelevant-user-id",
-  view = {},
-  type = "irrelevant-type"
+  type = "irrelevant-type",
+  view,
+  actions
 }): SlackPayload => ({
   type,
   token: "",
@@ -24,8 +25,9 @@ export const SlackPayloadBuilder = ({
   is_enterprise_install: "",
   enterprise: "",
   submission: {},
-  view,
+  view: view ? view : undefined,
   callback_id: "",
   response_url: "",
   state: "",
+  actions: actions ? actions : undefined
 })

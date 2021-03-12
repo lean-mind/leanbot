@@ -33,7 +33,7 @@ export interface SlackPayload {
   actions?: SlackAction[]
 }
 
-interface SlackAction {
+export interface SlackAction {
   type: string,
   action_id: string,
   value: string
