@@ -51,6 +51,7 @@ describe('Coffee roulette', () => {
 
   afterEach(() => {
     platform.deleteTempUserData(coffeeRouletteProps.userId, "coffeeMembers")
+    platform.deleteTempUserData(coffeeRouletteProps.userId, "coffeeText")
   })
 
   describe('command', () => {

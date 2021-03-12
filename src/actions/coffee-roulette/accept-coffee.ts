@@ -23,6 +23,7 @@ export const acceptCoffee = async (
     platform.sendMessage(senderId.id, i18n.translate("coffeeRoulette.acceptedOffer", { user: `<@${data.userId.id}>` })) 
 
     platform.deleteTempUserData(senderId.id, "coffeeMembers")
+    platform.deleteTempUserData(senderId.id, "coffeeText")
   } catch (e) {
     platform.sendMessage(senderId.id, i18n.translate("coffeeRoulette.error"))
     platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.error"))
