@@ -10,16 +10,19 @@
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon",
     "test": "jest",
-    "test:silent": "jest --silent",
-    "test:watch": "jest --watch --silent",
-    "coverage": "jest --coverage --silent",
+    "test:silent": "npm test -- --silent",
+    "test:watch": "npm run test:silent -- --watch",
     "test:database-windows": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
     "test:database-unix": "bash ./src/services/database/mongo/test/mongo-script.sh",
-    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx"
+    "coverage": "npm run test:silent -- --coverage",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix-dry-run"
   },
   "jest": {
     "verbose": true,
-    "testPathIgnorePatterns": ["build"],
+    "testPathIgnorePatterns": [
+      "build"
+    ],
     "preset": "ts-jest",
     "resetMocks": true
   },

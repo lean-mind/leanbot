@@ -1,6 +1,6 @@
 # LeanBot para Slack
 
-Pet proyect de un bot para el Slack de LeanMind 💙
+Pet Project de un bot para el Slack de LeanMind 💙
 
 ----------------
 
@@ -56,7 +56,7 @@ TEST_MONGODB_URI       # La URI de la base de datos de test
 
 ### **Bot**
 
-Para obtener el `BOT_TOKEN` hay que crear una aplicación de slack en [api.slack.com/apps](https://api.slack.com/apps)
+Para obtener el `SLACK_TOKEN` y el `SLACK_USER_TOKEN` hay que crear una aplicación de Slack en [api.slack.com/apps](https://api.slack.com/apps)
 
 Una vez creado el bot, deberías estar en las sección **Basic Information** tendrás un desplegable "**Add features and functionality**", entraremos en donde dice **Bot** y te redireccionará a la sección **App Home** donde actualizaremos los scopes dándole al botón en verde "Review Scopes to Add". Vamos al apartado de **Scopes** y añadiremos los siguientes **Bot Token Scopes** en base a los métodos que estamos consumiendo de Slack:
 
@@ -113,9 +113,6 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 4. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))
 5. Actualizar los slash commands y el endpoint de interactive en la aplicación de Slack con la url que te da `ngrok`
 6. Levantar la base de datos con docker `docker-compose up database` (no tiene seguridad user-pass)
-
-    > :bulb: **IMPORTANTE**: El puerto de MongoDB (por defecto 27017) debe estar protegido mediante un firewall, y **NO SE DEBE EXPONER**.
-
 7. Arrancar la aplicación en watch `npm run start:dev`
 
 ----------------
@@ -125,6 +122,7 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 1. Clonar el repositorio
 2. Configurar el `.env.prod`
 3. Levantar todo con docker `docker-compose up`
+    > :bulb: **IMPORTANTE**: El puerto de MongoDB (por defecto 27017) debe estar protegido mediante un firewall, y **NO SE DEBE EXPONER**.
 
 ----------------
 

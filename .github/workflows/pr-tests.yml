@@ -29,6 +29,8 @@ jobs:
           mongodb-version: ${{ matrix.mongodb-version }}
       - name: Install Packages
         run: npm install
+      - name: Run linter
+        run: npm lint
       - name: Run tests
         run: npm run test
         env: 
