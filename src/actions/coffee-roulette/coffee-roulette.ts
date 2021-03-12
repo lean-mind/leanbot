@@ -22,6 +22,7 @@ const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform:
   const i18n = await I18n.getInstance()
   if (communityMembers.length === 0) {
     platform.sendMessage(data.userId, i18n.translate("coffeeRoulette.noOneAvailable"))
+    platform.deleteTempUserData(data.userId, "coffeeMembers")
     return 
   }
   const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)] 
