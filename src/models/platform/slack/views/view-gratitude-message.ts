@@ -1,10 +1,12 @@
 import { SlackModal } from "./views";
 import { I18n } from "../../../../services/i18n/i18n";
 
+let viewNumber = 0
+
 export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => {
   const i18n = await I18n.getInstance()
   const type = "modal"
-  const external_id = "thanks-confirmation"
+  const external_id = `${viewNumber++}-thanks-confirmation`
   const title = {
     type: "plain_text",
     text: i18n.translate("gratitudeMessageView.title")
