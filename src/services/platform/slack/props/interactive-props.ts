@@ -31,7 +31,8 @@ export const getSlackInteractiveProps = async (body: SlackBody): Promise<Interac
   
   let actionId = ""
   if (body.payload?.view) {
-    actionId = body.payload.view.external_id
+    const externalId = body.payload.view.external_id.replace(/^[0-9]+-/, "")
+    actionId = externalId
   } else if (body.payload?.actions) {
     actionId = body.payload.actions[0].action_id
   }
