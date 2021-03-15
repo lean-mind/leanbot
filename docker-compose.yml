@@ -17,6 +17,7 @@ services:
       - ./.env.prod
     ports: 
       - 80:80
+      - 5050:5050
     depends_on: 
       - database
     restart: unless-stopped

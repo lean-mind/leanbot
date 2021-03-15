@@ -13,7 +13,7 @@ export class CommunityDto {
     return new CommunityDto(
       data.id,
       data.platform,
-      data.deletedAt
+      data.deletedAtTime
     )
   }
 

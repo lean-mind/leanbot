@@ -31,5 +31,24 @@
     "received": "Recibidos:",
     "noReceived": "No has recibido gracias esta semana",
     "receivedCount": "Te han dado las gracias *${count} veces*"
+  },
+  "coffeeRoulette": {
+    "searching": "Estamos buscando a alguien que quiera tomarse un café... :coffee:",
+    "stop": "Hemos dejado de buscar a alguien para tomar un café",
+    "tryAgain": "Vamos a intentarlo de nuevo :eyes:",
+    "recipientMessage": "${sender} te ha invitado a tomarte un café",
+    "recipientMessageWithText": "$t(coffeeRoulette.recipientMessage):\n> ${text}",
+    "noOneAvailable": "Lo sentimos, no hay nadie disponible para tomar un café",
+    "acceptedOffer": "${user} ha aceptado tu café",
+    "rejectedOffer": "No han aceptado tu café :disappointed: ¿Quieres intentarlo de nuevo?",
+    "recipientAcceptedOffer": "Has aceptado el café de ${sender}",
+    "recipientRejectedOffer": "Has rechazado el café de ${sender}",
+    "error": "Vaya, hubo algún error con tu café... :shocked_face_with_exploding_head:"
+  },
+  "button": {
+    "accept": "Mándale",
+    "reject": "Quita pa'llá",
+    "yes": "Sobran",
+    "no": "Pasando"
   }
 }

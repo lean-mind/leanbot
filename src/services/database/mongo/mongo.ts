@@ -1,3 +1,4 @@
+import { CoffeeBreak } from './../../../models/database/coffee-break';
 import { MongoClient } from 'mongodb'
 import { JsonData } from '../../../models/json-data';
 import { Database, DatabaseResponse } from '../database';
@@ -8,6 +9,7 @@ import { Community } from '../../../models/database/community';
 import { CommunityDto } from '../../../models/database/dtos/community-dto';
 import { GratitudeMessage, GratitudeMessageOptions } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
+import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -37,7 +39,7 @@ export class MongoDB extends Database {
     await this.close()
     return { ok: true, data }
   }
-
+  
   private connect = async (): Promise<void> => {
     if (!this.instance.isConnected()) {
       await this.instance.connect()
@@ -50,33 +52,34 @@ export class MongoDB extends Database {
       this.instance = MongoDB.getClient()
     }
   }
-
+  
+  removeCollections = async (): Promise<void> => {
+    await this.on(() => this.instance.db(this.database).dropDatabase())
+  }
+  
   registerCommunity = async (community: Community): Promise<void> => {
-    const response = await this.on(async () => {
+    await this.on(async () => {
       if (!community.id) return
-
+      
       const collection = this.instance.db(this.database).collection(Collection.communities)
       const existsCommunity = await collection.findOne({ id: community.id })
       
       if (!existsCommunity) {
+        Logger.onDBAction("Registering community")
         const communityJson = CommunityDto.fromModel(community).toJson()
         await collection.insertOne(communityJson)
-
-        collection.find
       }
     })
-    
-    if (!response.ok) throw Error(response.error)
   }
   
   getCommunities = async (): Promise<Community[]> => {
     const response = await this.on(async () => {
-      const cursor = await this.instance.db(this.database).collection(Collection.communities).find({}).toArray()
+      Logger.onDBAction("Getting communities")
+      const cursor = await this.instance.db(this.database).collection(Collection.communities).find({deletedAtTime: null}).toArray()
       return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
     });
     
-    if (!response.ok) throw Error(response.error)
-    return response.data
+    return response.ok ? response.data : []
   }
 
   saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
@@ -84,6 +87,7 @@ export class MongoDB extends Database {
       const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) => GratitudeMessageDto.fromModel(gratitudeMessage).toJson())
 
       if (gratitudeMessagesJson.length > 0) {
+        Logger.onDBAction("Saving gratitude messages")
         await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
       }
     });
@@ -104,10 +108,27 @@ export class MongoDB extends Database {
         }
       }
 
+      Logger.onDBAction("Getting gratitude messages")
       const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
       return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
     })
 
     return response.ok ? response.data : []
+  }
+
+  saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
+    const response = await this.on(async () => {
+      if (coffeeBreak) {
+        const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
+        Logger.onDBAction("Saving coffee break")
+        try {
+          await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+        } catch (e) {
+          throw Error(`saveCoffeeBreak insert error: ${e.message}`)
+        }
+      }
+    })
+
+    if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
   }
 }

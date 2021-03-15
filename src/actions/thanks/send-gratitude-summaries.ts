@@ -1,14 +1,15 @@
 import { Community } from "../../models/database/community";
 import { GratitudeMessage, GratitudeSummary, GratitudeSummaryMessage } from "../../models/database/gratitude-message";
+import { View } from "../../models/platform/message";
 import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
 import { Platform, PlatformName } from "../../services/platform/platform";
-import { ViewGratitudeSummary } from "../../services/platform/slack/views/view-gratitude-summary";
+import { SlackView } from "../../models/platform/slack/views/views";
 
 const getGratitudeSummaryMessageFrom = (gratitudeMessage: GratitudeMessage, isSender: boolean): GratitudeSummaryMessage => ({
   users: isSender ? [gratitudeMessage.recipient] : [gratitudeMessage.sender],
-  text: gratitudeMessage.text,
+  text: gratitudeMessage.text.split("\n").join(" "),
   isAnonymous: gratitudeMessage.isAnonymous,
   createdAt: gratitudeMessage.createdAt,
 })
@@ -28,14 +29,14 @@ const updateListIfNeeds = (list: GratitudeSummaryMessage[], currentThanks: Grati
 const update = (summary: GratitudeSummary[], currentGratitudeMessage: GratitudeMessage, who: "sender" | "recipient") => {
   const isSender = who === "sender"
   const user = currentGratitudeMessage[who]
-  const grattudeSummaryMessage = getGratitudeSummaryMessageFrom(currentGratitudeMessage, isSender)
+  const gratitudeSummaryMessage = getGratitudeSummaryMessageFrom(currentGratitudeMessage, isSender)
   const existingGratitudeSummary = summary.find((value) => value.user.id === user.id)
   const gratitudeSummary: GratitudeSummary = existingGratitudeSummary ?? { communityId: currentGratitudeMessage.communityId, user, sent: [], received: [] }
   
   if (isSender) {
-    updateListIfNeeds(gratitudeSummary.sent, grattudeSummaryMessage)
+    updateListIfNeeds(gratitudeSummary.sent, gratitudeSummaryMessage)
   } else {
-    updateListIfNeeds(gratitudeSummary.received, grattudeSummaryMessage)
+    updateListIfNeeds(gratitudeSummary.received, gratitudeSummaryMessage)
   }
   
   if (!existingGratitudeSummary) summary.push(gratitudeSummary)
@@ -44,7 +45,8 @@ const update = (summary: GratitudeSummary[], currentGratitudeMessage: GratitudeM
 export const sendGratitudeSummaries = async (
   db: Database = Database.make(),
   cat: Cat = new Cat()
-) => {
+): Promise<void> => {
+  Logger.log("Sending gratitude summaries...")
   try {
     const catImage = await cat.getRandomImage({})
     const communities = await db.getCommunities()
@@ -55,14 +57,21 @@ export const sendGratitudeSummaries = async (
       return summary
     }, [])
     
-    summaries.forEach(({ communityId, user, sent, received }: GratitudeSummary) => {
-      const blocks = ViewGratitudeSummary({ image: catImage.url, sent, received })
+    let messagesSent = 0
+    await Promise.all(summaries.map(async ({ communityId, user, sent, received }: GratitudeSummary) => {
+      // TODO: refactor get view from platform
+      // type Views = "gratitude-summary"
+      // type InteractiveViews = "gratitude-message"
+      // Platform.getInstance(platform).getView("gratitude-summary")
+      const blocks: View = await SlackView.gratitudeSummary({ image: catImage.url, sent, received })
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
       
       if (platformName) {
-        Platform.getInstance(platformName).postBlocks(user.id, blocks)
+        Platform.getInstance(platformName).sendMessage(user.id, blocks)
+        messagesSent++
       }
-    })
+    }))
+    Logger.log(`${messagesSent} summary messages sent`)
   } catch(e) {
     Logger.onError(e)
   }

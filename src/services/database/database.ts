@@ -1,3 +1,4 @@
+import { CoffeeBreak } from './../../models/database/coffee-break';
 import { Community } from "../../models/database/community";
 import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message";
 import { Logger } from "../logger/logger";
@@ -14,6 +15,7 @@ export abstract class Database {
   static make = (databaseName: DatabaseName = "mongo"): Database => {
     const dictionary = {
       ["mongo"]: (): Database => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { MongoDB } = require('./mongo/mongo')
         return new MongoDB()
       }
@@ -32,4 +34,6 @@ export abstract class Database {
   
   abstract saveGratitudeMessage: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
   abstract getGratitudeMessages: (options: GratitudeMessageOptions) => Promise<GratitudeMessage[]>
+
+  abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
 }

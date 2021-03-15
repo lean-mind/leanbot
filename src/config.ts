@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config()
 
 interface Config {
@@ -14,6 +15,7 @@ interface Config {
 
 interface PlatformConfig {
   readonly token: string
+  readonly userToken: string
   readonly signingSecret: string
 }
 
@@ -29,13 +31,14 @@ export const config: Config = {
   platform: {
     slack: {
       token: process.env.SLACK_TOKEN || "xoxb-unknown",
+      userToken: process.env.SLACK_USER_TOKEN || "xoxp-unknown",
       signingSecret: process.env.SLACK_SIGNING_SECRET || "secret-unknown",
     }
   },
   database: {
     mongodb: {
       uri: process.env.MONGODB_URI || "mongodb://localhost:27017",
-      database: process.env.MONGODB_DATABASE || "db-unknown"
+      database: process.env.MONGODB_DATABASE || "db_undefined"
     }
   }
 };

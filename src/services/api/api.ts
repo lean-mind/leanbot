@@ -14,7 +14,7 @@ const getPlatformData = async (request: any, getProps: any) => {
   if (Slack.getToken(request) === config.platform.slack.signingSecret) {
     const platform: Platform = Slack.getInstance()
     const data = Slack.getBody(request)
-    const props = getProps(platform, data)
+    const props = await getProps(platform, data)
     const community: Community = { id: data.team_id, platform: "slack" }
     await db.registerCommunity(community)
 
@@ -26,6 +26,7 @@ export class API {
   private port: number = parseInt(config.apiPort)
 
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     private instance = require('express')()
   ) {
     this.instance.use(json())

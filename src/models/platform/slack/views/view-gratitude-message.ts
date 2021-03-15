@@ -1,33 +1,35 @@
-import { I18n } from "../../../i18n/i18n";
+import { SlackModal } from "./views";
+import { I18n } from "../../../../services/i18n/i18n";
 
-export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
-  type: "modal",
-  external_id: "thanks-confirmation",
-  title: {
+export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => {
+  const i18n = await I18n.getInstance()
+  const type = "modal"
+  const external_id = "thanks-confirmation"
+  const title = {
     type: "plain_text",
-    text: i18n.gratitudeMessageView("title")
-  },
-  submit: {
+    text: i18n.translate("gratitudeMessageView.title")
+  }
+  const submit = {
     type: "plain_text",
-    text: i18n.gratitudeMessageView("submit")
-  },
-  close: {
+    text: i18n.translate("gratitudeMessageView.submit")
+  }
+  const close = {
     type: "plain_text",
-    text: i18n.gratitudeMessageView("cancel")
-  },
-  blocks: [
+    text: i18n.translate("gratitudeMessageView.cancel")
+  }
+  const blocks = [
     {
       type: "section",
       block_id: "recipients",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.gratitudeMessageView("recipientsLabel")}*`
+        text: `*${i18n.translate("gratitudeMessageView.recipientsLabel")}*`
       },
       accessory: {
         type: "multi_conversations_select",
         placeholder: {
           type: "plain_text",
-          text: i18n.gratitudeMessageView("recipientsPlaceholder"),
+          text: i18n.translate("gratitudeMessageView.recipientsPlaceholder"),
           emoji: true
         },
         filter: {
@@ -46,7 +48,7 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
       },
       label: {
         type: "plain_text",
-        text: i18n.gratitudeMessageView("textLabel"),
+        text: i18n.translate("gratitudeMessageView.textLabel"),
         emoji: true
       }
     },
@@ -55,7 +57,7 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
       block_id: "options",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.gratitudeMessageView("optionsLabel")}*`
+        text: `*${i18n.translate("gratitudeMessageView.optionsLabel")}*`
       },
       accessory: {
         type: "checkboxes",
@@ -63,11 +65,11 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
           {
             text: {
               type: "mrkdwn",
-              text: i18n.gratitudeMessageView("optionsAnonymousLabel")
+              text: i18n.translate("gratitudeMessageView.optionsAnonymousLabel")
             },
             description: {
               type: "mrkdwn",
-              text: `_${i18n.gratitudeMessageView("optionsAnonymousDescription")}_`
+              text: `_${i18n.translate("gratitudeMessageView.optionsAnonymousDescription")}_`
             },
             value: "anonymous"
           }
@@ -80,13 +82,13 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
       block_id: "channel",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.gratitudeMessageView("channelLabel")}*\n${i18n.gratitudeMessageView("channelDescription")}`
+        text: `*${i18n.translate("gratitudeMessageView.channelLabel")}*\n${i18n.translate("gratitudeMessageView.channelDescription")}`
       },
       accessory: {
         type: "conversations_select",
         placeholder: {
           type: "plain_text",
-          text: i18n.gratitudeMessageView("channelPlaceholder"),
+          text: i18n.translate("gratitudeMessageView.channelPlaceholder"),
         },
         filter: {
           include: [ "public" ]
@@ -95,4 +97,13 @@ export const ViewGratitudeMessage = (i18n: I18n = new I18n()) => ({
       }
     }
   ]
-})
+  
+  return new SlackModal({
+    type,
+    external_id,
+    title,
+    submit,
+    close,
+    blocks,
+  })
+}

@@ -13,16 +13,26 @@ jobs:
           - 12.16
           - 12.20
           - 14.15
+        mongodb-version: 
+          - 4.2
         os:
           - ubuntu-latest
-          - windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
       - name: Install Packages
         run: npm install
+      - name: Run linter
+        run: npm run lint
       - name: Run tests
         run: npm run test
+        env: 
+          TEST_MONGODB_DATABASE: test
+          TEST_MONGODB_URI: mongodb://localhost

@@ -25,8 +25,16 @@ export interface SlackPayload {
   is_enterprise_install: string,
   enterprise: string,
   submission: Submission,
-  view: View,
+  view?: View,
+  container?: any,
   callback_id: string,
   response_url: string,
   state: string,
+  actions?: SlackAction[]
+}
+
+export interface SlackAction {
+  type: string,
+  action_id: string,
+  value: string
 }

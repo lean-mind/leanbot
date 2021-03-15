@@ -1,6 +1,6 @@
 {
   "name": "leanbot",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "LeanBot for Slack",
   "proxy": "http://localhost:5050",
   "author": "Michael Reyes (@mreysei)",
@@ -10,16 +10,31 @@
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:silent": "npm test -- --silent",
+    "test:watch": "npm run test:silent -- --watch",
+    "test:database-windows": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
+    "test:database-unix": "bash ./src/services/database/mongo/test/mongo-script.sh",
+    "coverage": "npm run test:silent -- --coverage",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix-dry-run"
+  },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "build"
+    ],
+    "preset": "ts-jest",
+    "resetMocks": true
   },
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "i18next": "^19.9.0",
     "mongodb": "^3.6.3",
-    "ts-node": "^9.1.1",
     "node-schedule": "^1.3.2",
+    "ts-node": "^9.1.1",
     "typescript": "^3.8.2"
   },
   "devDependencies": {
@@ -29,6 +44,9 @@
     "@types/mongodb": "^3.6.3",
     "@types/node": "^13.7.5",
     "@types/node-schedule": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
     "jest": "^25.1.0",
     "nodemon": "^2.0.7",
     "ts-jest": "^25.3.0"

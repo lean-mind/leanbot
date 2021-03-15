@@ -1,9 +1,8 @@
 import { GratitudeMessage } from "../../models/database/gratitude-message"
 import { Emojis } from "../../models/emojis"
-import { Id, IdType } from "../../models/slack/id"
+import { Id, IdType } from "../../models/platform/slack/id"
 import { Database } from "../../services/database/database"
 import { I18n } from "../../services/i18n/i18n"
-import { Logger } from "../../services/logger/logger"
 import { Platform } from "../../services/platform/platform"
 
 export interface ThanksConfirmationProps {
@@ -15,9 +14,9 @@ export interface ThanksConfirmationProps {
   isAnonymous: boolean
 }
 
-const i18n = new I18n()
+let i18n: I18n
 
-const separateByType = (sender: Id) => (recipientsFiltered: any, currentRecipient: Id) => {
+const separateByType = (sender: Id) => (recipientsFiltered, currentRecipient: Id) => {
   if (currentRecipient.type == IdType.channel){
     recipientsFiltered.channels.push(currentRecipient)
   } else if (currentRecipient.id !== sender.id) {
@@ -27,7 +26,7 @@ const separateByType = (sender: Id) => (recipientsFiltered: any, currentRecipien
 }
 
 const getMembersFromChannel = (platform: Platform) => async (currentChannel: Id) => {
-  const members = await platform.getMembersId(currentChannel.id)
+  const members = await platform.getMembersByChannelId(currentChannel.id)
 
   return members.map((member: string) => new Id(member))
 }
@@ -41,36 +40,39 @@ const getGratitudeMessage = (communityId: string, sender: Id, recipient: Id, cha
 }
 
 const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeMessage[]): void => {
-  gratitudeMessages.map(({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
-    const senderName = isAnonymous ? i18n.gratitudeMessage("anAnonymous") : `<@${sender.id}>`
-    const recipientMessage = i18n.gratitudeMessage("recipientMessage", { sender: senderName, text: text.toString() })
+  gratitudeMessages.forEach(({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
+    text = text.split("\n").join("\n>")
+    const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
+    const recipientMessage = i18n.translate("gratitudeMessage.recipientMessage", { sender: senderName, text: text.toString() })
   
-    platform.postMessage(recipient.id, recipientMessage)
+    platform.sendMessage(recipient.id, recipientMessage)
   })
 }
 
-const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous: boolean = false): void => {
+const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous = false): void => {
+  text = text.split("\n").join("\n>")
   const allRecipients = recipient.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
-  const senderName = isAnonymous ? i18n.gratitudeMessage("anAnonymous") : `<@${sender.id}>`
-  const anonymously = isAnonymous ? i18n.gratitudeMessage("anonymously") : ""
-  const senderMessage = i18n.gratitudeMessage("senderMessage", { recipient: `${allRecipients}${anonymously}`, text })
-  const channelMessage = i18n.gratitudeMessage("channelMessage", { sender: senderName, recipient: `${allRecipients}`, text })
+  const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
+  const anonymously = isAnonymous ? i18n.translate("gratitudeMessage.anonymously") : ""
+  const senderMessage = i18n.translate("gratitudeMessage.senderMessage", { recipient: `${allRecipients}${anonymously}`, text })
+  const channelMessage = i18n.translate("gratitudeMessage.channelMessage", { sender: senderName, recipient: `${allRecipients}`, text })
 
   if (channel.type !== IdType.unknown) {
-    platform.postMessage(channel.id, channelMessage)
+    platform.sendMessage(channel.id, channelMessage)
   }
-  platform.postMessage(sender.id, senderMessage)
+  platform.sendMessage(sender.id, senderMessage)
 }
 
 const sendMessage = async (platform: Platform, id: string, message: string): Promise<void> => {
-  await platform.postMessage(id, message)
+  await platform.sendMessage(id, message)
 }
 
 export const thanksConfirmation = async (
   platform: Platform,
   { communityId, sender, recipients, text, isAnonymous, channel }: ThanksConfirmationProps,
   db: Database = Database.make(),
-) => {
+): Promise<void> => {
+  i18n = await I18n.getInstance()
   const createdAt = new Date()
 
   const recipientsFiltered = recipients.reduce(separateByType(sender), { channels: [], users: [] })
@@ -87,13 +89,12 @@ export const thanksConfirmation = async (
       sendRecipientMessages(platform, gratitudeMessages)
       sendSenderMessage(platform, channel, sender, recipients, text, isAnonymous)
     } else if (recipients[0].id !== sender.id) {
-      sendMessage(platform, sender.id, `${i18n.gratitudeMessage("errorNothingToGive")} ${Emojis.Disappointed}`)
+      sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorNothingToGive")} ${Emojis.Disappointed}`)
     } else {
-      sendMessage(platform, sender.id, `${i18n.gratitudeMessage("errorMessageSelf")} ${Emojis.FacePalm}`)
+      sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorMessageSelf")} ${Emojis.FacePalm}`)
     }
   } catch(e) {
-    sendMessage(platform, sender.id, `${i18n.gratitudeMessage("error")} ${Emojis.ShockedFaceWithExplodingHead}`)
-    Logger.onDBError(e)
+    sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.error")} ${Emojis.ShockedFaceWithExplodingHead}`)
   }
 }
 

@@ -1,8 +1,9 @@
-import { GratitudeSummaryMessage } from "../../../../models/database/gratitude-message";
-import { I18n } from "../../../i18n/i18n";
-import { getDateFormatted } from "../../../logger/logger";
+import { GratitudeSummaryMessage } from "../../../database/gratitude-message";
+import { SlackView } from "./views";
+import { I18n } from "../../../../services/i18n/i18n";
+import { getDateFormatted } from "../../../../services/logger/logger";
 
-interface ViewGratitudeSummaryProps {
+export interface GratitudeSummaryViewProps {
   image: string,
   sent?: GratitudeSummaryMessage[],
   received?: GratitudeSummaryMessage[],
@@ -12,11 +13,12 @@ const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
   return `• *${users.map(({ id }) => `<@${id}>`).join(", ")}* \`${getDateFormatted(createdAt)}\`: ${text}`;
 }
 
-export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSummaryProps, i18n: I18n = new I18n()) => {
+export const GratitudeSummaryView = async ({ image, sent, received }: GratitudeSummaryViewProps): Promise<SlackView> => {
+  const i18n = await I18n.getInstance()
   const hasSent = sent !== undefined && sent.length > 0
   const hasReceived = received !== undefined && received.length > 0
 
-  return [
+  const blocks = [
     {
       type: "image",
       image_url: image,
@@ -26,7 +28,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "header",
       text: {
         type: "plain_text",
-        text: i18n.gratitudeMessageSummary("title"), 
+        text: i18n.translate("gratitudeMessageSummary.title"), 
         emoji: true
       }
     },
@@ -35,7 +37,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasSent ? `*${i18n.gratitudeMessageSummary("sent")}*\n` + sent?.map(toMessage).join("\n") : i18n.gratitudeMessageSummary("noSent")
+        text: hasSent ? `*${i18n.translate("gratitudeMessageSummary.sent")}*\n` + sent?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noSent")
       }
     },
     { type: "divider" },
@@ -43,7 +45,7 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasReceived ? `*${i18n.gratitudeMessageSummary("received")}*\n` + received?.map(toMessage).join("\n") : i18n.gratitudeMessageSummary("noReceived")
+        text: hasReceived ? `*${i18n.translate("gratitudeMessageSummary.received")}*\n` + received?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noReceived")
       }
     },
     { type: "divider" },
@@ -57,11 +59,13 @@ export const ViewGratitudeSummary = ({ image, sent, received }: ViewGratitudeSum
         },
         {
           type: "mrkdwn",
-          text: (hasSent ? i18n.gratitudeMessageSummary("sentCount", { count: (sent?.length ?? 0) + ""}) : '') +
+          text: (hasSent ? i18n.translate("gratitudeMessageSummary.sentCount", { count: (sent?.length ?? 0) + ""}) : '') +
             (hasSent && hasReceived ? `. ` : '') +
-            (hasReceived ? i18n.gratitudeMessageSummary("receivedCount", { count: (received?.length ?? 0) + ""}) : '')
+            (hasReceived ? i18n.translate("gratitudeMessageSummary.receivedCount", { count: (received?.length ?? 0) + ""}) : '')
         }
       ]
     }
   ]
+
+  return new SlackView(blocks)
 }

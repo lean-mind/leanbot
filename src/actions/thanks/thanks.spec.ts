@@ -8,10 +8,10 @@ describe('Actions Thanks', () => {
     
   it('should open interactive in platform', () => {
     const props: ThanksProps = ThanksPropsBuilder({})
-    platform.openInteractive = jest.fn() 
+    platform.sendMessage = jest.fn() 
 
     thanks(platform, props)
 
-    expect(platform.openInteractive).toBeCalledWith(props.channelId, props.block)
+    expect(platform.sendMessage).toBeCalledWith(props.channelId, props.block)
   })
 })

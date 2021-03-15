@@ -22,5 +22,33 @@
     "channelLabel": "Do you want it to be published on a channel?",
     "channelDescription": "* It is optional and the bot has to belong to the channel",
     "channelPlaceholder": "Channel"
+  },
+  "gratitudeMessageSummary": {
+    "title": "Weekly summary :clap:",
+    "sent": "Given:",
+    "noSent": "You haven't expressed gratitude this week",
+    "sentCount": "You expressed your gratitude *${count} times*",
+    "received": "Received:",
+    "noReceived": "You haven't received any gratitude messages this week",
+    "receivedCount": "You have received gratitude messages *${count} times*"
+  },
+  "coffeeRoulette": {
+    "searching": "We're looking for someone who'd like to have a coffee... :coffee:",
+    "stop": "We're no longer looking for someone to have a coffee",
+    "tryAgain": "Let's try again :eyes:",
+    "recipientMessage": "${sender} has invited you to have a coffee:\n> ${message}",
+    "recipientMessageWithText": "$t(coffeeRoulette.recipientMessage):\n> ${text}",
+    "noOneAvailable": "Sorry, there is no one available for a coffee",
+    "acceptedOffer": "${user} has accepted your coffee",
+    "rejectedOffer": "Your coffee was not accepted :disappointed: Do you want to try again?",
+    "recipientAcceptedOffer": "You accepted ${sender}'s coffee",
+    "recipientRejectedOffer": "You rejected ${sender}'s coffee",
+    "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
+  },
+  "button": {
+    "accept": "Accept",
+    "reject": "Reject",
+    "yes": "Yes",
+    "no": "No"
   }
 }
