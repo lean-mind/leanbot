@@ -13,7 +13,8 @@ export interface CoffeeRouletteProps {
 export const coffeeRoulette = async (platform: Platform, data: CoffeeRouletteProps): Promise<void> => {
   let communityMembers = platform.getTempUserData(data.userId, "coffeeMembers") 
   if (!communityMembers) {
-    communityMembers = await platform.getCommunityMembers(data.communityId)
+    // communityMembers = await platform.getCommunityMembers(data.communityId)
+    communityMembers = ["U01NCQLSQRZ", "U01NCJNH82E"]
   }
   await coffeeRouletteRecursive(communityMembers)(platform, data)
 }
@@ -29,7 +30,7 @@ const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform:
   const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)] 
   communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
   const randomUserInfo = await platform.getUserInfo(randomUserId)
-  if (randomUserInfo?.isBot || randomUserId === data.userId) {
+  if (randomUserInfo?.isBot || !randomUserInfo?.isAvailable || randomUserId === data.userId) {
     return coffeeRouletteRecursive(communityMembers)(platform, data)
   }
 
