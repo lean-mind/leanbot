@@ -9,7 +9,7 @@ export const getUserPresence = (request: Request, headers: any) => async (userId
       user: userId
     }
   })
-  Logger.onResponse(endpoint, { status, data })
+  Logger.onResponse(endpoint, { status, error: data.error })
 
   return data.presence === "active" ? true : false 
 }
