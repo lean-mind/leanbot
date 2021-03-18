@@ -30,7 +30,8 @@
     "sentCount": "You expressed your gratitude *${count} times*",
     "received": "Received:",
     "noReceived": "You haven't received any gratitude messages this week",
-    "receivedCount": "You have received gratitude messages *${count} times*"
+    "receivedCount": "You have received gratitude messages *${count} times*",
+    "anonymous": "Anonymous"
   },
   "coffeeRoulette": {
     "searching": "We're looking for someone who'd like to have a coffee... :coffee:",
