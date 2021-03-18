@@ -32,7 +32,8 @@ describe('Coffee roulette', () => {
     platform.getUserInfo = jest.fn(async () => ({
       id: randomUserId,
       name: "irrelevant-name",
-      isBot: false
+      isBot: false,
+      isAvailable: true
     }))
     platform.sendMessage = jest.fn()
     platform.updateMessage = jest.fn()

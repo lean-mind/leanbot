@@ -13,8 +13,7 @@ export interface CoffeeRouletteProps {
 export const coffeeRoulette = async (platform: Platform, data: CoffeeRouletteProps): Promise<void> => {
   let communityMembers = platform.getTempUserData(data.userId, "coffeeMembers") 
   if (!communityMembers) {
-    // communityMembers = await platform.getCommunityMembers(data.communityId)
-    communityMembers = ["U01NCQLSQRZ", "U01NCJNH82E"]
+    communityMembers = await platform.getCommunityMembers(data.communityId)
   }
   await coffeeRouletteRecursive(communityMembers)(platform, data)
 }
