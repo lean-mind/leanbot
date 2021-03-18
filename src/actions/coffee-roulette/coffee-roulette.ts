@@ -29,7 +29,7 @@ const coffeeRouletteRecursive = (communityMembers: string[]) => async (platform:
   const randomUserId = communityMembers[Math.floor(Math.random() * communityMembers.length)] 
   communityMembers.splice(communityMembers.indexOf(randomUserId), 1)
   const randomUserInfo = await platform.getUserInfo(randomUserId)
-  if (randomUserInfo?.isBot || randomUserId === data.userId) {
+  if (randomUserInfo?.isBot || !randomUserInfo?.isAvailable || randomUserId === data.userId) {
     return coffeeRouletteRecursive(communityMembers)(platform, data)
   }
 
