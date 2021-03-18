@@ -30,7 +30,8 @@
     "sentCount": "Has dado las gracias *${count} veces*",
     "received": "Recibidos:",
     "noReceived": "No has recibido gracias esta semana",
-    "receivedCount": "Te han dado las gracias *${count} veces*"
+    "receivedCount": "Te han dado las gracias *${count} veces*",
+    "anonymous": "Anónimo"
   },
   "coffeeRoulette": {
     "searching": "Estamos buscando a alguien que quiera tomarse un café... :coffee:",

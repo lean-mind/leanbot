@@ -9,8 +9,12 @@ export interface GratitudeSummaryViewProps {
   received?: GratitudeSummaryMessage[],
 }
 
-const toMessage = ({ users, createdAt, text }: GratitudeSummaryMessage) => {
-  return `• *${users.map(({ id }) => `<@${id}>`).join(", ")}* \`${getDateFormatted(createdAt)}\`: ${text}`;
+
+const toMessage = ({ users, createdAt, text, isAnonymous }: GratitudeSummaryMessage, i18n: I18n) => {
+  const userList = isAnonymous ? 
+                    i18n.translate("gratitudeMessageSummary.anonymous") 
+                    : users.map(({ id }) => `<@${id}>`).join(", ")
+  return `• *${userList}* \`${getDateFormatted(createdAt)}\`: ${text}`;
 }
 
 export const GratitudeSummaryView = async ({ image, sent, received }: GratitudeSummaryViewProps): Promise<SlackView> => {
@@ -37,7 +41,9 @@ export const GratitudeSummaryView = async ({ image, sent, received }: GratitudeS
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasSent ? `*${i18n.translate("gratitudeMessageSummary.sent")}*\n` + sent?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noSent")
+        text: hasSent ? 
+          `*${i18n.translate("gratitudeMessageSummary.sent")}*\n` + sent?.map(message => toMessage(message, i18n)).join("\n") 
+          : i18n.translate("gratitudeMessageSummary.noSent")
       }
     },
     { type: "divider" },
@@ -45,7 +51,9 @@ export const GratitudeSummaryView = async ({ image, sent, received }: GratitudeS
       type: "section",
       text: {
         type: "mrkdwn",
-        text: hasReceived ? `*${i18n.translate("gratitudeMessageSummary.received")}*\n` + received?.map(toMessage).join("\n") : i18n.translate("gratitudeMessageSummary.noReceived")
+        text: hasReceived ? 
+        `*${i18n.translate("gratitudeMessageSummary.received")}*\n` + received?.map(message => toMessage(message, i18n)).join("\n") 
+        : i18n.translate("gratitudeMessageSummary.noReceived")
       }
     },
     { type: "divider" },

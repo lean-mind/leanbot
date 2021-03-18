@@ -10,7 +10,7 @@ import { SlackView } from "../../models/platform/slack/views/views";
 const getGratitudeSummaryMessageFrom = (gratitudeMessage: GratitudeMessage, isSender: boolean): GratitudeSummaryMessage => ({
   users: isSender ? [gratitudeMessage.recipient] : [gratitudeMessage.sender],
   text: gratitudeMessage.text.split("\n").join(" "),
-  isAnonymous: gratitudeMessage.isAnonymous,
+  isAnonymous: gratitudeMessage.isAnonymous && isSender ? false : gratitudeMessage.isAnonymous,
   createdAt: gratitudeMessage.createdAt,
 })
 
