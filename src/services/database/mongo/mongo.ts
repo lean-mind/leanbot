@@ -7,10 +7,10 @@ import { Collection } from './collection';
 import { config } from '../../../config';
 import { Community } from '../../../models/database/community';
 import { CommunityDto } from '../../../models/database/dtos/community-dto';
-import { GratitudeMessage, GratitudeMessageOptions } from '../../../models/database/gratitude-message';
+import { GratitudeMessage } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
 import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
-import { makeGratitudeMessagesQuery } from './methods/gratitude-messages-query';
+import { makeQuery, QueryOptions } from './methods/query';
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -89,16 +89,20 @@ export class MongoDB extends Database {
 
       if (gratitudeMessagesJson.length > 0) {
         Logger.onDBAction("Saving gratitude messages")
-        await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
+        try{
+          await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
+        } catch (e) {
+          throw Error(`saveGratitudeMessage insert error: ${e.message}`)
+        }
       }
     });
     
     if (!response.ok) throw Error(response.error)
   }
 
-  getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
+  getGratitudeMessages = async (options: QueryOptions): Promise<GratitudeMessage[]> => {
     const response = await this.on(async () => {
-      const query = makeGratitudeMessagesQuery(options)
+      const query = makeQuery(options)
       Logger.onDBAction("Getting gratitude messages")
       const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
       return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
@@ -109,17 +113,26 @@ export class MongoDB extends Database {
 
   saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
     const response = await this.on(async () => {
-      if (coffeeBreak) {
-        const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
-        Logger.onDBAction("Saving coffee break")
-        try {
-          await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
-        } catch (e) {
-          throw Error(`saveCoffeeBreak insert error: ${e.message}`)
-        }
+      const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
+      Logger.onDBAction("Saving coffee break")
+      try {
+        await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+      } catch (e) {
+        throw Error(`saveCoffeeBreak insert error: ${e.message}`)
       }
     })
 
     if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
+  }
+
+  getCoffeeBreaks = async (options: QueryOptions): Promise<CoffeeBreak[]> => {
+    const response = await this.on(async () => {
+      const query = makeQuery(options)
+      Logger.onDBAction("Getting coffee breaks...")
+      const cursor = await this.instance.db(this.database).collection(Collection.coffeeBreaks).find(query).toArray()
+      return cursor.map((coffeeBreakJson): CoffeeBreak => CoffeeBreakDto.fromJson(coffeeBreakJson).toModel())
+    })
+
+    return response.ok ? response.data : []
   }
 }

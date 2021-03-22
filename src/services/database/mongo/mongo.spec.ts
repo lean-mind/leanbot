@@ -45,108 +45,213 @@ describe('Service MongoDB: ', () => {
     expect(retrievedCommunities).toHaveLength(2)
   }) 
 
-  it('should save and retrieve gratitude messages', async () => {
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ text: "message 1" }),
-      GratitudeMessageBuilder({ text: "message 2" }),
-      GratitudeMessageBuilder({ text: "message 3" })
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
-
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
-
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(3)
-  })
-
-  it('should retrieve gratitude messages for a certain community', async () => {
-    const communityId = "test-community-id"
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ communityId }),
-      GratitudeMessageBuilder({}),
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
-
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ communityId })
-
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toHaveLength(1)
-  })
-
-  it('should retrieve gratitude messages for a certain user', async () => {
-    const userId: Id = new Id("test-user-id")
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ sender: userId }),
-      GratitudeMessageBuilder({ recipient: userId }),
-      GratitudeMessageBuilder({})
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
-
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ userId: userId.id })
-
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(2)
-  })
+  describe('Collection gratitudeMessages', () => {
+    it('should save and retrieve gratitude messages', async () => {
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ text: "message 1" }),
+        GratitudeMessageBuilder({ text: "message 2" }),
+        GratitudeMessageBuilder({ text: "message 3" })
+      ]
+      await db.saveGratitudeMessage(gratitudeMessages)
   
-  it('should retrieve gratitude messages from a given number of days', async () => {
-    const today = new Date()
-    const fiveDaysAgo = new Date(today.getDate() - 5)
-
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ createdAt: today }),
-      GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
-
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
-
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toHaveLength(1)
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
+  
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(3)
+    })
+  
+    it('should retrieve gratitude messages for a certain community', async () => {
+      const communityId = "test-community-id"
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ communityId }),
+        GratitudeMessageBuilder({}),
+      ]
+      await db.saveGratitudeMessage(gratitudeMessages)
+  
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ communityId })
+  
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toHaveLength(1)
+    })
+  
+    it('should retrieve gratitude messages for a certain user', async () => {
+      const userId: Id = new Id("test-user-id")
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ sender: userId }),
+        GratitudeMessageBuilder({ recipient: userId }),
+        GratitudeMessageBuilder({})
+      ]
+      await db.saveGratitudeMessage(gratitudeMessages)
+  
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ userId: userId.id })
+  
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(2)
+    })
+    
+    it('should retrieve gratitude messages from a given number of days', async () => {
+      const today = new Date()
+      const fiveDaysAgo = new Date(today.getDate() - 5)
+  
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ createdAt: today }),
+        GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
+      ]
+      await db.saveGratitudeMessage(gratitudeMessages)
+  
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
+  
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toHaveLength(1)
+    })
+  
+    it('should retrieve gratitude messages for a given time interval with 1 or both boundaries', async () => {
+      const today = new Date()
+      const fiveDaysAgo = new Date(today.getDate() - 5)
+      const tenDaysAgo = new Date(today.getDate() - 10)
+  
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ createdAt: today }),
+        GratitudeMessageBuilder({ createdAt: fiveDaysAgo }),
+        GratitudeMessageBuilder({ createdAt: tenDaysAgo })
+      ]
+      await db.saveGratitudeMessage(gratitudeMessages)
+  
+      const startDate = new Date(today.getDate() - 7).toISOString()
+      const endDate = new Date(today.getDate() - 2).toISOString()
+  
+      let retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ startDate, endDate })
+   
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(1)
+  
+      retrievedMessages = await db.getGratitudeMessages({ startDate })
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(2)
+  
+      retrievedMessages = await db.getGratitudeMessages({ endDate })
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(2)
+    })
   })
 
-  it('should retrieve gratitude messages for a given time interval with 1 or both boundaries', async () => {
-    const today = new Date()
-    const fiveDaysAgo = new Date(today.getDate() - 5)
-    const tenDaysAgo = new Date(today.getDate() - 10)
+  describe('Collection coffeeBreaks:', () => {
+    it('should save and retrieve coffee breaks', async () => {
+      const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
 
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ createdAt: today }),
-      GratitudeMessageBuilder({ createdAt: fiveDaysAgo }),
-      GratitudeMessageBuilder({ createdAt: tenDaysAgo })
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
+      await db.saveCoffeeBreak(coffeeBreak)
 
-    const startDate = new Date(today.getDate() - 7).toISOString()
-    const endDate = new Date(today.getDate() - 2).toISOString()
+      const retrievedCoffees: CoffeeBreak[] = await db.getCoffeeBreaks({})
 
-    let retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ startDate, endDate })
- 
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(1)
+      expect(retrievedCoffees).toContainEqual(coffeeBreak)
+      expect(retrievedCoffees).toHaveLength(1)
+    })
 
-    retrievedMessages = await db.getGratitudeMessages({ startDate })
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(2)
+    it('should retrieve coffee breaks for a certain community', async () => {
+      const communityId = "test-community-id"
+      const coffeeBreaks: CoffeeBreak[] = [
+        CoffeeBreakBuilder({ communityId }),
+        CoffeeBreakBuilder({})
+      ]
 
-    retrievedMessages = await db.getGratitudeMessages({ endDate })
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(2)
-  })
+      for (const coffeeBreak of coffeeBreaks) {
+        await db.saveCoffeeBreak(coffeeBreak)
+      }
 
-  it('should save coffee breaks', async () => {
-    const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
-    await db.saveCoffeeBreak(coffeeBreak)
+      const retrievedCoffees: CoffeeBreak[] = await db.getCoffeeBreaks({ communityId })
+
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).toHaveLength(1)
+    })
+
+    it('should retrieve coffee breaks for a certain user', async () => {
+      const userId: Id = new Id("test-user-id")
+      const coffeeBreaks: CoffeeBreak[] = [
+        CoffeeBreakBuilder({ sender: userId }),
+        CoffeeBreakBuilder({ recipient: userId }),
+        CoffeeBreakBuilder({})
+      ]
+
+      for (const coffeeBreak of coffeeBreaks) {
+        await db.saveCoffeeBreak(coffeeBreak)
+      }
+
+      const retrievedCoffees: CoffeeBreak[] = await db.getCoffeeBreaks({ userId: userId.id })
+
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[2])
+      expect(retrievedCoffees).toHaveLength(2)
+    })
+
+    it('should retrieve coffee breaks from a given number of days', async () => {
+      const today = new Date()
+      const fiveDaysAgo = new Date(today.getDate() - 5)
+  
+      const coffeeBreaks: CoffeeBreak[] = [
+        CoffeeBreakBuilder({ createdAt: today }),
+        CoffeeBreakBuilder({ createdAt: fiveDaysAgo })
+      ]
+      
+      for (const coffeeBreak of coffeeBreaks) {
+        await db.saveCoffeeBreak(coffeeBreak)
+      }
+
+      const retrievedCoffees: CoffeeBreak[] = await db.getCoffeeBreaks({ days: 3 })
+  
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).toHaveLength(1)
+    })
+
+    it('should retrieve coffee breaks for a given time interval with 1 or both boundaries', async () => {
+      const today = new Date()
+      const fiveDaysAgo = new Date(today.getDate() - 5)
+      const tenDaysAgo = new Date(today.getDate() - 10)
+  
+      const coffeeBreaks: CoffeeBreak[] = [
+        CoffeeBreakBuilder({ createdAt: today }),
+        CoffeeBreakBuilder({ createdAt: fiveDaysAgo }),
+        CoffeeBreakBuilder({ createdAt: tenDaysAgo })
+      ]
+      for (const coffeeBreak of coffeeBreaks) {
+        await db.saveCoffeeBreak(coffeeBreak)
+      }  
+
+      const startDate = new Date(today.getDate() - 7).toISOString()
+      const endDate = new Date(today.getDate() - 2).toISOString()
+  
+      let retrievedCoffees: CoffeeBreak[] = await db.getCoffeeBreaks({ startDate, endDate })
+   
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[2])
+      expect(retrievedCoffees).toHaveLength(1)
+  
+      retrievedCoffees = await db.getCoffeeBreaks({ startDate })
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[2])
+      expect(retrievedCoffees).toHaveLength(2)
+  
+      retrievedCoffees = await db.getCoffeeBreaks({ endDate })
+      expect(retrievedCoffees).not.toContainEqual(coffeeBreaks[0])
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[1])
+      expect(retrievedCoffees).toContainEqual(coffeeBreaks[2])
+      expect(retrievedCoffees).toHaveLength(2)
+    })
   })
 }) 

@@ -1,4 +1,10 @@
-import { GratitudeMessageOptions } from "../../../../models/database/gratitude-message"
+export interface QueryOptions {
+  communityId?: string,
+  days?: number,
+  userId?: string,
+  startDate?: string,
+  endDate?: string
+}
 
 const queryDays = (query: any, days: number): any => {
   const nowTime = (new Date()).getTime()
@@ -10,7 +16,7 @@ const queryDays = (query: any, days: number): any => {
   return query
 }
 
-export const makeGratitudeMessagesQuery = (options: GratitudeMessageOptions): any => {
+export const makeQuery = (options: QueryOptions): any => {
   const query = {}
 
   if (options.communityId) {

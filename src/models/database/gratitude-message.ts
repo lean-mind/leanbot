@@ -25,11 +25,3 @@ export interface GratitudeSummary {
   sent: GratitudeSummaryMessage[],
   received: GratitudeSummaryMessage[],
 }
-
-export interface GratitudeMessageOptions {
-  communityId?: string,
-  days?: number,
-  userId?: string,
-  startDate?: string,
-  endDate?: string
-}

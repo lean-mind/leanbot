@@ -1,4 +1,3 @@
-import { GratitudeMessageOptions } from './../../models/database/gratitude-message';
 import { json, urlencoded } from 'body-parser';
 import { Logger } from '../logger/logger';
 import { config } from '../../config';
@@ -8,6 +7,7 @@ import { Slack } from '../platform/slack/slack';
 import { Platform } from '../platform/platform';
 import { Community } from '../../models/database/community';
 import { Database } from '../database/database';
+import { QueryOptions } from '../database/mongo/methods/query';
 
 const getPlatformData = async (request: any) => {
   const db = Database.make()
@@ -60,12 +60,17 @@ export class API {
     
     this.instance.get("/gratitudeMessages", async (request: any, response: any) => {
       // TODO: maintenance??
-      const options: GratitudeMessageOptions = request.query
+      const options: QueryOptions = request.query
       const gratitudeMessages = await db.getGratitudeMessages(options)
       return response.send(gratitudeMessages)
     })
-    // TODO: /coffeeBreaks
-
+    
+    this.instance.get("/coffeeBreaks", async (request: any, response: any) => {
+      const options: QueryOptions = request.query
+      const coffeeBreaks = await db.getCoffeeBreaks(options)
+      return response.send(coffeeBreaks)
+    })
+    
     this.instance.listen(this.port, () => Logger.onApiStart(this.port))
   }
 }
