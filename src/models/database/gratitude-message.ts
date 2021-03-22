@@ -27,5 +27,9 @@ export interface GratitudeSummary {
 }
 
 export interface GratitudeMessageOptions {
-  days?: number
+  communityId?: string,
+  days?: number,
+  userId?: string,
+  startDate?: string,
+  endDate?: string
 }

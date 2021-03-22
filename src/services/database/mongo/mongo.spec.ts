@@ -6,6 +6,7 @@ import { Community } from './../../../models/database/community';
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
+import { Id } from '../../../models/platform/slack/id';
 
 describe('Service MongoDB: ', () => {
   let db: MongoDB
@@ -59,11 +60,42 @@ describe('Service MongoDB: ', () => {
     expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
     expect(retrievedMessages).toHaveLength(3)
   })
+
+  it('should retrieve gratitude messages for a certain community', async () => {
+    const communityId = "test-community-id"
+    const gratitudeMessages: GratitudeMessage[] = [
+      GratitudeMessageBuilder({ communityId }),
+      GratitudeMessageBuilder({}),
+    ]
+    await db.saveGratitudeMessage(gratitudeMessages)
+
+    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ communityId })
+
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).toHaveLength(1)
+  })
+
+  it('should retrieve gratitude messages for a certain user', async () => {
+    const userId: Id = new Id("test-user-id")
+    const gratitudeMessages: GratitudeMessage[] = [
+      GratitudeMessageBuilder({ sender: userId }),
+      GratitudeMessageBuilder({ recipient: userId }),
+      GratitudeMessageBuilder({})
+    ]
+    await db.saveGratitudeMessage(gratitudeMessages)
+
+    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ userId: userId.id })
+
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+    expect(retrievedMessages).toHaveLength(2)
+  })
   
   it('should retrieve gratitude messages from a given number of days', async () => {
     const today = new Date()
-    const fiveDaysAgo = new Date()
-    fiveDaysAgo.setDate(today.getDate() - 5)
+    const fiveDaysAgo = new Date(today.getDate() - 5)
 
     const gratitudeMessages: GratitudeMessage[] = [
       GratitudeMessageBuilder({ createdAt: today }),
@@ -76,6 +108,41 @@ describe('Service MongoDB: ', () => {
     expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
     expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
     expect(retrievedMessages).toHaveLength(1)
+  })
+
+  it('should retrieve gratitude messages for a given time interval with 1 or both boundaries', async () => {
+    const today = new Date()
+    const fiveDaysAgo = new Date(today.getDate() - 5)
+    const tenDaysAgo = new Date(today.getDate() - 10)
+
+    const gratitudeMessages: GratitudeMessage[] = [
+      GratitudeMessageBuilder({ createdAt: today }),
+      GratitudeMessageBuilder({ createdAt: fiveDaysAgo }),
+      GratitudeMessageBuilder({ createdAt: tenDaysAgo })
+    ]
+    await db.saveGratitudeMessage(gratitudeMessages)
+
+    const startDate = new Date(today.getDate() - 7).toISOString()
+    const endDate = new Date(today.getDate() - 2).toISOString()
+
+    let retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ startDate, endDate })
+ 
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+    expect(retrievedMessages).toHaveLength(1)
+
+    retrievedMessages = await db.getGratitudeMessages({ startDate })
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[2])
+    expect(retrievedMessages).toHaveLength(2)
+
+    retrievedMessages = await db.getGratitudeMessages({ endDate })
+    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[0])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+    expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
+    expect(retrievedMessages).toHaveLength(2)
   })
 
   it('should save coffee breaks', async () => {

@@ -10,6 +10,7 @@ import { CommunityDto } from '../../../models/database/dtos/community-dto';
 import { GratitudeMessage, GratitudeMessageOptions } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
 import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
+import { makeGratitudeMessagesQuery } from './methods/gratitude-messages-query';
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -97,17 +98,7 @@ export class MongoDB extends Database {
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
     const response = await this.on(async () => {
-      const query = {}
-      
-      if (options.days) {
-        const nowTime = (new Date()).getTime()
-        const queryTime = options.days * 24 * 60 * 60 * 1000
-        query["createdAtTime"] = {
-          $gte: nowTime - queryTime,
-          $lt: nowTime,
-        }
-      }
-
+      const query = makeGratitudeMessagesQuery(options)
       Logger.onDBAction("Getting gratitude messages")
       const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
       return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
