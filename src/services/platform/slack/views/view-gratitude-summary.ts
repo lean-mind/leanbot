@@ -1,5 +1,5 @@
-import { GratitudeSummaryMessage } from "../../../database/gratitude-message";
-import { SlackView } from "./views";
+import { GratitudeSummaryMessage } from "../../../../models/database/gratitude-message";
+import { SlackView } from "../../../../models/platform/slack/views";
 import { I18n } from "../../../../services/i18n/i18n";
 import { getDateFormatted } from "../../../../services/logger/logger";
 

@@ -5,7 +5,6 @@ import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
 import { Platform, PlatformName } from "../../services/platform/platform";
-import { SlackView } from "../../models/platform/slack/views/views";
 
 const getGratitudeSummaryMessageFrom = (gratitudeMessage: GratitudeMessage, isSender: boolean): GratitudeSummaryMessage => ({
   users: isSender ? [gratitudeMessage.recipient] : [gratitudeMessage.sender],
@@ -59,15 +58,11 @@ export const sendGratitudeSummaries = async (
     
     let messagesSent = 0
     await Promise.all(summaries.map(async ({ communityId, user, sent, received }: GratitudeSummary) => {
-      // TODO: refactor get view from platform
-      // type Views = "gratitude-summary"
-      // type InteractiveViews = "gratitude-message"
-      // Platform.getInstance(platform).getView("gratitude-summary")
-      const blocks: View = await SlackView.gratitudeSummary({ image: catImage.url, sent, received })
       const platformName: PlatformName | undefined = communities.find((current: Community) => current.id === communityId)?.platform
-      
       if (platformName) {
-        Platform.getInstance(platformName).sendMessage(user.id, blocks)
+        const platform = Platform.getInstance(platformName)
+        const view: View = await platform.getView("gratitudeSummary", { image: catImage.url, sent, received })
+        platform.sendMessage(user.id, view)
         messagesSent++
       }
     }))

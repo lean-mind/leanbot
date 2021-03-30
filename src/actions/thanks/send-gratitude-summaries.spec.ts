@@ -88,6 +88,7 @@ describe('Action Send Gratitude Summary', () => {
       createdAt: gratitudeMessage.createdAt
     }
     const senderBlock = await GratitudeSummaryViewBuilder({
+      platform: slack,
       image: catImage,
       sent: [GratitudeSummaryMessageBuilder({
         users: [new Id(firstRecipientId), new Id(secondRecipientId)],
@@ -95,6 +96,7 @@ describe('Action Send Gratitude Summary', () => {
       })]
     })
     const recipientBlock = await GratitudeSummaryViewBuilder({
+      platform: slack,
       image: catImage,
       received: [GratitudeSummaryMessageBuilder({
         users: [new Id(senderId)],
