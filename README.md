@@ -111,6 +111,10 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 2. Configurar el `.env` haciendo una copia de `.env.sample` y actualizando las variables.
 3. Instalar los paquetes de node con `npm install`
 4. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))
+
+    - Para HTTP: `ngrok http 80`
+    - Para HTTPS: `ngrok http https://localhost:80`
+
 5. Actualizar los slash commands y el endpoint de interactive en la aplicación de Slack con la url que te da `ngrok`
 6. Levantar la base de datos con docker `docker-compose up database` (no tiene seguridad user-pass)
 7. Arrancar la aplicación en watch `npm run start:dev`
