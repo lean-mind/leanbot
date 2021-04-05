@@ -71,6 +71,12 @@ export class API {
       return response.send(coffeeBreaks)
     })
     
+    this.instance.get("/users/:id", async (request: any, response: any) => {
+      const userId: string = request.params.id
+      const { id, name } = await Slack.getInstance().getUserInfo(userId) ?? { id: "", name: ""}
+      return response.send({ id, name })
+    })
+    
     this.instance.listen(this.port, () => Logger.onApiStart(this.port))
   }
 }

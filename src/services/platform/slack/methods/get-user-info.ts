@@ -22,7 +22,7 @@ export const getUserInfo = (request: Request, headers: any) => async (userId : s
 
   return data.ok ? {
     id: data.user.id,
-    name: data.user.name,
+    name: data.user.real_name,
     isBot: data.user.is_bot,
     isAvailable: await getUserPresence(request, headers)(userId)
   } : undefined
