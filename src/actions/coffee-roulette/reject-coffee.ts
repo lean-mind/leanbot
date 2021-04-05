@@ -7,6 +7,6 @@ export const rejectCoffee = async (platform: Platform, data: ButtonActionProps):
   const i18n = await I18n.getInstance()
 
   const senderId = data.value
-  platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.recipientRejectedOffer", { sender: `<@${senderId}>`}) )
-  platform.sendMessage(senderId, await SlackInteractiveBlock.tryAgainCoffeeMessage())
+  await platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.recipientRejectedOffer", { sender: `<@${senderId}>`}) )
+  await platform.sendMessage(senderId, await SlackInteractiveBlock.tryAgainCoffeeMessage())
 }
