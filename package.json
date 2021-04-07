@@ -24,7 +24,11 @@
       "build"
     ],
     "preset": "ts-jest",
-    "resetMocks": true
+    "resetMocks": true,
+    "coverageReporters": [
+      "json-summary",
+      "text"
+    ]
   },
   "dependencies": {
     "axios": "^0.21.1",
