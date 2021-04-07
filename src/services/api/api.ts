@@ -1,13 +1,14 @@
-import { json, urlencoded } from 'body-parser';
-import { Logger } from '../logger/logger';
-import { config } from '../../config';
-import { EndpointInstance, Endpoints } from './endpoints';
-import { Emojis } from '../../models/emojis';
-import { Slack } from '../platform/slack/slack';
-import { Platform } from '../platform/platform';
-import { Community } from '../../models/database/community';
-import { Database } from '../database/database';
-import { QueryOptions } from '../database/mongo/methods/query';
+import { json, urlencoded } from "body-parser";
+import { Logger } from "../logger/logger";
+import { config } from "../../config";
+import { EndpointInstance, Endpoints } from "./endpoints";
+import { Emojis } from "../../models/emojis";
+import { Slack } from "../platform/slack/slack";
+import { Platform } from "../platform/platform";
+import { Community } from "../../models/database/community";
+import { Database } from "../database/database";
+import { QueryOptions } from "../database/mongo/methods/query";
+import { OAuth2Client } from "google-auth-library";
 
 const getPlatformData = async (request: any) => {
   const db = Database.make()
@@ -31,7 +32,8 @@ export class API {
 
   constructor(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    private instance = require('express')()
+    private instance = require('express')(),
+    private client = new OAuth2Client(process.env.CLIENT_ID)
   ) {
     this.instance.use(json())
     this.instance.use(urlencoded({ extended: true }))
@@ -75,6 +77,23 @@ export class API {
       const userId: string = request.params.id
       const { id, name } = await Slack.getInstance().getUserInfo(userId) ?? { id: "", name: ""}
       return response.send({ id, name })
+    })
+
+    this.instance.post("/auth", async (request: any, response: any) => {
+      const authorization: string = request.get("authorization")
+      const bearer = "bearer "
+      if (authorization && authorization.toLowerCase().startsWith(bearer)) {
+        const token = authorization.substring(bearer.length)
+        const decodedToken = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.CLIENT_ID
+        }).then(ticket => ticket.getPayload())
+        console.log(decodedToken, token)
+
+        return response.send()
+      } else {
+        return response.send("Invalid token")
+      }
     })
     
     this.instance.listen(this.port, () => Logger.onApiStart(this.port))
