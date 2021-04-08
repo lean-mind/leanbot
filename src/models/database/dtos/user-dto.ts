@@ -1,10 +1,9 @@
-import { JsonData } from './../../json-data';
-import { Id } from '../../platform/slack/id';
 import { User } from "../user";
+import { JsonData } from "../../json-data";
 
 export class UserDto {
   private constructor (
-    private userId: Id,
+    private userId: string,
     private userName: string,
   ) { }
 

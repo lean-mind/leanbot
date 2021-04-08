@@ -14,9 +14,9 @@ export const registerConfirmation = async (
   console.log("Entro por aqui")
   try {
     await db.saveUser({userId: userId, userName: userName })
-    await platform.sendMessage(senderId.id, i18n.translate("coffeeRoulette.acceptedOffer", {user: `<@${userId}>`}))
+    await platform.sendMessage(senderId, i18n.translate("coffeeRoulette.acceptedOffer", {user: `<@${userId}>`}))
   } catch (e) {
-    await platform.sendMessage(senderId.id, i18n.translate("coffeeRoulette.error"))
+    await platform.sendMessage(senderId, i18n.translate("coffeeRoulette.error"))
     Logger.onError(`Accept-coffee error:  ${e}`)
   }
 }
