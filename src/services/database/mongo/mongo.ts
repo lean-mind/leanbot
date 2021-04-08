@@ -10,7 +10,9 @@ import { CommunityDto } from '../../../models/database/dtos/community-dto';
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
 import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
+import { UserDto } from "../../../models/database/dtos/user-dto";
 import { makeQuery, QueryOptions } from './methods/query';
+import { User } from "../../../models/database/user";
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -134,5 +136,15 @@ export class MongoDB extends Database {
     })
 
     return response.ok ? response.data : []
+  }
+
+  saveUser = async (user: User): Promise<void> => {
+     await this.on(async () => {
+       console.log("Entro por aqui")
+       const collection = this.instance.db(this.database).collection(Collection.users)
+       Logger.onDBAction("Registering users")
+       const userJson = UserDto.fromModel(user).toJson()
+       await collection.insertOne(userJson)
+    })
   }
 }

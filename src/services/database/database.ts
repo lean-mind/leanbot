@@ -3,6 +3,7 @@ import { Community } from "../../models/database/community";
 import { GratitudeMessage } from "../../models/database/gratitude-message";
 import { Logger } from "../logger/logger";
 import { QueryOptions } from './mongo/methods/query';
+import { User } from "../../models/database/user";
 
 export interface DatabaseResponse {
   ok: boolean
@@ -38,4 +39,6 @@ export abstract class Database {
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
   abstract getCoffeeBreaks: (options: QueryOptions) => Promise<CoffeeBreak[]>
+
+  abstract saveUser: (user: User) => Promise<void>
 }
