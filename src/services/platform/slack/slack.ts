@@ -10,6 +10,7 @@ import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
 import { chatUpdateMessage } from './methods/chat-update-message';
+import { getSlackRegisterProps} from "./props/register-props";
 
 export type Request = AxiosInstance
 
@@ -25,13 +26,13 @@ export class Slack extends Platform {
 
   static headers = {
     bot: {
-      Authorization: `Bearer ${config.platform.slack.token}` 
+      Authorization: `Bearer ${config.platform.slack.token}`
     },
     user: {
-      Authorization: `Bearer ${config.platform.slack.userToken}` 
+      Authorization: `Bearer ${config.platform.slack.userToken}`
     }
   }
-  
+
   private constructor(
     private api = axios.create({
       baseURL: "https://slack.com/api",
@@ -39,7 +40,7 @@ export class Slack extends Platform {
         "Content-type": "application/json; charset=utf-8",
       }
     })
-  ) { 
+  ) {
     super()
   }
 
@@ -82,6 +83,7 @@ export class Slack extends Platform {
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps
   getCoffeeRouletteProps = getSlackCoffeeRouletteProps
+  getRegisterProps = getSlackRegisterProps
 }
 
 Platform.dictionary["slack"] = Slack.getInstance()
