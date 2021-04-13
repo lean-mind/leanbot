@@ -37,6 +37,8 @@
     "express": "^4.17.1",
     "google-auth-library": "^7.0.4",
     "i18next": "^19.9.0",
+    "jest-coverage-badges": "^1.1.2",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
     "node-schedule": "^1.3.2",
     "ts-node": "^9.1.1",

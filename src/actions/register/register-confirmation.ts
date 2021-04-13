@@ -6,17 +6,16 @@ import { RegisterProps } from "./register";
 
 export const registerConfirmation = async (
   platform: Platform,
-  { userId, userName}: RegisterProps,
+  { userId, userName }: RegisterProps,
   db: Database = Database.make()
 ): Promise<void> => {
   const i18n: I18n = await I18n.getInstance()
   const senderId = userId
-  console.log("Entro por aqui")
-  try {
-    await db.saveUser({userId: userId, userName: userName })
-    await platform.sendMessage(senderId, i18n.translate("coffeeRoulette.acceptedOffer", {user: `<@${userId}>`}))
-  } catch (e) {
-    await platform.sendMessage(senderId, i18n.translate("coffeeRoulette.error"))
-    Logger.onError(`Accept-coffee error:  ${e}`)
+  const savedUser = await db.saveUser({ userId: userId, userName: userName })
+  if (savedUser) {
+    await platform.sendMessage(senderId, i18n.translate("register.success"))
+    Logger.log(`Registered user: { userId: ${savedUser.userId}, userName: ${savedUser.userName}`)
+  } else {
+    await platform.sendMessage(senderId, i18n.translate("register.failure"))
   }
 }

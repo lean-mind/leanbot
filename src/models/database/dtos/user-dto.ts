@@ -27,4 +27,11 @@ export class UserDto {
       model.userName
     )
   }
+
+  toModel(): User {
+    return new User(
+      this.userId,
+      this.userName
+    )
+  }
 }

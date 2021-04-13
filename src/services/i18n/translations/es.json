@@ -50,5 +50,9 @@
     "reject": "Rechazar",
     "yes": "Sí",
     "no": "No"
+  },
+  "register": {
+    "success": "Usuario registrado",
+    "failure": "No se pudo registrar al usuario"
   }
 }

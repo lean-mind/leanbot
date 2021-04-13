@@ -1,3 +1,4 @@
+import * as jwt from "jsonwebtoken";
 import { json, urlencoded } from "body-parser";
 import { Logger } from "../logger/logger";
 import { config } from "../../config";
@@ -25,6 +26,32 @@ const getPlatformData = async (request: any) => {
 
 const getPlatformProps = async (platform: Platform, data, getProps) => {
   return await getProps(platform, data)
+}
+
+const decodeGoogleToken = async (client: OAuth2Client, request: any) => {
+  const authorization: string = request.get("authorization")
+  const bearer = "bearer "
+  if (authorization && authorization.toLowerCase().startsWith(bearer)) {
+    const token = authorization.substring(bearer.length)
+    return await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.CLIENT_ID
+    }).then(ticket => ticket.getPayload())
+  }
+}
+
+const decodeIdToken = (token: string) => {
+  console.log(token)
+  return jwt.verify(token, process.env.PASS, function (error, decode){
+    if(error){
+      throw new Error(error)
+    }
+    return decode
+  })
+}
+
+interface SignUpQuery {
+  id: string
 }
 
 export class API {
@@ -80,19 +107,22 @@ export class API {
     })
 
     this.instance.post("/auth", async (request: any, response: any) => {
-      const authorization: string = request.get("authorization")
-      const bearer = "bearer "
-      if (authorization && authorization.toLowerCase().startsWith(bearer)) {
-        const token = authorization.substring(bearer.length)
-        const decodedToken = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.CLIENT_ID
-        }).then(ticket => ticket.getPayload())
-        console.log(decodedToken, token)
+      const decodedToken = await decodeGoogleToken(this.client, request);
+      console.log("/auth <--", decodedToken)
 
+      return response.send()
+    })
+
+    this.instance.post("/signup", async (request: any, response: any) => {
+      const options: SignUpQuery = request.query
+      try {
+        const decodedGoogleToken = await decodeGoogleToken(this.client, request)
+        const decodedIdToken = decodeIdToken(options.id)
+        console.log("/signup <--", decodedGoogleToken, decodedIdToken)
         return response.send()
-      } else {
-        return response.send("Invalid token")
+      } catch (error) {
+        console.log(error)
+        return response.send(`Invalid token: ${error}`)
       }
     })
     

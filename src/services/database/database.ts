@@ -18,7 +18,7 @@ export abstract class Database {
     const dictionary = {
       ["mongo"]: (): Database => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { MongoDB } = require('./mongo/mongo')
+        const {MongoDB} = require('./mongo/mongo')
         return new MongoDB()
       }
     }
@@ -33,12 +33,14 @@ export abstract class Database {
 
   abstract registerCommunity: (community: Community) => Promise<void>
   abstract getCommunities: () => Promise<Community[]>
-  
+
   abstract saveGratitudeMessage: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
   abstract getGratitudeMessages: (options: QueryOptions) => Promise<GratitudeMessage[]>
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
   abstract getCoffeeBreaks: (options: QueryOptions) => Promise<CoffeeBreak[]>
 
-  abstract saveUser: (user: User) => Promise<void>
+  abstract saveUser: (user: User) => Promise<User | undefined>
+  abstract getUser: (userId: string) => Promise<User | undefined>
+
 }

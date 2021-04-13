@@ -50,5 +50,9 @@
     "reject": "Quita pa'llá",
     "yes": "Sobran",
     "no": "Pasando"
+  },
+  "register": {
+    "success": "Usuario registrado",
+    "failure": "No se pudo registrar al usuario"
   }
 }

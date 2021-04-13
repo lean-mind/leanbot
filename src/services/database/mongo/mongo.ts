@@ -13,6 +13,7 @@ import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
 import { UserDto } from "../../../models/database/dtos/user-dto";
 import { makeQuery, QueryOptions } from './methods/query';
 import { User } from "../../../models/database/user";
+import { response } from "express";
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -34,7 +35,7 @@ export class MongoDB extends Database {
     try {
       await this.connect()
       data = await callback()
-    } catch(error) {
+    } catch (error) {
       Logger.onDBError(error)
       await this.close()
       return { ok: false, error }
@@ -138,13 +139,29 @@ export class MongoDB extends Database {
     return response.ok ? response.data : []
   }
 
-  saveUser = async (user: User): Promise<void> => {
-     await this.on(async () => {
-       console.log("Entro por aqui")
-       const collection = this.instance.db(this.database).collection(Collection.users)
-       Logger.onDBAction("Registering users")
-       const userJson = UserDto.fromModel(user).toJson()
-       await collection.insertOne(userJson)
+  saveUser = async (user: User): Promise<User | undefined> => {
+    const response = await this.on(async () => {
+      const userExists = this.getUser(user.userId)
+
+      if (!userExists) {
+        Logger.onDBAction("Registering user")
+        const userJson = UserDto.fromModel(user).toJson()
+        await this.instance.db(this.database).collection(Collection.users).insertOne(userJson)
+        return user
+      } else {
+        console.log("El usuario ya existe")
+        return undefined
+      }
     })
+
+    return response.ok ? response.data : undefined
+  }
+
+  getUser = async(userId: string): Promise<User | undefined> => {
+    const response = await this.on(async () => {
+      const usersCollection = this.instance.db(this.database).collection(Collection.users)
+      return await usersCollection.findOne({ "userId": userId })
+    })
+    return response.ok ? response.data : undefined
   }
 }
