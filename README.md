@@ -30,7 +30,7 @@ Pet Project de un bot para el Slack de LeanMind 💙
 
 ### **Variables de entorno**
 
-Necesitas el fichero `.env` en la raiz del proyecto, puedes duplicar el fichero `.env.sample` y modificar los valores:
+Necesitas el fichero `.env` en la raíz del proyecto, puedes duplicar el fichero `.env.sample` y modificar los valores:
 
 ```bash
 # Api
@@ -52,13 +52,17 @@ CAT_TOKEN              # El token de TheCatAPI para consumir imágenes de gatito
 # Test database
 TEST_MONGODB_DATABASE  # El nombre de la base de datos de test
 TEST_MONGODB_URI       # La URI de la base de datos de test
+
+# SSL 
+HTTPS_CERT             # Ruta del certificado SSL, por ejemplo -> my_cert.crt
+HTTPS_KEY              # Ruta de la clave del certificado SSL, por ejemplo -> my_cert.key
 ```
 
 ### **Bot**
 
 Para obtener el `SLACK_TOKEN` y el `SLACK_USER_TOKEN` hay que crear una aplicación de Slack en [api.slack.com/apps](https://api.slack.com/apps)
 
-Una vez creado el bot, deberías estar en las sección **Basic Information** tendrás un desplegable "**Add features and functionality**", entraremos en donde dice **Bot** y te redireccionará a la sección **App Home** donde actualizaremos los scopes dándole al botón en verde "Review Scopes to Add". Vamos al apartado de **Scopes** y añadiremos los siguientes **Bot Token Scopes** en base a los métodos que estamos consumiendo de Slack:
+Una vez creado el bot, deberías estar en la sección **Basic Information** tendrás un desplegable "**Add features and functionality**", entraremos en donde dice **Bot** y te redireccionará a la sección **App Home** donde actualizaremos los scopes dándole al botón en verde "Review Scopes to Add". Vamos al apartado de **Scopes** y añadiremos los siguientes **Bot Token Scopes** en base a los métodos que estamos consumiendo de Slack:
 
 Method   | Bot Scopes
 ---------|-----------
@@ -108,6 +112,7 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 ## Trabajo en local
 
 1. Clonar el repositorio
+12. Generar un certificado y una clave SSL ([Tutorial](https://programarivm.com/pon-en-marcha-un-servidor-https-en-node-js-con-express))  
 2. Configurar el `.env` haciendo una copia de `.env.sample` y actualizando las variables.
 3. Instalar los paquetes de node con `npm install`
 4. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))
