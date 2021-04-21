@@ -1,3 +1,6 @@
+import * as https from 'https';
+import * as fs from 'fs';
+import * as cors from 'cors';
 import { json, urlencoded } from 'body-parser';
 import { Logger } from '../logger/logger';
 import { config } from '../../config';
@@ -31,11 +34,11 @@ export class API {
   ) {
     this.instance.use(json())
     this.instance.use(urlencoded({ extended: true }))
+    this.instance.use(cors())
 
     Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
       this.instance.post(name, async (request: any, response: any) => {
         const data = await getPlatformData(request, getProps)
-        
         if (config.maintenance) {
           return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
         }
@@ -51,6 +54,9 @@ export class API {
       })
     })
 
-    this.instance.listen(this.port, () => Logger.onApiStart(this.port))
+    https.createServer({
+      key: fs.readFileSync(process.env.HTTPS_KEY ?? ""),
+      cert: fs.readFileSync(process.env.HTTPS_CERT ?? "")
+    }, this.instance).listen(this.port, () => Logger.onApiStart(this.port))
   }
 }

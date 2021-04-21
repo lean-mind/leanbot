@@ -2,7 +2,6 @@ import { tryAgainCoffee } from './try-again-coffee';
 import { rejectCoffee } from './reject-coffee';
 import { ButtonActionPropsBuilder } from './../../tests/builders/actions/coffee-button-action-props-builder';
 import { acceptCoffee } from './accept-coffee';
-import { SlackInteractiveBlock } from "../../models/platform/slack/views/views"
 import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
@@ -76,7 +75,7 @@ describe('Coffee roulette', () => {
       expect(platform.sendMessage).nthCalledWith(
         2,
         randomUserId, 
-        await SlackInteractiveBlock.coffeeRouletteMessage(coffeeRouletteProps)
+        await platform.getView("coffeeRouletteMessage", coffeeRouletteProps)
       )
     })
       
@@ -89,7 +88,7 @@ describe('Coffee roulette', () => {
       expect(platform.sendMessage).nthCalledWith(
         2,
         randomUserId, 
-        await SlackInteractiveBlock.coffeeRouletteMessage(coffeeRoulettePropsWithText)
+        await platform.getView("coffeeRouletteMessage", coffeeRoulettePropsWithText)
       )
     })
 
@@ -173,7 +172,7 @@ describe('Coffee roulette', () => {
 
       expect(platform.sendMessage).toBeCalledWith(
         senderId, 
-        await SlackInteractiveBlock.tryAgainCoffeeMessage()
+        await platform.getView("tryAgainCoffeeMessage", {})
       )
       expect(platform.updateMessage).toBeCalledWith(
         responseUrl, 

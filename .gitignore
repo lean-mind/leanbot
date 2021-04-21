@@ -1,3 +1,4 @@
+.idea
 .vscode
 .env*
 !.env.sample
@@ -7,3 +8,9 @@ logs
 localdb
 leanbotdb
 coverage
+
+# SSL certificates
+*.crt
+*.csr
+*.key
+*.pem
