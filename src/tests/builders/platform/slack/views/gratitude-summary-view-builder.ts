@@ -1,5 +1,5 @@
-import { GratitudeSummaryViewProps } from "../../../../../models/platform/slack/views/view-gratitude-summary";
 import { View } from "../../../../../models/platform/message";
+import { GratitudeSummaryViewProps } from "../../../../../services/platform/slack/views/view-gratitude-summary";
 
 export const GratitudeSummaryViewBuilder = ({
   platform,
