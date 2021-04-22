@@ -56,7 +56,8 @@ export class API {
 
     https.createServer({
       key: fs.readFileSync(process.env.HTTPS_KEY ?? ""),
-      cert: fs.readFileSync(process.env.HTTPS_CERT ?? "")
+      cert: fs.readFileSync(process.env.HTTPS_CERT ?? ""),
+      ca: fs.readFileSync(process.env.HTTPS_CHAIN ?? "")
     }, this.instance).listen(this.port, () => Logger.onApiStart(this.port))
   }
 }
