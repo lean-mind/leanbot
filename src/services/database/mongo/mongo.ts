@@ -1,4 +1,4 @@
-import { CoffeeBreak } from './../../../models/database/coffee-break';
+import { CoffeeBreak } from '../../../models/database/coffee-break';
 import { MongoClient } from 'mongodb'
 import { JsonData } from '../../../models/json-data';
 import { Database, DatabaseResponse } from '../database';
@@ -13,7 +13,6 @@ import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
 import { UserDto } from "../../../models/database/dtos/user-dto";
 import { makeQuery, QueryOptions } from './methods/query';
 import { User } from "../../../models/database/user";
-import { response } from "express";
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -92,15 +91,11 @@ export class MongoDB extends Database {
 
       if (gratitudeMessagesJson.length > 0) {
         Logger.onDBAction("Saving gratitude messages")
-        try{
-          await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
-        } catch (e) {
-          throw Error(`saveGratitudeMessage insert error: ${e.message}`)
-        }
+        await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
       }
     });
     
-    if (!response.ok) throw Error(response.error)
+    if (!response.ok) throw Error(`saveGratitudeMessage error: ${response.error}`)
   }
 
   getGratitudeMessages = async (options: QueryOptions): Promise<GratitudeMessage[]> => {
@@ -118,11 +113,7 @@ export class MongoDB extends Database {
     const response = await this.on(async () => {
       const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
       Logger.onDBAction("Saving coffee break")
-      try {
-        await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
-      } catch (e) {
-        throw Error(`saveCoffeeBreak insert error: ${e.message}`)
-      }
+      await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
     })
 
     if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
@@ -141,17 +132,15 @@ export class MongoDB extends Database {
 
   saveUser = async (user: User): Promise<User | undefined> => {
     const response = await this.on(async () => {
-      const userExists = this.getUser(user.userId)
-
-      if (!userExists) {
-        Logger.onDBAction("Registering user")
-        const userJson = UserDto.fromModel(user).toJson()
-        await this.instance.db(this.database).collection(Collection.users).insertOne(userJson)
-        return user
-      } else {
-        console.log("El usuario ya existe")
+      const userExists = await this.getUserById(user.userId)
+      if (userExists) {
+        Logger.onDBAction("User already exists")
         return undefined
       }
+      Logger.onDBAction("Registering user")
+      const userJson = UserDto.fromModel(user).toJson()
+      await this.instance.db(this.database).collection(Collection.users).insertOne(userJson)
+      return user
     })
 
     return response.ok ? response.data : undefined
@@ -159,9 +148,14 @@ export class MongoDB extends Database {
 
   getUser = async(userId: string): Promise<User | undefined> => {
     const response = await this.on(async () => {
-      const usersCollection = this.instance.db(this.database).collection(Collection.users)
-      return await usersCollection.findOne({ "userId": userId })
+      return await this.getUserById(userId);
     })
     return response.ok ? response.data : undefined
+  }
+
+  private getUserById = async (userId: string): Promise<User | undefined> => {
+    const usersCollection = this.instance.db(this.database).collection(Collection.users)
+    const user = await usersCollection.findOne({"userId": userId})
+    return user ? UserDto.fromJson(user).toModel() : undefined
   }
 }
