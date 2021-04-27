@@ -1,12 +1,14 @@
-import { CoffeeBreakBuilder } from './../../../tests/builders/models/coffee-break-builder';
-import { CoffeeBreak } from './../../../models/database/coffee-break';
-import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
-import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
-import { Community } from './../../../models/database/community';
+import { CoffeeBreakBuilder } from '../../../tests/builders/models/coffee-break-builder';
+import { CoffeeBreak } from '../../../models/database/coffee-break';
+import { CommunityBuilder } from '../../../tests/builders/models/community-builder';
+import { GratitudeMessageBuilder } from '../../../tests/builders/models/gratitude-message-builder';
+import { Community } from '../../../models/database/community';
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
 import { Id } from '../../../models/platform/slack/id';
+import { User } from "../../../models/database/user";
+import { UserBuilder } from "../../../tests/builders/models/user-builder";
 
 describe('Service MongoDB: ', () => {
   let db: MongoDB
@@ -30,20 +32,56 @@ describe('Service MongoDB: ', () => {
     config.database = oldConfig
   })
 
-  it('should save and retrieve communities', async () => {
-    const communities: Community[] = [
-      CommunityBuilder({ id: "first-community-id"}), 
-      CommunityBuilder({ id: "second-community-id"})
-    ]
-    await db.registerCommunity(communities[0])
-    await db.registerCommunity(communities[1])
-    
-    const retrievedCommunities: Community[] = await db.getCommunities()
-    
-    expect(retrievedCommunities).toContainEqual(communities[0])
-    expect(retrievedCommunities).toContainEqual(communities[1])
-    expect(retrievedCommunities).toHaveLength(2)
-  }) 
+  it('should catch errors', async () => {
+    config.database = {
+      mongodb: {
+        uri: "",
+        database: "test"
+      }
+    }
+    const errorDb = new MongoDB()
+
+    expect(async () => await errorDb.getUser('id')).not.toThrow()
+  })
+
+  describe('Collection communities', () => {
+    it('should save and retrieve communities', async () => {
+      const communities: Community[] = [
+        CommunityBuilder({ id: "first-community-id"}),
+        CommunityBuilder({ id: "second-community-id"})
+      ]
+      await db.registerCommunity(communities[0])
+      await db.registerCommunity(communities[1])
+
+      const retrievedCommunities: Community[] = await db.getCommunities()
+
+      expect(retrievedCommunities).toContainEqual(communities[0])
+      expect(retrievedCommunities).toContainEqual(communities[1])
+      expect(retrievedCommunities).toHaveLength(2)
+    })
+  })
+
+  describe('Collection users', () => {
+    it('should save and retrieve user', async () => {
+      const user: User = UserBuilder({})
+      await db.saveUser(user)
+      const retrievedUser: User | undefined = await db.getUser(user.userId)
+
+      expect(retrievedUser).not.toBeUndefined()
+      expect(retrievedUser).toEqual(user)
+    })
+    it('should not save user when it already exists', async () => {
+      const user: User = UserBuilder({userName: 'repeated-username'})
+
+      const firstInsertedUser: User | undefined = await db.saveUser(user)
+      const retrievedUser: User | undefined = await db.getUser(user.userId)
+      const secondInsertedUser: User | undefined = await db.saveUser(user)
+
+      expect(firstInsertedUser).toEqual(user)
+      expect(secondInsertedUser).toBeUndefined()
+      expect(retrievedUser).not.toBeUndefined()
+    })
+  })
 
   describe('Collection gratitudeMessages', () => {
     it('should save and retrieve gratitude messages', async () => {
