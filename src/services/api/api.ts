@@ -1,7 +1,7 @@
 import * as https from 'https';
 import * as fs from 'fs';
 import { json, urlencoded } from 'body-parser';
-import { Logger } from '../logger/logger';
+import { getDateFormatted, Logger } from '../logger/logger';
 import { config } from '../../config';
 import { EndpointInstance, Endpoints } from './endpoints';
 import { Emojis } from '../../models/emojis';
@@ -9,6 +9,7 @@ import { Slack } from '../platform/slack/slack';
 import { Platform } from '../platform/platform';
 import { Community } from '../../models/database/community';
 import { Database } from '../database/database';
+import * as morgan from 'morgan'
 
 const getPlatformData = async (request: any) => {
   const db = Database.make()
@@ -29,9 +30,11 @@ const getPlatformProps = async (platform: Platform, data, getProps) => {
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const app = require('express')()
-
 app.use(json())
 app.use(urlencoded({ extended: true }))
+
+morgan.token('date', () => { return getDateFormatted() })
+app.use(morgan(':date :method :url :status :res[content-length] - :response-time ms'))
 
 Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
   app.post(name, async (request: any, response: any) => {

@@ -27,7 +27,7 @@
     "preset": "ts-jest",
     "resetMocks": true,
     "coverageReporters": [
-      "json-summary", 
+      "json-summary",
       "text"
     ]
   },
@@ -41,6 +41,7 @@
     "i18next": "^19.9.0",
     "jest-coverage-badges": "^1.1.2",
     "mongodb": "^3.6.3",
+    "morgan": "^1.10.0",
     "node-schedule": "^1.3.2",
     "ts-node": "^9.1.1",
     "typescript": "^3.8.2"
