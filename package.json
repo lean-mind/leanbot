@@ -15,6 +15,7 @@
     "test:database-windows": "powershell .\\src\\services\\database\\mongo\\test\\mongo-script.ps1",
     "test:database-unix": "bash ./src/services/database/mongo/test/mongo-script.sh",
     "coverage": "npm run test:silent -- --coverage",
+    "coverage:badges": "npm run coverage && jest-coverage-badges",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix-dry-run"
   },
@@ -24,7 +25,11 @@
       "build"
     ],
     "preset": "ts-jest",
-    "resetMocks": true
+    "resetMocks": true,
+    "coverageReporters": [
+      "json-summary", 
+      "text"
+    ]
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -34,6 +39,7 @@
     "express": "^4.17.1",
     "https": "^1.0.0",
     "i18next": "^19.9.0",
+    "jest-coverage-badges": "^1.1.2",
     "mongodb": "^3.6.3",
     "node-schedule": "^1.3.2",
     "ts-node": "^9.1.1",

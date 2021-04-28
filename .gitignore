@@ -7,7 +7,8 @@ dist
 logs
 localdb
 leanbotdb
-coverage
+coverage/*
+!coverage/badge*
 
 # SSL certificates
 *.crt

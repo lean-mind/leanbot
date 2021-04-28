@@ -1,5 +1,10 @@
 # LeanBot para Slack
 
+![Statement coverage](coverage/badge-statements.svg)
+![Branch coverage](coverage/badge-branches.svg)
+![Function coverage](coverage/badge-functions.svg)
+![Line coverage](coverage/badge-lines.svg)
+
 Pet Project de un bot para el Slack de LeanMind 💙
 
 ----------------
