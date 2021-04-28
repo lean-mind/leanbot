@@ -1,8 +1,8 @@
-import { CoffeeBreakBuilder } from './../../../tests/builders/models/coffee-break-builder';
-import { CoffeeBreak } from './../../../models/database/coffee-break';
-import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
-import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
-import { Community } from './../../../models/database/community';
+import { CoffeeBreakBuilder } from '../../../tests/builders/models/coffee-break-builder';
+import { CoffeeBreak } from '../../../models/database/coffee-break';
+import { CommunityBuilder } from '../../../tests/builders/models/community-builder';
+import { GratitudeMessageBuilder } from '../../../tests/builders/models/gratitude-message-builder';
+import { Community } from '../../../models/database/community';
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
@@ -29,20 +29,34 @@ describe('Service MongoDB: ', () => {
     config.database = oldConfig
   })
 
-  it('should save and retrieve communities', async () => {
-    const communities: Community[] = [
-      CommunityBuilder({ id: "first-community-id"}), 
-      CommunityBuilder({ id: "second-community-id"})
-    ]
-    await db.registerCommunity(communities[0])
-    await db.registerCommunity(communities[1])
-    
-    const retrievedCommunities: Community[] = await db.getCommunities()
-    
-    expect(retrievedCommunities).toContainEqual(communities[0])
-    expect(retrievedCommunities).toContainEqual(communities[1])
-    expect(retrievedCommunities).toHaveLength(2)
-  }) 
+  it('should catch errors', async () => {
+    config.database = {
+      mongodb: {
+        uri: "",
+        database: "test"
+      }
+    }
+    const errorDb = new MongoDB()
+
+    expect(async () => await errorDb.getCommunities()).not.toThrow()
+  })
+
+  describe('Collection communities', () => {
+    it('should save and retrieve communities', async () => {
+      const communities: Community[] = [
+        CommunityBuilder({ id: "first-community-id"}),
+        CommunityBuilder({ id: "second-community-id"})
+      ]
+      await db.registerCommunity(communities[0])
+      await db.registerCommunity(communities[1])
+
+      const retrievedCommunities: Community[] = await db.getCommunities()
+
+      expect(retrievedCommunities).toContainEqual(communities[0])
+      expect(retrievedCommunities).toContainEqual(communities[1])
+      expect(retrievedCommunities).toHaveLength(2)
+    })
+  })
 
   it('should save and retrieve gratitude messages', async () => {
     const gratitudeMessages: GratitudeMessage[] = [
