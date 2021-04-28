@@ -1,3 +1,5 @@
+import * as https from 'https';
+import * as fs from 'fs';
 import * as jwt from "jsonwebtoken";
 import { json, urlencoded } from "body-parser";
 import { Logger } from "../logger/logger";
@@ -53,79 +55,79 @@ const decodeIdToken = (token: string) => {
 interface SignUpQuery {
   id: string
 }
+  
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+const app = require('express')()
+const client = new OAuth2Client(process.env.CLIENT_ID)
 
-export class API {
-  private port: number = parseInt(config.apiPort)
+app.use(json())
+app.use(urlencoded({ extended: true }))
 
-  constructor(
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    private instance = require('express')(),
-    private client = new OAuth2Client(process.env.CLIENT_ID)
-  ) {
-    this.instance.use(json())
-    this.instance.use(urlencoded({ extended: true }))
+Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
+  app.post(name, async (request: any, response: any) => {
+    const data = await getPlatformData(request)
 
-    Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
-      this.instance.post(name, async (request: any, response: any) => {
-        const data = await getPlatformData(request)
-        
-        if (config.maintenance) {
-          return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
-        }
-        
-        if (data) {
-          const props = await getPlatformProps(data.platform, data.data, getProps)
-          action(data.platform, props)
-          return response.send()
-        }
-        
-        const errorMessage = "Invalid request"
-        Logger.onError(`${errorMessage}: ${request}`)
-        return response.send(errorMessage)
-      })
-    })
+    if (config.maintenance) {
+      return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
+    }
 
-    const db: Database = Database.make()
-    
-    this.instance.get("/gratitudeMessages", async (request: any, response: any) => {
-      // TODO: maintenance??
-      const options: QueryOptions = request.query
-      const gratitudeMessages = await db.getGratitudeMessages(options)
-      return response.send(gratitudeMessages)
-    })
-    
-    this.instance.get("/coffeeBreaks", async (request: any, response: any) => {
-      const options: QueryOptions = request.query
-      const coffeeBreaks = await db.getCoffeeBreaks(options)
-      return response.send(coffeeBreaks)
-    })
-    
-    this.instance.get("/users/:id", async (request: any, response: any) => {
-      const userId: string = request.params.id
-      const { id, name } = await Slack.getInstance().getUserInfo(userId) ?? { id: "", name: ""}
-      return response.send({ id, name })
-    })
-
-    this.instance.post("/auth", async (request: any, response: any) => {
-      const decodedToken = await decodeGoogleToken(this.client, request);
-      console.log("/auth <--", decodedToken)
-
+    if (data) {
+      const props = await getPlatformProps(data.platform, data.data, getProps)
+      action(data.platform, props)
       return response.send()
-    })
+    }
 
-    this.instance.post("/signup", async (request: any, response: any) => {
-      const options: SignUpQuery = request.query
-      try {
-        const decodedGoogleToken = await decodeGoogleToken(this.client, request)
-        const decodedIdToken = decodeIdToken(options.id)
-        console.log("/signup <--", decodedGoogleToken, decodedIdToken)
-        return response.send()
-      } catch (error) {
-        console.log(error)
-        return response.send(`Invalid token: ${error}`)
-      }
-    })
+    const errorMessage = "Invalid request"
+    Logger.onError(`${errorMessage}: ${request}`)
+    return response.send(errorMessage)
+  })
+})
+
+
+const db: Database = Database.make()
     
-    this.instance.listen(this.port, () => Logger.onApiStart(this.port))
+app.get("/gratitudeMessages", async (request: any, response: any) => {
+  // TODO: maintenance??
+  const options: QueryOptions = request.query
+  const gratitudeMessages = await db.getGratitudeMessages(options)
+  return response.send(gratitudeMessages)
+})
+
+app.get("/coffeeBreaks", async (request: any, response: any) => {
+  const options: QueryOptions = request.query
+  const coffeeBreaks = await db.getCoffeeBreaks(options)
+  return response.send(coffeeBreaks)
+})
+
+app.get("/users/:id", async (request: any, response: any) => {
+  const userId: string = request.params.id
+  const { id, name } = await Slack.getInstance().getUserInfo(userId) ?? { id: "", name: ""}
+  return response.send({ id, name })
+})
+
+app.post("/auth", async (request: any, response: any) => {
+  const decodedToken = await decodeGoogleToken(client, request);
+  console.log("/auth <--", decodedToken)
+
+  return response.send()
+})
+
+app.post("/signup", async (request: any, response: any) => {
+  const options: SignUpQuery = request.query
+  try {
+    const decodedGoogleToken = await decodeGoogleToken(client, request)
+    const decodedIdToken = decodeIdToken(options.id)
+    console.log("/signup <--", decodedGoogleToken, decodedIdToken)
+    return response.send()
+  } catch (error) {
+    console.log(error)
+    return response.send(`Invalid token: ${error}`)
   }
-}
+})
+
+
+export const httpsApp = https.createServer({
+  key: fs.readFileSync(process.env.HTTPS_KEY ?? ""),
+  cert: fs.readFileSync(process.env.HTTPS_CERT ?? ""),
+  ca: fs.readFileSync(process.env.HTTPS_CHAIN ?? "")
+}, app)

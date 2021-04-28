@@ -1,9 +1,9 @@
-import { SlackModal } from "./views";
+import { SlackModal } from "../../../../models/platform/slack/views";
 import { I18n } from "../../../../services/i18n/i18n";
 
 let viewNumber = 0
 
-export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => {
+export const GratitudeMessageInteractiveView = async (_): Promise<SlackModal> => {
   const i18n = await I18n.getInstance()
   const type = "modal"
   const external_id = `${viewNumber++}-thanks-confirmation`

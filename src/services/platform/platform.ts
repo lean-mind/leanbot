@@ -1,7 +1,7 @@
 import { CoffeeRouletteProps } from "../../actions/coffee-roulette/coffee-roulette"
 import { InteractiveProps } from "../../actions/interactive"
 import { ThanksProps } from "../../actions/thanks/thanks"
-import { Message } from "../../models/platform/message"
+import { Message, ViewTypes } from "../../models/platform/message"
 import { Logger } from "../logger/logger"
 import { UserInfo } from "./slack/methods/get-user-info"
 import {RegisterProps} from "../../actions/register/register";
@@ -40,6 +40,8 @@ export abstract class Platform {
       delete this.tempUserData[userId][key]
     }
   }
+
+  abstract getView: (view: ViewTypes, options: any | undefined) => Promise<Message>
 
   abstract sendMessage: (channelId: string, message: Message) => Promise<void>
   abstract updateMessage: (messageId: any, message: Message) => Promise<void>

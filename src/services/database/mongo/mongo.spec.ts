@@ -41,7 +41,7 @@ describe('Service MongoDB: ', () => {
     }
     const errorDb = new MongoDB()
 
-    expect(async () => await errorDb.getUser('id')).not.toThrow()
+    expect(async () => await errorDb.getCommunities()).not.toThrow()
   })
 
   describe('Collection communities', () => {

@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
-import { Message } from "../../../models/platform/message"
+import { Message, ViewTypes } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
-import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views/views"
+import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views"
 import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
 import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
@@ -10,7 +10,10 @@ import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
 import { chatUpdateMessage } from './methods/chat-update-message';
-import { getSlackRegisterProps} from "./props/register-props";
+import { CoffeeRouletteMessage, TryAgainCoffeeMessage } from "./views/coffee-roulette-views"
+import { GratitudeSummaryView } from "./views/view-gratitude-summary"
+import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
+import { getSlackRegisterProps } from "./props/register-props"
 
 export type Request = AxiosInstance
 
@@ -52,6 +55,21 @@ export class Slack extends Platform {
   static getToken = (data: any): string | undefined => {
     const body = Slack.getBody(data)
     return body.token ?? body.payload?.token
+  }
+
+  getView = async (view: ViewTypes, options: any | undefined): Promise<Message> => {
+    const mapper = {
+      "gratitudeMessage": GratitudeMessageInteractiveView,
+      "gratitudeSummary": GratitudeSummaryView,
+      "coffeeRouletteMessage": CoffeeRouletteMessage,
+      "tryAgainCoffeeMessage": TryAgainCoffeeMessage
+    }
+    const viewFunc = mapper[view]
+    // TODO: refactor
+    if (viewFunc) {
+      return viewFunc(options)
+    }
+    throw Error("Unknown view error")
   }
 
   sendMessage = async (channelId: string, message: Message): Promise<void> => {
