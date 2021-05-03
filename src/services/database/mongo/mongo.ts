@@ -31,12 +31,12 @@ export class MongoDB extends Database {
     try {
       await this.connect()
       data = await callback()
-    } catch(error) {
+    } catch (error) {
       Logger.onDBError(error)
-      await this.close()
       return { ok: false, error }
+    } finally {
+      await this.close()
     }
-    await this.close()
     return { ok: true, data }
   }
   
@@ -56,7 +56,7 @@ export class MongoDB extends Database {
   removeCollections = async (): Promise<void> => {
     await this.on(() => this.instance.db(this.database).dropDatabase())
   }
-  
+
   registerCommunity = async (community: Community): Promise<void> => {
     await this.on(async () => {
       if (!community.id) return
@@ -126,3 +126,17 @@ export class MongoDB extends Database {
     if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
   }
 }
+
+// getUser = () => {
+//   try {
+//     db.connect()
+//     getUserById() // lógica
+//   } finally {
+//     db.close()
+//   }
+// }
+//
+// @connectdb
+// getUser () => {
+//   //lógica
+// }
