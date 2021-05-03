@@ -1,4 +1,4 @@
-import { CoffeeBreak } from './../../models/database/coffee-break';
+import { CoffeeBreak } from '../../models/database/coffee-break';
 import { Community } from "../../models/database/community";
 import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message";
 import { Logger } from "../logger/logger";
