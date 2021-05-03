@@ -30,16 +30,16 @@ describe('Service MongoDB: ', () => {
     config.database = oldConfig
   })
 
-  it('should catch errors', async () => {
+  it('should throw errors if needed', async () => {
     config.database = {
       mongodb: {
         uri: "",
         database: "test"
       }
     }
-    const errorDb = new MongoDB()
 
-    expect(async () => await errorDb.getCommunities()).not.toThrow()
+    const errorDb = new MongoDB()
+    await expect(errorDb.getCommunities()).rejects.toBeDefined()
   })
 
   describe('Collection communities', () => {

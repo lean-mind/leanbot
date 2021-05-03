@@ -1,7 +1,7 @@
 import { CoffeeBreak } from "../../../models/database/coffee-break";
 import { MongoClient } from "mongodb"
 import { JsonData } from "../../../models/json-data";
-import { Database, DatabaseResponse } from "../database";
+import { Database } from "../database";
 import { Logger } from "../../logger/logger";
 import { Collection } from "./collection";
 import { config } from "../../../config";
@@ -26,18 +26,13 @@ export class MongoDB extends Database {
     super()
   }
 
-  private on = async (callback: () => Promise<any>): Promise<DatabaseResponse> => {
-    let data: any
+  private on = async (callback: () => Promise<any>): Promise<any> => {
     try {
       await this.connect()
-      data = await callback()
-    } catch (error) {
-      Logger.onDBError(error)
-      return { ok: false, error }
+      return await callback()
     } finally {
       await this.close()
     }
-    return { ok: true, data }
   }
   
   private connect = async (): Promise<void> => {
@@ -65,26 +60,22 @@ export class MongoDB extends Database {
 
   getCommunities = async (): Promise<Community[]> => {
     Logger.onDBAction("Getting communities")
-    const response = await this.on(async () => await this.findAllCommunities())
-    return response.ok ? response.data : []
+    return await this.on(async () => await this.findAllCommunities())
   }
 
   saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
     Logger.onDBAction("Saving gratitude messages")
-    const response = await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages));
-    if (!response.ok) throw Error(`saveGratitudeMessage error: ${response.error}`)
+    await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages));
   }
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
     Logger.onDBAction("Getting gratitude messages")
-    const response = await this.on(async () => await this.findGratitudeMessages(options))
-    return response.ok ? response.data : []
+    return await this.on(async () => await this.findGratitudeMessages(options))
   }
 
   saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
     Logger.onDBAction("Saving coffee break")
-    const response = await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
-    if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
+    return await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
   }
 
   private dropDatabase = () => this.instance.db(this.database).dropDatabase();
