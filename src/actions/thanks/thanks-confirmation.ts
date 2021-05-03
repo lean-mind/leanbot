@@ -84,7 +84,7 @@ export const thanksConfirmation = async (
 
   try {
     if (gratitudeMessages.length > 0) {
-      await db.saveGratitudeMessage(gratitudeMessages)
+      await db.saveGratitudeMessages(gratitudeMessages)
 
       sendRecipientMessages(platform, gratitudeMessages)
       sendSenderMessage(platform, channel, sender, recipients, text, isAnonymous)

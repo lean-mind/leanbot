@@ -20,7 +20,7 @@ describe('Actions Thanks Confirmation', () => {
 
   beforeEach(() => {
     db = Database.make()
-    db.saveGratitudeMessage = jest.fn()
+    db.saveGratitudeMessages = jest.fn()
 
     platform = Slack.getInstance()
     platform.sendMessage = jest.fn()

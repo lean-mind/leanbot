@@ -32,7 +32,7 @@ export abstract class Database {
   abstract registerCommunity: (community: Community) => Promise<void>
   abstract getCommunities: () => Promise<Community[]>
   
-  abstract saveGratitudeMessage: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
+  abstract saveGratitudeMessages: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
   abstract getGratitudeMessages: (options: GratitudeMessageOptions) => Promise<GratitudeMessage[]>
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>

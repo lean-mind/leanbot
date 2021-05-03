@@ -69,7 +69,7 @@ export class MongoDB extends Database {
     return response.ok ? response.data : []
   }
 
-  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
+  saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
     Logger.onDBAction("Saving gratitude messages")
     const response = await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages));
     if (!response.ok) throw Error(`saveGratitudeMessage error: ${response.error}`)

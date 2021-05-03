@@ -66,7 +66,7 @@ describe('Service MongoDB: ', () => {
         GratitudeMessageBuilder({ text: "message 2" }),
         GratitudeMessageBuilder({ text: "message 3" })
       ]
-      await db.saveGratitudeMessage(gratitudeMessages)
+      await db.saveGratitudeMessages(gratitudeMessages)
 
       const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
 
@@ -85,7 +85,7 @@ describe('Service MongoDB: ', () => {
         GratitudeMessageBuilder({ createdAt: today }),
         GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
       ]
-      await db.saveGratitudeMessage(gratitudeMessages)
+      await db.saveGratitudeMessages(gratitudeMessages)
 
       const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
 
