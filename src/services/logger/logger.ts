@@ -39,7 +39,7 @@ export const getDateFormatted = (date: Date = new Date(Date.now())): string => {
   const months = date.getMonth() + 1;
   const years = date.getFullYear();
   const hours = date.getHours();
-  const mins = date.getMinutes();
+  const minutes = date.getMinutes();
   const seconds = date.getSeconds();
-  return `[${days}/${months}/${years} ${hours}:${mins}:${seconds}]`
+  return `[${days}/${months}/${years} ${hours}:${minutes}:${seconds}]`
 }
