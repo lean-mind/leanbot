@@ -19,7 +19,7 @@ export type Request = AxiosInstance
 export class Slack extends Platform {
   private static instance: Slack
 
-  static getInstance = (api?: any) => {
+  static getInstance = (api?: any): Slack => {
     if (!Slack.instance || api) {
       Slack.instance = new Slack(api)
     }
@@ -46,7 +46,7 @@ export class Slack extends Platform {
     super()
   }
 
-  static getBody = (data: any) => {
+  static getBody = (data: any): SlackBody => {
     const payload = data.body.payload ? JSON.parse(data.body.payload) : {}
     return  { ...data.body, payload } as SlackBody
   }
@@ -83,7 +83,7 @@ export class Slack extends Platform {
     }
   }
 
-  updateMessage = async (messageId: any, message: Message): Promise<void> => {
+  updateMessage = async (messageId: string, message: Message): Promise<void> => {
     if (typeof message === "string") {
       await chatUpdateMessage(messageId, { text: message })
     } else if (message instanceof SlackView) {

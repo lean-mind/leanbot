@@ -21,20 +21,20 @@ export class Logger {
   }
 
   static log = Logger.info;
-  static onApiStart = (port: number) => Logger.info(`API started in port ${port}`);
-  static onScheduleStart = () => Logger.info(`Scheduler started`);
-  static onDBAction = (message: string) => Logger.info(`Database action: ${message}`);
-  static onRequest = (endpoint: string, data: any) => Logger.info(`${endpoint} -> ${JSON.stringify(data)}`)
-  static onResponse = (endpoint: string, data: any) => Logger.info(`${endpoint} <- ${JSON.stringify(data)}`)
+  static onApiStart = (port: number): void =>  Logger.info(`API started in port ${port}`);
+  static onScheduleStart = (): void => Logger.info(`Scheduler started`);
+  static onDBAction = (message: string): void => Logger.info(`Database action: ${message}`);
+  static onRequest = (endpoint: string, data: any): void => Logger.info(`${endpoint} -> ${JSON.stringify(data)}`)
+  static onResponse = (endpoint: string, data: any): void => Logger.info(`${endpoint} <- ${JSON.stringify(data)}`)
 
-  static onError = (error: any) => Logger.error(`Oops! There was an error`, error);
-  static onDBError = (error: any) => Logger.error(`Oops! There was an error writing or reading database`, error);
-  static onFileReadError = (file: string, error: any) => Logger.error(`Oops! There was an error reading ${file} file`, error);
-  static onFileWriteError = (file: string, error: any) => Logger.error(`Oops! There was an error writing ${file} file`, error);
-  static onMissingTranslation = (file: string, type: string, key: string) => Logger.error(`Oops! There was an error in ${file} file: { "${type}": { "${key}": "MISSING TRANSLATION" } }`);
+  static onError = (error: any): void => Logger.error(`Oops! There was an error`, error);
+  static onDBError = (error: any): void => Logger.error(`Oops! There was an error writing or reading database`, error);
+  static onFileReadError = (file: string, error: any): void => Logger.error(`Oops! There was an error reading ${file} file`, error);
+  static onFileWriteError = (file: string, error: any): void => Logger.error(`Oops! There was an error writing ${file} file`, error);
+  static onMissingTranslation = (file: string, type: string, key: string): void => Logger.error(`Oops! There was an error in ${file} file: { "${type}": { "${key}": "MISSING TRANSLATION" } }`);
 }
  
-export const getDateFormatted = (date: Date = new Date(Date.now())) => {
+export const getDateFormatted = (date: Date = new Date(Date.now())): string => {
   const days = date.getDate();
   const months = date.getMonth() + 1;
   const years = date.getFullYear();
