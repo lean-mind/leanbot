@@ -46,6 +46,9 @@
     "recipientRejectedOffer": "You rejected ${sender}'s coffee",
     "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
   },
+  "todo": {
+    "toDoListTitle": ":spiral_note_pad: These are your tasks:"
+  },
   "button": {
     "accept": "Accept",
     "reject": "Reject",

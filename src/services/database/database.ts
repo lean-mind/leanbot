@@ -33,4 +33,5 @@ export abstract class Database {
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
 
   abstract saveToDo: (todo: ToDo) => Promise<void>
+  abstract getToDos: (userId: string) => Promise<ToDo[]>
 }

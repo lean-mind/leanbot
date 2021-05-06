@@ -46,6 +46,9 @@
     "recipientRejectedOffer": "Has rechazado el café de ${sender}",
     "error": "Vaya, hubo algún error con tu café... :shocked_face_with_exploding_head:"
   },
+  "todo": {
+    "toDoListTitle": ":spiral_note_pad: Aquí te va el curro:"
+  },
   "button": {
     "accept": "Mándale",
     "reject": "Quita pa'llá",

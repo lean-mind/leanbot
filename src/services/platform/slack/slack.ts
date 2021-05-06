@@ -15,6 +15,7 @@ import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
 import { Community } from "../../../models/database/community";
 import { getSlackTodoProps } from "./props/todo-props";
+import { ToDoListView } from "./views/todo-views"
 
 export type Request = AxiosInstance
 
@@ -67,12 +68,13 @@ export class Slack extends Platform {
       "gratitudeMessage": GratitudeMessageInteractiveView,
       "gratitudeSummary": GratitudeSummaryView,
       "coffeeRouletteMessage": CoffeeRouletteMessage,
-      "tryAgainCoffeeMessage": TryAgainCoffeeMessage
+      "tryAgainCoffeeMessage": TryAgainCoffeeMessage,
+      "toDoList": ToDoListView
     }
     const viewFunc = mapper[view]
     // TODO: refactor
     if (viewFunc) {
-      return viewFunc(options)
+      return await viewFunc(options)
     }
     throw Error("Unknown view error")
   }

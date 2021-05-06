@@ -85,6 +85,11 @@ export class MongoDB extends Database {
     return await this.on(async () => await this.insertToDo(todo))
   }
 
+  getToDos = async (userId: string) => {
+    Logger.onDBAction(`Getting todos for user ${userId}`)
+    return await this.on(async () => await this.findToDos(userId))
+  }
+
   private dropDatabase = () => this.instance.db(this.database).dropDatabase()
 
   private insertCommunity = async (community: Community) => {
@@ -136,5 +141,11 @@ export class MongoDB extends Database {
   private insertToDo = async (todo: ToDo) => {
     const toDoJson = ToDoDto.fromModel(todo).toJson()
     await this.instance.db(this.database).collection(Collection.toDos).insertOne(toDoJson)
+  }
+
+  private findToDos = async (userId: string) => {
+    const collection = this.instance.db(this.database).collection(Collection.toDos)
+    const cursor = await collection.find({ userId }).toArray()
+    return cursor?.map((todo: JsonData) => ToDoDto.fromJson(todo).toModel()) ?? []
   }
 }
