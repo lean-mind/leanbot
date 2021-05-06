@@ -13,6 +13,7 @@ import { chatUpdateMessage } from './methods/chat-update-message';
 import { CoffeeRouletteMessage, TryAgainCoffeeMessage } from "./views/coffee-roulette-views"
 import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
+import { Community } from "../../../models/database/community";
 
 export type Request = AxiosInstance
 
@@ -54,6 +55,10 @@ export class Slack extends Platform {
   static getToken = (data: any): string | undefined => {
     const body = Slack.getBody(data)
     return body.token ?? body.payload?.token
+  }
+
+  getCommunity = (body: SlackBody): Community => {
+    return { id: body.team_id, platform: "slack" }
   }
 
   getView = async (view: ViewTypes, options: any | undefined): Promise<Message> => {

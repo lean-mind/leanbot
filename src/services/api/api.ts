@@ -5,28 +5,9 @@ import { getDateFormatted, Logger } from '../logger/logger';
 import { config } from '../../config';
 import { EndpointInstance, Endpoints } from './endpoints';
 import { Emojis } from '../../models/emojis';
-import { Slack } from '../platform/slack/slack';
-import { Platform } from '../platform/platform';
-import { Community } from '../../models/database/community';
-import { Database } from '../database/database';
 import * as morgan from 'morgan'
-
-const getPlatformData = async (request: any) => {
-  const db = Database.make()
-
-  if (Slack.getToken(request) === config.platform.slack.signingSecret) {
-    const platform: Platform = Slack.getInstance()
-    const data = Slack.getBody(request)
-    const community: Community = { id: data.team_id, platform: "slack" }
-    await db.registerCommunity(community)
-
-    return { platform, data }
-  }
-}
-
-const getPlatformProps = async (platform: Platform, data, getProps) => {
-  return await getProps(platform, data)
-}
+import { registerCommunity } from "./methods/register-community";
+import { getPlatformData } from "./methods/get-platform-data";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const app = require('express')()
@@ -38,15 +19,16 @@ app.use(morgan(':date :method :url :status :res[content-length] - :response-time
 
 Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
   app.post(name, async (request: any, response: any) => {
-    const data = await getPlatformData(request)
+    const { platform, data } = await getPlatformData(request)
 
     if (config.maintenance) {
       return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
     }
 
-    if (data) {
-      const props = await getPlatformProps(data.platform, data.data, getProps)
-      action(data.platform, props)
+    if (platform && data) {
+      await registerCommunity(platform, data)
+      const props = await platform.getPlatformProps(data, getProps)
+      action(platform, props)
       return response.send()
     }
 
