@@ -1,3 +1,4 @@
+
 import { CoffeeBreakBuilder } from '../../../tests/builders/models/coffee-break-builder';
 import { CoffeeBreak } from '../../../models/database/coffee-break';
 import { CommunityBuilder } from '../../../tests/builders/models/community-builder';
@@ -29,16 +30,16 @@ describe('Service MongoDB: ', () => {
     config.database = oldConfig
   })
 
-  it('should catch errors', async () => {
+  it('should throw errors if needed', async () => {
     config.database = {
       mongodb: {
         uri: "",
         database: "test"
       }
     }
-    const errorDb = new MongoDB()
 
-    expect(async () => await errorDb.getCommunities()).not.toThrow()
+    const errorDb = new MongoDB()
+    await expect(errorDb.getCommunities()).rejects.toBeDefined()
   })
 
   describe('Collection communities', () => {
@@ -58,42 +59,46 @@ describe('Service MongoDB: ', () => {
     })
   })
 
-  it('should save and retrieve gratitude messages', async () => {
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ text: "message 1" }),
-      GratitudeMessageBuilder({ text: "message 2" }),
-      GratitudeMessageBuilder({ text: "message 3" })
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
+  describe('Collection gratitude messages:', () => {
+    it('should save and retrieve gratitude messages', async () => {
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ text: "message 1" }),
+        GratitudeMessageBuilder({ text: "message 2" }),
+        GratitudeMessageBuilder({ text: "message 3" })
+      ]
+      await db.saveGratitudeMessages(gratitudeMessages)
 
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({})
 
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
-    expect(retrievedMessages).toHaveLength(3)
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[2])
+      expect(retrievedMessages).toHaveLength(3)
+    })
+
+    it('should retrieve gratitude messages from a given number of days', async () => {
+      const today = new Date()
+      const fiveDaysAgo = new Date()
+      fiveDaysAgo.setDate(today.getDate() - 5)
+
+      const gratitudeMessages: GratitudeMessage[] = [
+        GratitudeMessageBuilder({ createdAt: today }),
+        GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
+      ]
+      await db.saveGratitudeMessages(gratitudeMessages)
+
+      const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
+
+      expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
+      expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
+      expect(retrievedMessages).toHaveLength(1)
+    })
   })
-  
-  it('should retrieve gratitude messages from a given number of days', async () => {
-    const today = new Date()
-    const fiveDaysAgo = new Date()
-    fiveDaysAgo.setDate(today.getDate() - 5)
 
-    const gratitudeMessages: GratitudeMessage[] = [
-      GratitudeMessageBuilder({ createdAt: today }),
-      GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
-    ]
-    await db.saveGratitudeMessage(gratitudeMessages)
-
-    const retrievedMessages: GratitudeMessage[] = await db.getGratitudeMessages({ days: 3 })
-
-    expect(retrievedMessages).toContainEqual(gratitudeMessages[0])
-    expect(retrievedMessages).not.toContainEqual(gratitudeMessages[1])
-    expect(retrievedMessages).toHaveLength(1)
+  describe('Collection coffee breaks:', () => {
+    it('should save coffee breaks', async () => {
+      const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
+      await db.saveCoffeeBreak(coffeeBreak)
+    })
   })
-
-  it('should save coffee breaks', async () => {
-    const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
-    await db.saveCoffeeBreak(coffeeBreak)
-  })
-}) 
+})

@@ -45,7 +45,7 @@ export const CoffeeRouletteMessage = async (data: CoffeeRouletteProps): Promise<
   return new SlackInteractiveBlock(blocks)
 }
 
-export const TryAgainCoffeeMessage = async (_): Promise<SlackInteractiveBlock> => {
+export const TryAgainCoffeeMessage = async (): Promise<SlackInteractiveBlock> => {
   const i18n = await I18n.getInstance()
   
   const blocks = [
