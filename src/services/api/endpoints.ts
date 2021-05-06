@@ -3,6 +3,7 @@ import { interactive } from "../../actions/interactive"
 import { sendGratitudeSummaries } from "../../actions/thanks"
 import { thanks } from "../../actions/thanks/thanks"
 import { Platform } from "../platform/platform"
+import { todo } from "../../actions/todo/todo";
 
 export interface EndpointInstance {
   name: Endpoint,
@@ -15,6 +16,7 @@ export enum Endpoint {
   thanks = "/thanks",
   coffeeRoulette = "/coffee-roulette",
   sendSummary = "/send-summary",
+  todo = "/todo"
 }
 
 export const Endpoints: EndpointInstance[] = [
@@ -32,6 +34,11 @@ export const Endpoints: EndpointInstance[] = [
     name: Endpoint.coffeeRoulette,
     action: coffeeRoulette,
     getProps: (platform, data) => platform.getCoffeeRouletteProps(data)
+  },
+  {
+    name: Endpoint.todo,
+    action: todo,
+    getProps: (platform, data) => platform.getTodoProps(data)
   },
   { 
     name: Endpoint.sendSummary,

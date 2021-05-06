@@ -2,6 +2,7 @@ import { CoffeeBreak } from '../../models/database/coffee-break';
 import { Community } from "../../models/database/community";
 import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message";
 import { Logger } from "../logger/logger";
+import { ToDo } from "../../models/database/todo";
 
 export type DatabaseName = "mongo"
 
@@ -30,4 +31,6 @@ export abstract class Database {
   abstract getGratitudeMessages: (options: GratitudeMessageOptions) => Promise<GratitudeMessage[]>
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
+
+  abstract saveToDo: (todo: ToDo) => Promise<void>
 }

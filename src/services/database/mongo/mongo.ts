@@ -10,6 +10,8 @@ import { CommunityDto } from "../../../models/database/dtos/community-dto";
 import { GratitudeMessage, GratitudeMessageOptions } from "../../../models/database/gratitude-message";
 import { GratitudeMessageDto } from "../../../models/database/dtos/gratitude-message-dto";
 import { CoffeeBreakDto } from "../../../models/database/dtos/coffee-break-dto";
+import { ToDo } from "../../../models/database/todo";
+import { ToDoDto } from "../../../models/database/dtos/to-do-dto";
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -78,7 +80,12 @@ export class MongoDB extends Database {
     return await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
   }
 
-  private dropDatabase = () => this.instance.db(this.database).dropDatabase();
+  saveToDo = async (todo: ToDo): Promise<void> => {
+    Logger.onDBAction("Saving todo")
+    return await this.on(async () => await this.insertToDo(todo))
+  }
+
+  private dropDatabase = () => this.instance.db(this.database).dropDatabase()
 
   private insertCommunity = async (community: Community) => {
     if (!community.id) return
@@ -124,5 +131,10 @@ export class MongoDB extends Database {
   private insertCoffeeBreak = async (coffeeBreak: CoffeeBreak) => {
     const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
     await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
-  };
+  }
+
+  private insertToDo = async (todo: ToDo) => {
+    const toDoJson = ToDoDto.fromModel(todo).toJson()
+    await this.instance.db(this.database).collection(Collection.toDos).insertOne(toDoJson)
+  }
 }
