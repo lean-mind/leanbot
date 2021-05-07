@@ -1,9 +1,9 @@
-import { Id } from "../../platform/slack/id";
+import { Id } from "../../platform/slack/id"
 import { GratitudeMessage } from "../gratitude-message"
 import { GratitudeMessageDto } from "./gratitude-message-dto"
 
-describe('DTO GratitudeMessage', () => {
-  it('should transform to json', () => {
+describe("DTO GratitudeMessage", () => {
+  it("should transform to json", () => {
     const model = new GratitudeMessage(
       "communityId",
       new Id("senderId"),
@@ -26,7 +26,7 @@ describe('DTO GratitudeMessage', () => {
     expect(GratitudeMessageDto.fromModel(model).toJson()).toStrictEqual(jsonExpected)
   })
 
-  it('should transform to model', () => {
+  it("should transform to model", () => {
     const json = {
       communityId: "communityId",
       senderId: "senderId",

@@ -5,7 +5,7 @@ import { ButtonActionProps } from "../../services/platform/slack/props/button-pr
 export const stopCoffee = async (platform: Platform, data: ButtonActionProps): Promise<void> => {
   const i18n = await I18n.getInstance()
 
-  platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.stop"))
+  await platform.updateMessage(data.responseUrl, i18n.translate("coffeeRoulette.stop"))
   platform.deleteTempUserData(data.userId.id, "coffeeMembers")
   platform.deleteTempUserData(data.userId.id, "coffeeText")
 }

@@ -1,4 +1,4 @@
-import { GratitudeSummaryMessage } from "../../../models/database/gratitude-message";
+import { GratitudeSummaryMessage } from "../../../models/database/gratitude-message"
 
 export const GratitudeSummaryMessageBuilder = ({
   users = [],

@@ -4,13 +4,13 @@ import { InteractivePropsBuilder } from "../tests/builders/actions/interactive-p
 import { interactive, InteractiveProps } from "./interactive"
 import { thanksConfirmation } from "./thanks"
 
-jest.mock('./thanks')
-jest.mock('../services/platform/slack/slack')
+jest.mock("./thanks")
+jest.mock("../services/platform/slack/slack")
 
-describe('Actions Interactive', () => {
+describe("Actions Interactive", () => {
   const platform: Platform = Slack.getInstance()
 
-  it('without matching', () => {
+  it("without matching", () => {
     const props: InteractiveProps = InteractivePropsBuilder({})
 
     interactive(platform, props)
@@ -18,7 +18,7 @@ describe('Actions Interactive', () => {
     expect(thanksConfirmation).not.toBeCalled()
   })
 
-  it('matching with thanks confirmation', () => {
+  it("matching with thanks confirmation", () => {
     const props: InteractiveProps = InteractivePropsBuilder({
       nextStep: "thanks-confirmation"
     })

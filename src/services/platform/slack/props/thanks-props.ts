@@ -1,8 +1,8 @@
-import { ThanksProps } from "../../../../actions/thanks/thanks";
-import { removeDuplicates, ThanksConfirmationProps } from "../../../../actions/thanks/thanks-confirmation";
-import { SlackBody } from "../../../../models/platform/slack/body";
-import { Id } from "../../../../models/platform/slack/id";
-import { Slack } from "../slack";
+import { ThanksProps } from "../../../../actions/thanks/thanks"
+import { removeDuplicates, ThanksConfirmationProps } from "../../../../actions/thanks/thanks-confirmation"
+import { SlackBody } from "../../../../models/platform/slack/body"
+import { Id } from "../../../../models/platform/slack/id"
+import { Slack } from "../slack"
 
 export const getSlackThanksProps = async (body: SlackBody): Promise<ThanksProps> => {
   const view = await Slack.getInstance().getView("gratitudeMessage", {})
@@ -10,15 +10,19 @@ export const getSlackThanksProps = async (body: SlackBody): Promise<ThanksProps>
 
   return {
     channelId,
-    block: view, 
+    block: view,
   }
 }
 
 export const getSlackThanksConfirmationProps = (body: SlackBody): ThanksConfirmationProps => ({
   communityId: body.payload.team.id,
   sender: new Id(body.payload.user.id),
-  recipients: body.payload.view.state.values.recipients.action.selected_conversations.filter(removeDuplicates<string>()).map((toId: string) => new Id(toId)),
+  recipients: body.payload.view.state.values.recipients.action.selected_conversations
+    .filter(removeDuplicates<string>())
+    .map((toId: string) => new Id(toId)),
   channel: new Id(body.payload.view.state.values.channel.action.selected_conversation),
   text: body.payload.view.state.values.text.action.value,
-  isAnonymous: body.payload.view.state.values.options.action.selected_options.some(({ value }) => value === "anonymous"),
+  isAnonymous: body.payload.view.state.values.options.action.selected_options.some(
+    ({ value }) => value === "anonymous"
+  ),
 })
