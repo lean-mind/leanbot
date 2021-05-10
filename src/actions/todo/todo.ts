@@ -10,7 +10,8 @@ export interface TodoProps {
 }
 
 export const todo = async (platform: Platform, data: TodoProps) => {
-  if (data.text.match(/^list$/)) {
+  const listKeyword = /^list$/
+  if (data.text.match(listKeyword)) {
     await listToDos(platform, data)
   } else {
     await createToDo(platform, data)
