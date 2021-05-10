@@ -6,6 +6,8 @@ import { todo, TodoProps } from "./todo"
 import { Slack } from "../../services/platform/slack/slack"
 import { ToDo } from "../../models/database/todo"
 import { Id } from "../../models/platform/slack/id"
+import { completeToDo } from "./complete-todo"
+import { CheckboxActionPropsBuilder } from "../../tests/builders/actions/todo-checkbox-action-props-builder"
 
 describe("To Do", () => {
   let i18n: I18n
@@ -17,9 +19,11 @@ describe("To Do", () => {
 
     platform = Slack.getInstance()
     platform.sendMessage = jest.fn()
+    platform.updateMessage = jest.fn()
 
     db = Database.make()
     db.saveToDo = jest.fn()
+    db.completeToDo = jest.fn()
   })
 
   describe("/todo", () => {
@@ -35,6 +39,7 @@ describe("To Do", () => {
     })
     it.todo("should inform the user about usage if no todo text is provided")
   })
+
   describe("/todo list", () => {
     it("should show all uncompleted todos", async () => {
       const userId: Id = new Id("user-id")
@@ -48,13 +53,14 @@ describe("To Do", () => {
       expect(db.getToDos).toBeCalledWith(userId.id)
       expect(platform.sendMessage).toBeCalledWith(userId.id, await platform.getView("toDoList", toDoList))
     })
+
     it("should allow the user to complete a todo", async () => {
-      platform.updateMessage = jest.fn()
       const toDoId = "test-todo-id"
+      const props = CheckboxActionPropsBuilder({ value: toDoId })
 
-      await completeToDo(toDoId)
+      await completeToDo(platform, props, db)
 
-      expect(platform.updateMessage).toBeCalled()
+      expect(platform.updateMessage).toBeCalledWith(props.responseUrl, expect.any(Object))
       expect(db.completeToDo).toBeCalledWith(toDoId)
     })
   })

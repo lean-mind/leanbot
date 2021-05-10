@@ -7,7 +7,7 @@ import { Community } from '../../../models/database/community';
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
-import { ToDo } from "../../../models/database/todo";
+import { ToDo } from "../../../models/database/todo"
 import { ToDoBuilder } from "../../../tests/builders/models/to-do-builder";
 import { Id } from "../../../models/platform/slack/id";
 
@@ -113,8 +113,9 @@ describe('Service MongoDB: ', () => {
 
       const retrievedToDos: ToDo[] = await db.getToDos(userId)
 
-      expect(retrievedToDos).toContainEqual(toDo)
       expect(retrievedToDos).toHaveLength(1)
+      expect(retrievedToDos[0].user).toEqual(toDo.user)
+      expect(retrievedToDos[0].text).toEqual(toDo.text)
     })
   })
 })
