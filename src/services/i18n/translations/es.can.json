@@ -47,7 +47,8 @@
     "error": "Vaya, hubo algún error con tu café... :shocked_face_with_exploding_head:"
   },
   "todo": {
-    "toDoListTitle": ":spiral_note_pad: Aquí te va el curro:"
+    "toDoListTitle": ":spiral_note_pad: Aquí te va el curro:",
+    "toDoCreated": "Se creó la siguiente tarea: \n> ${todo}"
   },
   "button": {
     "accept": "Mándale",

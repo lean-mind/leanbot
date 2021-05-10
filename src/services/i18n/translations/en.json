@@ -47,7 +47,8 @@
     "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
   },
   "todo": {
-    "toDoListTitle": ":spiral_note_pad: These are your tasks:"
+    "toDoListTitle": ":spiral_note_pad: These are your tasks:",
+    "toDoCreated": "The following todo has been created: \n> ${todo}"
   },
   "button": {
     "accept": "Accept",
