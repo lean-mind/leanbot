@@ -4,10 +4,11 @@ import { I18n } from "../../../i18n/i18n"
 
 export const ToDoListView = async (toDoList: ToDo[]): Promise<SlackInteractiveBlock> => {
   const i18n = await I18n.getInstance()
+  const uncompletedToDoList = toDoList.filter((todo) => !todo.completed)
 
   let blocks: any[]
 
-  if (toDoList.length == 0) {
+  if (uncompletedToDoList.length == 0) {
     blocks = [{
       "type": "section",
       "text": {
@@ -30,7 +31,7 @@ export const ToDoListView = async (toDoList: ToDo[]): Promise<SlackInteractiveBl
           {
             "type": "checkboxes",
             "options":
-              toDoList.filter((todo) => !todo.completed).map((todo) => {
+              uncompletedToDoList.map((todo) => {
                 return {
                   "text": {
                   "type": "mrkdwn",
