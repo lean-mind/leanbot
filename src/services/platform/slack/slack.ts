@@ -94,7 +94,7 @@ export class Slack extends Platform {
   updateMessage = async (messageId: string, message: Message): Promise<void> => {
     if (typeof message === "string") {
       await chatUpdateMessage(messageId, { text: message })
-    } else if (message instanceof SlackView) {
+    } else if (message instanceof SlackView || message instanceof SlackInteractiveBlock) {
       await chatUpdateMessage(messageId, { blocks: (message as SlackBlock).blocks })
     } else {
       Logger.onError('Unidentifiable message type')

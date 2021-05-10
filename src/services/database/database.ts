@@ -1,8 +1,8 @@
-import { CoffeeBreak } from '../../models/database/coffee-break';
-import { Community } from "../../models/database/community";
-import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message";
-import { Logger } from "../logger/logger";
-import { ToDo } from "../../models/database/todo";
+import { CoffeeBreak } from "../../models/database/coffee-break"
+import { Community } from "../../models/database/community"
+import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message"
+import { Logger } from "../logger/logger"
+import { ToDo } from "../../models/database/todo"
 
 export type DatabaseName = "mongo"
 
@@ -11,9 +11,9 @@ export abstract class Database {
     const dictionary = {
       ["mongo"]: (): Database => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { MongoDB } = require('./mongo/mongo')
+        const { MongoDB } = require("./mongo/mongo")
         return new MongoDB()
-      }
+      },
     }
 
     const instance = dictionary[databaseName]
@@ -26,7 +26,7 @@ export abstract class Database {
 
   abstract registerCommunity: (community: Community) => Promise<void>
   abstract getCommunities: () => Promise<Community[]>
-  
+
   abstract saveGratitudeMessages: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
   abstract getGratitudeMessages: (options: GratitudeMessageOptions) => Promise<GratitudeMessage[]>
 
@@ -34,4 +34,5 @@ export abstract class Database {
 
   abstract saveToDo: (todo: ToDo) => Promise<void>
   abstract getToDos: (userId: string) => Promise<ToDo[]>
+  abstract completeToDo: (toDoId: string) => Promise<void>
 }

@@ -30,11 +30,15 @@ export interface SlackPayload {
   callback_id: string,
   response_url: string,
   state: string,
-  actions?: SlackAction[]
+  actions?: SlackAction[] | SlackActionOptions
 }
 
 export interface SlackAction {
   type: string,
   action_id: string,
-  value: string
+  value: string,
+}
+
+export interface SlackActionOptions {
+  selected_options: SlackAction[]
 }

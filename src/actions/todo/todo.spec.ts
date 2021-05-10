@@ -48,5 +48,14 @@ describe("To Do", () => {
       expect(db.getToDos).toBeCalledWith(userId.id)
       expect(platform.sendMessage).toBeCalledWith(userId.id, await platform.getView("toDoList", toDoList))
     })
+    it("should allow the user to complete a todo", async () => {
+      platform.updateMessage = jest.fn()
+      const toDoId = "test-todo-id"
+
+      await completeToDo(toDoId)
+
+      expect(platform.updateMessage).toBeCalled()
+      expect(db.completeToDo).toBeCalledWith(toDoId)
+    })
   })
 })

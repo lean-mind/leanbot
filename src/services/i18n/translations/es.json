@@ -48,7 +48,8 @@
   },
   "todo": {
     "toDoListTitle": ":spiral_note_pad: Estas son tus tareas: ",
-    "toDoCreated": "Se ha creado la siguiente tarea: \n> ${todo}"
+    "toDoCreated": "Se ha creado la siguiente tarea: \n> ${todo}",
+    "emptyToDoList": "No tienes tareas pendientes :white_check_mark:"
   },
   "button": {
     "accept": "Aceptar",

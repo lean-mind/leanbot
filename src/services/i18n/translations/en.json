@@ -48,7 +48,8 @@
   },
   "todo": {
     "toDoListTitle": ":spiral_note_pad: These are your tasks:",
-    "toDoCreated": "The following todo has been created: \n> ${todo}"
+    "toDoCreated": "The following todo has been created: \n> ${todo}",
+    "emptyToDoList": "You have nothing to do :white_check_mark:"
   },
   "button": {
     "accept": "Accept",

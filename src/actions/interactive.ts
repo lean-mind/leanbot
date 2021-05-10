@@ -5,6 +5,7 @@ import { rejectCoffee } from "./coffee-roulette/reject-coffee"
 import { stopCoffee } from "./coffee-roulette/stop-coffee"
 import { tryAgainCoffee } from "./coffee-roulette/try-again-coffee"
 import { thanksConfirmation } from "./thanks"
+import { completeToDo } from "./todo/complete-todo"
 
 export interface InteractiveProps {
   nextStep: string,
@@ -22,7 +23,8 @@ export const interactive = (platform: Platform, props: InteractiveProps): void =
       ["accept-coffee"]: acceptCoffee,
       ["reject-coffee"]: rejectCoffee,
       ["try-again-coffee"]: tryAgainCoffee,
-      ["stop-coffee"]: stopCoffee
+      ["stop-coffee"]: stopCoffee,
+      ["complete-todo"]: completeToDo,
     }
     const command = mapper[nextStep];
     
