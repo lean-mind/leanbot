@@ -2,6 +2,7 @@ import { Platform } from "../../services/platform/platform";
 import { Database } from "../../services/database/database";
 import { ToDo } from "../../models/database/todo";
 import { Id } from "../../models/platform/slack/id";
+import { I18n } from "../../services/i18n/i18n"
 
 export interface TodoProps {
   userId: string,
@@ -9,7 +10,8 @@ export interface TodoProps {
 }
 
 export const todo = async (platform: Platform, data: TodoProps) => {
-  if (data.text.match(/^list$/)) {
+  const listKeyword = /^list$/
+  if (data.text.match(listKeyword)) {
     await listToDos(platform, data)
   } else {
     await createToDo(platform, data)
@@ -24,7 +26,8 @@ const listToDos = async (platform: Platform, data: TodoProps) => {
 }
 
 const createToDo = async (platform: Platform, data: TodoProps) => {
-  await platform.sendMessage(data.userId, `You have made a todo: ${data.text}`)
+  const i18n: I18n = await I18n.getInstance()
+  await platform.sendMessage(data.userId, i18n.translate("todo.toDoCreated", {todo: data.text}))
   const todo: ToDo = new ToDo(new Id(data.userId), data.text)
   await db.saveToDo(todo)
 }
