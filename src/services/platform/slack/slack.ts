@@ -2,29 +2,15 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { Message, ViewTypes } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
-import {
-  SlackBlock,
-  SlackInteractiveBlock,
-  SlackModal,
-  SlackView,
-} from "../../../models/platform/slack/views"
+import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views"
 import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
-import {
-  getConversationMembers,
-  chatPostMessage,
-  viewsOpen,
-  getTeamMembers,
-  getUserInfo,
-} from "./methods"
+import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
 import { chatUpdateMessage } from "./methods/chat-update-message"
-import {
-  CoffeeRouletteMessage,
-  TryAgainCoffeeMessage,
-} from "./views/coffee-roulette-views"
+import { CoffeeRouletteMessage, TryAgainCoffeeMessage } from "./views/coffee-roulette-views"
 import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
 import { Community } from "../../../models/database/community"
@@ -75,10 +61,7 @@ export class Slack extends Platform {
     return { id: body.team_id, platform: "slack" }
   }
 
-  getView = async (
-    view: ViewTypes,
-    options: any | undefined
-  ): Promise<Message> => {
+  getView = async (view: ViewTypes, options: any | undefined): Promise<Message> => {
     const mapper = {
       gratitudeMessage: GratitudeMessageInteractiveView,
       gratitudeSummary: GratitudeSummaryView,
@@ -94,31 +77,23 @@ export class Slack extends Platform {
   }
 
   sendMessage = async (channelId: string, message: Message): Promise<void> => {
-    if (typeof message === "string") {
-      await chatPostMessage(this.api, Slack.headers.bot)(channelId, {
-        text: message,
-      })
-    } else if (
-      message instanceof SlackView ||
-      message instanceof SlackInteractiveBlock
-    ) {
-      await chatPostMessage(this.api, Slack.headers.bot)(channelId, {
-        blocks: (message as SlackBlock).blocks,
-      })
-    } else if (message instanceof SlackModal) {
-      await viewsOpen(this.api, Slack.headers.bot)(
-        message as SlackModal,
-        channelId
-      )
-    } else {
-      Logger.onError("Unidentifiable message type")
-    }
+    await message.send(channelId)(this.api, Slack.headers.bot)
+    // if (typeof message === "string") {
+    //   await chatPostMessage(this.api, Slack.headers.bot)(channelId, {
+    //     text: message,
+    //   })
+    // } else if (message instanceof SlackView || message instanceof SlackInteractiveBlock) {
+    //   await chatPostMessage(this.api, Slack.headers.bot)(channelId, {
+    //     blocks: (message as SlackBlock).blocks,
+    //   })
+    // } else if (message instanceof SlackModal) {
+    //   await viewsOpen(this.api, Slack.headers.bot)(message as SlackModal, channelId)
+    // } else {
+    //   Logger.onError("Unidentifiable message type")
+    // }
   }
 
-  updateMessage = async (
-    messageId: string,
-    message: Message
-  ): Promise<void> => {
+  updateMessage = async (messageId: string, message: Message): Promise<void> => {
     if (typeof message === "string") {
       await chatUpdateMessage(messageId, { text: message })
     } else if (message instanceof SlackView) {

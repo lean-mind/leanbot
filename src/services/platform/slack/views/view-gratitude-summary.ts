@@ -9,10 +9,7 @@ export interface GratitudeSummaryViewProps {
   received?: GratitudeSummaryMessage[]
 }
 
-const toMessage = (
-  { users, createdAt, text, isAnonymous }: GratitudeSummaryMessage,
-  i18n: I18n
-) => {
+const toMessage = ({ users, createdAt, text, isAnonymous }: GratitudeSummaryMessage, i18n: I18n) => {
   const userList = isAnonymous
     ? i18n.translate("gratitudeMessageSummary.anonymous")
     : users.map(({ id }) => `<@${id}>`).join(", ")
