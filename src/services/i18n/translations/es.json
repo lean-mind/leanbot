@@ -49,7 +49,8 @@
   "todo": {
     "toDoListTitle": ":spiral_note_pad: Estas son tus tareas: ",
     "toDoCreated": "Se ha creado la siguiente tarea: \n> ${todo}",
-    "emptyToDoList": "No tienes tareas pendientes :white_check_mark:"
+    "emptyToDoList": "No tienes tareas pendientes :white_check_mark:",
+    "emptyTextError": "Debes proporcionar un mensaje para la tarea o una opción: list"
   },
   "button": {
     "accept": "Aceptar",

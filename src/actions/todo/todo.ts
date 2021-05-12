@@ -25,7 +25,11 @@ const listToDos = async (platform: Platform, data: TodoProps, db: Database) => {
 
 const createToDo = async (platform: Platform, data: TodoProps, db: Database) => {
   const i18n: I18n = await I18n.getInstance()
-  await platform.sendMessage(data.userId, i18n.translate("todo.toDoCreated", {todo: data.text}))
+  if (data.text.length === 0) {
+    await platform.sendMessage(data.userId, i18n.translate("todo.emptyTextError", {todo: data.text}))
+    return
+  }
   const todo: ToDo = new ToDo(new Id(data.userId), data.text)
   await db.saveToDo(todo)
+  await platform.sendMessage(data.userId, i18n.translate("todo.toDoCreated", {todo: data.text}))
 }

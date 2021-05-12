@@ -49,7 +49,8 @@
   "todo": {
     "toDoListTitle": ":spiral_note_pad: These are your tasks:",
     "toDoCreated": "The following todo has been created: \n> ${todo}",
-    "emptyToDoList": "You have nothing to do :white_check_mark:"
+    "emptyToDoList": "You have nothing to do :white_check_mark:",
+    "emptyTextError": "You must provide a task description or an option: list"
   },
   "button": {
     "accept": "Accept",
