@@ -3,6 +3,7 @@ import { Database } from "../../services/database/database"
 import { ToDo } from "../../models/database/todo"
 import { Id } from "../../models/platform/slack/id"
 import { I18n } from "../../services/i18n/i18n"
+import { Factory } from "../../services/infrastructure/factory";
 
 export interface TodoProps {
   userId: string,
@@ -12,7 +13,7 @@ export interface TodoProps {
 const idRegExp = "(?<id>[UW][A-Z0-9]+)"
 const usernameRegExp = "([a-z0-9._-]{1,21})"
 
-export const todo = async (platform: Platform, data: TodoProps, db: Database = Database.make()) => {
+export const todo = async (platform: Platform, data: TodoProps, db: Database = Factory.createRepository()) => {
   const listKeyword = /^list$/
   const userKeyword = new RegExp(`<@${idRegExp}[|]${usernameRegExp}> `)
   const userMentioned = data.text.match(userKeyword)

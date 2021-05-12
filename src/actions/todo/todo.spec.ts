@@ -8,6 +8,7 @@ import { ToDo } from "../../models/database/todo"
 import { Id } from "../../models/platform/slack/id"
 import { completeToDo } from "./complete-todo"
 import { CheckboxActionPropsBuilder } from "../../tests/builders/actions/todo-checkbox-action-props-builder"
+import { Factory } from "../../services/infrastructure/factory";
 
 describe("To Do", () => {
   let i18n: I18n
@@ -21,7 +22,7 @@ describe("To Do", () => {
     platform.sendMessage = jest.fn()
     platform.updateMessage = jest.fn()
 
-    db = Database.make()
+    db = Factory.createRepository()
     db.saveToDo = jest.fn()
     db.completeToDo = jest.fn()
   })

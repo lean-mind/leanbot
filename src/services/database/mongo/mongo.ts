@@ -2,7 +2,6 @@ import { CoffeeBreak } from "../../../models/database/coffee-break"
 import { MongoClient, ObjectId } from "mongodb"
 import { JsonData } from "../../../models/json-data"
 import { Database } from "../database"
-import { Logger } from "../../logger/logger"
 import { Collection } from "./collection"
 import { config } from "../../../config"
 import { Community } from "../../../models/database/community"
@@ -49,47 +48,38 @@ export class MongoDB extends Database {
   }
 
   removeCollections = async (): Promise<void> => {
-    Logger.onDBAction("Removing collections")
     await this.on(() => this.dropDatabase())
   }
 
   registerCommunity = async (community: Community): Promise<void> => {
-    Logger.onDBAction("Registering community")
     await this.on(async () => await this.insertCommunity(community))
   }
 
   getCommunities = async (): Promise<Community[]> => {
-    Logger.onDBAction("Getting communities")
     return await this.on(async () => await this.findAllCommunities())
   }
 
   saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
-    Logger.onDBAction("Saving gratitude messages")
     await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages))
   }
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
-    Logger.onDBAction("Getting gratitude messages")
     return await this.on(async () => await this.findGratitudeMessages(options))
   }
 
   saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
-    Logger.onDBAction("Saving coffee break")
     return await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
   }
 
   saveToDo = async (todo: ToDo): Promise<void> => {
-    Logger.onDBAction("Saving todo")
     return await this.on(async () => await this.insertToDo(todo))
   }
 
   getToDos = async (userId: string) => {
-    Logger.onDBAction(`Getting todos for user ${userId}`)
     return await this.on(async () => await this.findAssignedToDos(userId))
   }
 
   completeToDo = async (toDoId: string): Promise<void> => {
-    Logger.onDBAction(`Completing todo with id ${toDoId}`)
     return await this.on(async () => await this.completeToDoById(toDoId))
   }
 

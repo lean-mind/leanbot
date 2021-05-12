@@ -5,6 +5,7 @@ import { Cat } from "../../services/cat/cat";
 import { Database } from "../../services/database/database";
 import { Logger } from "../../services/logger/logger";
 import { Platform, PlatformName } from "../../services/platform/platform";
+import { Factory } from "../../services/infrastructure/factory";
 
 const getGratitudeSummaryMessageFrom = (gratitudeMessage: GratitudeMessage, isSender: boolean): GratitudeSummaryMessage => ({
   users: isSender ? [gratitudeMessage.recipient] : [gratitudeMessage.sender],
@@ -42,7 +43,7 @@ const update = (summary: GratitudeSummary[], currentGratitudeMessage: GratitudeM
 }
 
 export const sendGratitudeSummaries = async (
-  db: Database = Database.make(),
+  db: Database = Factory.createRepository(),
   cat: Cat = new Cat()
 ): Promise<void> => {
   Logger.log("Sending gratitude summaries...")
