@@ -34,9 +34,13 @@ export const ToDoListView = async (toDoList: ToDo[]): Promise<SlackInteractiveBl
               uncompletedToDoList.map((todo) => {
                 return {
                   "text": {
-                  "type": "mrkdwn",
+                    "type": "mrkdwn",
                     "text": todo.text
-                },
+                  },
+                  // "description": todo.user.id != todo.assignee.id ? {
+                  //   "type": "mrkdwn",
+                  //   "text": `Asignado por otra persona`
+                  // } : undefined,
                   "value": todo.id
                 }
               }),

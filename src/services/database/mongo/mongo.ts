@@ -85,7 +85,7 @@ export class MongoDB extends Database {
 
   getToDos = async (userId: string) => {
     Logger.onDBAction(`Getting todos for user ${userId}`)
-    return await this.on(async () => await this.findToDos(userId))
+    return await this.on(async () => await this.findAssignedToDos(userId))
   }
 
   completeToDo = async (toDoId: string): Promise<void> => {
@@ -148,9 +148,9 @@ export class MongoDB extends Database {
     await this.instance.db(this.database).collection(Collection.toDos).insertOne(toDoJson)
   }
 
-  private findToDos = async (userId: string) => {
+  private findAssignedToDos = async (userId: string) => {
     const collection = this.instance.db(this.database).collection(Collection.toDos)
-    const cursor = await collection.find({ userId }).toArray()
+    const cursor = await collection.find({ $or: [{ userId }, { assigneeId: userId }] }).toArray()
     return cursor?.map((todo: JsonData) => {
         return ToDoDto.fromJson(todo).toModel()
     }) ?? []
