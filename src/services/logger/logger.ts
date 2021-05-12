@@ -32,6 +32,10 @@ export class Logger {
   static onFileReadError = (file: string, error: any): void => Logger.error(`Oops! There was an error reading ${file} file`, error);
   static onFileWriteError = (file: string, error: any): void => Logger.error(`Oops! There was an error writing ${file} file`, error);
   static onMissingTranslation = (file: string, type: string, key: string): void => Logger.error(`Oops! There was an error in ${file} file: { "${type}": { "${key}": "MISSING TRANSLATION" } }`);
+
+  onDBAction(message: string) {
+    Logger.onDBAction(message)
+  }
 }
  
 export const getDateFormatted = (date: Date = new Date(Date.now())): string => {

@@ -93,12 +93,12 @@ export class MongoDB extends Database {
     return await this.on(async () => await this.completeToDoById(toDoId))
   }
 
-  private dropDatabase = () => this.instance.db(this.database).dropDatabase()
+  private dropDatabase = () => this.db().dropDatabase()
 
   private insertCommunity = async (community: Community) => {
     if (!community.id) return
 
-    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const collection = this.db().collection(Collection.communities)
     const existsCommunity = await collection.findOne({ id: community.id })
 
     if (!existsCommunity) {
@@ -108,7 +108,7 @@ export class MongoDB extends Database {
   }
 
   private findAllCommunities = async () => {
-    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const collection = this.db().collection(Collection.communities)
     const cursor = await collection.find({ deletedAtTime: null }).toArray()
     return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
   }
@@ -118,9 +118,10 @@ export class MongoDB extends Database {
       GratitudeMessageDto.fromModel(gratitudeMessage).toJson()
     )
     if (gratitudeMessagesJson.length > 0) {
-      await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
+      await this.db().collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
     }
   }
+
 
   private findGratitudeMessages = async (options: GratitudeMessageOptions) => {
     const query = {}
@@ -132,7 +133,7 @@ export class MongoDB extends Database {
         $lt: nowTime,
       }
     }
-    const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
+    const cursor = await this.db().collection(Collection.gratitudeMessages).find(query).toArray()
     return cursor.map(
       (gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel()
     )
@@ -140,16 +141,16 @@ export class MongoDB extends Database {
 
   private insertCoffeeBreak = async (coffeeBreak: CoffeeBreak) => {
     const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
-    await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+    await this.db().collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
   }
 
   private insertToDo = async (todo: ToDo) => {
     const toDoJson = ToDoDto.fromModel(todo).toJson()
-    await this.instance.db(this.database).collection(Collection.toDos).insertOne(toDoJson)
+    await this.db().collection(Collection.toDos).insertOne(toDoJson)
   }
 
   private findAssignedToDos = async (userId: string) => {
-    const collection = this.instance.db(this.database).collection(Collection.toDos)
+    const collection = this.db().collection(Collection.toDos)
     const cursor = await collection.find({ $or: [{ userId }, { assigneeId: userId }] }).toArray()
     return cursor?.map((todo: JsonData) => {
         return ToDoDto.fromJson(todo).toModel()
@@ -157,10 +158,14 @@ export class MongoDB extends Database {
   }
 
   private completeToDoById = async (toDoId: string) => {
-    const collection = this.instance.db(this.database).collection(Collection.toDos)
+    const collection = this.db().collection(Collection.toDos)
     await collection.updateOne(
       { "_id" : new ObjectId(toDoId) },
       { $set: { "completed" : true } }
     )
+  }
+
+  private db = () => {
+    return this.instance.db(this.database)
   }
 }
