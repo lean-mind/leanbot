@@ -49,8 +49,8 @@ export abstract class Platform {
   abstract getCommunity: (body: SlackBody) => Community
   abstract getView: (view: ViewTypes, options: any | undefined) => Promise<Message>
 
-  abstract sendMessage: (channelId: string, message: Message) => Promise<void>
-  abstract updateMessage: (messageId: any, message: Message) => Promise<void>
+  abstract sendMessage: (channelId: string, message: Message | string) => Promise<void>
+  abstract updateMessage: (messageId: any, message: Message | string) => Promise<void>
 
   abstract getCommunityMembers: (communityId: string) => Promise<string[]>
   abstract getMembersByChannelId: (channelId: string) => Promise<string[]>

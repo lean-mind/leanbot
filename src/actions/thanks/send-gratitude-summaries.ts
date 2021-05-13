@@ -1,6 +1,6 @@
 import { Community } from "../../models/database/community"
 import { GratitudeMessage, GratitudeSummary, GratitudeSummaryMessage } from "../../models/database/gratitude-message"
-import { View } from "../../models/platform/message"
+import { Message } from "../../models/platform/message"
 import { Cat } from "../../services/cat/cat"
 import { Database } from "../../services/database/database"
 import { Logger } from "../../services/logger/logger"
@@ -76,8 +76,8 @@ export const sendGratitudeSummaries = async (db: Database = Database.make(), cat
         )?.platform
         if (platformName) {
           const platform = Platform.getInstance(platformName)
-          const view: View = await platform.getView("gratitudeSummary", { image: catImage.url, sent, received })
-          platform.sendMessage(user.id, view)
+          const message: Message = await platform.getView("gratitudeSummary", { image: catImage.url, sent, received })
+          await platform.sendMessage(user.id, message)
           messagesSent++
         }
       })

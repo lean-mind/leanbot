@@ -1,12 +1,17 @@
 import { Message } from "../message"
 import { Request } from "../../../services/platform/slack/slack"
 import { chatPostMessage, viewsOpen } from "../../../services/platform/slack/methods"
+import { chatUpdateMessage } from "../../../services/platform/slack/methods/chat-update-message"
 
 export class SlackPlainTextMessage implements Message {
   constructor(public text: string) {}
 
   send = (recipient: string) => async (request: Request, headers: any) => {
     await chatPostMessage(request, headers)(recipient, { text: this.text })
+  }
+
+  update = async (responseUrl: string) => {
+    await chatUpdateMessage(responseUrl, { text: this.text })
   }
 }
 // TODO: maybe add tests
@@ -20,6 +25,10 @@ export class SlackView implements SlackBlock, Message {
   send = (recipient: string) => async (request: Request, headers: any) => {
     await chatPostMessage(request, headers)(recipient, { blocks: this.blocks })
   }
+
+  update = async (responseUrl: string) => {
+    await chatUpdateMessage(responseUrl, { blocks: this.blocks })
+  }
 }
 
 export class SlackInteractiveBlock implements SlackBlock, Message {
@@ -28,6 +37,8 @@ export class SlackInteractiveBlock implements SlackBlock, Message {
   send = (recipient: string) => async (request: Request, headers: any) => {
     await chatPostMessage(request, headers)(recipient, { blocks: this.blocks })
   }
+
+  update = (_: string) => undefined
 }
 
 export class SlackModal implements SlackBlock, Message {
@@ -57,4 +68,6 @@ export class SlackModal implements SlackBlock, Message {
   send = (recipient: string) => async (request: Request, headers: any) => {
     await viewsOpen(request, headers)(this, recipient)
   }
+
+  update = (_: string) => undefined
 }
