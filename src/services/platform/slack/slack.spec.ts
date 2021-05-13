@@ -9,7 +9,7 @@ import { Slack } from "./slack"
 import axios from "axios"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { ThanksProps } from "../../../actions/thanks/thanks"
-import { View } from "../../../models/platform/message"
+import { Message } from "../../../models/platform/message"
 import { SlackModal, SlackView } from "../../../models/platform/slack/views"
 
 jest.mock("axios")
@@ -43,7 +43,7 @@ describe("Slack service:", () => {
     it("should send a view", async () => {
       const endpoint = "/chat.postMessage"
       const channel = "irrelevant-channel"
-      const view: View = new SlackView([{ message: "irrelevant-text2" }])
+      const view: Message = new SlackView([{ message: "irrelevant-text2" }])
 
       await slackMock.sendMessage(channel, view)
 
@@ -109,7 +109,7 @@ describe("Slack service:", () => {
     })
 
     it("should update with a view", async () => {
-      const view: View = new SlackView([{ message: "irrelevant-text2" }])
+      const view: Message = new SlackView([{ message: "irrelevant-text2" }])
 
       await slackMock.updateMessage(responseUrl, view)
       expect(axiosMock.post).toBeCalledWith(
