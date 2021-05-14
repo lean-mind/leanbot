@@ -3,6 +3,7 @@ import { interactive } from "../../actions/interactive"
 import { sendGratitudeSummaries } from "../../actions/thanks"
 import { thanks } from "../../actions/thanks"
 import { Platform } from "../platform/platform"
+import { register } from "../../actions/register/register"
 
 export interface EndpointInstance {
   name: Endpoint
@@ -15,6 +16,7 @@ export enum Endpoint {
   thanks = "/thanks",
   coffeeRoulette = "/coffee-roulette",
   sendSummary = "/send-summary",
+  register = "/register"
 }
 
 export const Endpoints: EndpointInstance[] = [
@@ -38,4 +40,9 @@ export const Endpoints: EndpointInstance[] = [
     action: (_) => sendGratitudeSummaries(),
     getProps: async () => undefined,
   },
+  {
+    name: Endpoint.register,
+    action: register,
+    getProps: (platform, data) => platform.getRegisterProps(data)
+  }
 ]

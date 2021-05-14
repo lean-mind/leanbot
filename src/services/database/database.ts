@@ -1,6 +1,8 @@
+import { GratitudeMessage } from "../../models/database/gratitude-message"
+import { QueryOptions } from "./mongo/methods/query"
+import { User } from "../../models/database/user"
 import { CoffeeBreak } from "../../models/database/coffee-break"
 import { Community } from "../../models/database/community"
-import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message"
 import { Logger } from "../logger/logger"
 
 export type DatabaseName = "mongo"
@@ -27,7 +29,12 @@ export abstract class Database {
   abstract getCommunities: () => Promise<Community[]>
 
   abstract saveGratitudeMessages: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
-  abstract getGratitudeMessages: (options: GratitudeMessageOptions) => Promise<GratitudeMessage[]>
+  abstract getGratitudeMessages: (options: QueryOptions) => Promise<GratitudeMessage[]>
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>
+  abstract getCoffeeBreaks: (options: QueryOptions) => Promise<CoffeeBreak[]>
+
+  abstract saveUser: (user: User) => Promise<User | undefined>
+  abstract getUser: (userId: string) => Promise<User | undefined>
+
 }

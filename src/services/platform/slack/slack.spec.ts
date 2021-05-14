@@ -207,7 +207,7 @@ describe("Slack service:", () => {
     const userId = "irrelevant-user-id"
     const userInfoJson = {
       id: userId,
-      name: "irrelevant-name",
+      real_name: "irrelevant-name",
       is_bot: false,
     }
 
@@ -228,7 +228,7 @@ describe("Slack service:", () => {
       })
 
       expect(userInfoReceived?.id).toBe(userInfoJson.id)
-      expect(userInfoReceived?.name).toBe(userInfoJson.name)
+      expect(userInfoReceived?.name).toBe(userInfoJson.real_name)
       expect(userInfoReceived?.isBot).toBe(userInfoJson.is_bot)
     })
 

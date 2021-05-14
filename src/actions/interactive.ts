@@ -22,7 +22,7 @@ export const interactive = (platform: Platform, props: InteractiveProps): void =
       ["accept-coffee"]: acceptCoffee,
       ["reject-coffee"]: rejectCoffee,
       ["try-again-coffee"]: tryAgainCoffee,
-      ["stop-coffee"]: stopCoffee
+      ["stop-coffee"]: stopCoffee,
     }
     const command = mapper[nextStep];
     

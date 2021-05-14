@@ -51,5 +51,9 @@
     "reject": "Reject",
     "yes": "Yes",
     "no": "No"
+  },
+  "register": {
+    "success": "New user registered successfully",
+    "failure": "Couldn't register user"
   }
 }

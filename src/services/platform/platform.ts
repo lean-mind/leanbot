@@ -6,6 +6,7 @@ import { Logger } from "../logger/logger"
 import { UserInfo } from "./slack/methods/get-user-info"
 import { SlackBody } from "../../models/platform/slack/body"
 import { Community } from "../../models/database/community"
+import { RegisterProps } from "../../actions/register/register";
 
 export type PlatformName = "slack"
 
@@ -59,4 +60,6 @@ export abstract class Platform {
   abstract getThanksProps: (data: any) => Promise<ThanksProps>
   abstract getInteractiveProps: (data: any) => Promise<InteractiveProps | undefined>
   abstract getCoffeeRouletteProps: (data: any) => Promise<CoffeeRouletteProps>
+
+  abstract getRegisterProps: (data: any) => Promise<RegisterProps>
 }

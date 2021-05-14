@@ -7,6 +7,7 @@ import { getConversationMembers, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
+import { getSlackRegisterProps } from "./props/register-props"
 import { CoffeeRouletteMessage, TryAgainCoffeeMessage } from "./views/coffee-roulette-views"
 import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
@@ -95,6 +96,7 @@ export class Slack extends Platform {
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps
   getCoffeeRouletteProps = getSlackCoffeeRouletteProps
+  getRegisterProps = getSlackRegisterProps
 }
 
 Platform.dictionary["slack"] = Slack.getInstance()

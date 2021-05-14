@@ -25,7 +25,3 @@ export interface GratitudeSummary {
   sent: GratitudeSummaryMessage[],
   received: GratitudeSummaryMessage[],
 }
-
-export interface GratitudeMessageOptions {
-  days?: number
-}
