@@ -1,6 +1,6 @@
-import { SlackAction, SlackPayload, View } from './../../../../models/platform/slack/payload';
-import { SlackBody } from '../../../../models/platform/slack/body';
-import { SlackPayloadBuilder } from './slack-payload-builder';
+import { SlackAction, SlackPayload, View } from "../../../../models/platform/slack/payload"
+import { SlackBody } from "../../../../models/platform/slack/body"
+import { SlackPayloadBuilder } from "./slack-payload-builder"
 
 export const SlackBodyBuilder = ({
   teamId = "irrelevant-team-id",

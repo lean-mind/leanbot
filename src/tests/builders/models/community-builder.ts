@@ -1,4 +1,4 @@
-import { Community } from './../../../models/database/community';
+import { Community } from "./../../../models/database/community"
 
 export const CommunityBuilder = ({
   id = "irrelevant-community-id",

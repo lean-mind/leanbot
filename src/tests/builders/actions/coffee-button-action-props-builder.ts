@@ -1,5 +1,5 @@
-import { Id } from "../../../models/platform/slack/id";
-import { ButtonActionProps } from "../../../services/platform/slack/props/button-props";
+import { Id } from "../../../models/platform/slack/id"
+import { ButtonActionProps } from "../../../services/platform/slack/props/button-props"
 
 export const ButtonActionPropsBuilder = ({
   communityId = "irrelevant-community-id",

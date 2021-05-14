@@ -1,21 +1,21 @@
-import { CoffeeBreak } from './../coffee-break';
-import { JsonData } from './../../json-data';
-import { Id } from '../../platform/slack/id';
+import { CoffeeBreak } from "./../coffee-break"
+import { JsonData } from "./../../json-data"
+import { Id } from "../../platform/slack/id"
 
 export class CoffeeBreakDto {
-  private constructor (
+  private constructor(
     private communityId: string,
     private senderId: string,
     private recipientId: string,
-    private createdAtTime: number,
-  ) { }
+    private createdAtTime: number
+  ) {}
 
   static fromJson(data: JsonData): CoffeeBreakDto {
     return new CoffeeBreakDto(
       data.communityId,
       data.senderId,
       data.recipientId,
-      data.createdAtTime,
+      data.createdAtTime
     )
   }
 

@@ -1,11 +1,11 @@
-import { SlackBody } from "../../../../models/platform/slack/body";
-import { Id } from "../../../../models/platform/slack/id";
+import { SlackBody } from "../../../../models/platform/slack/body"
+import { Id } from "../../../../models/platform/slack/id"
 
 export interface ButtonActionProps {
-  communityId: string,
-  userId: Id, 
-  responseUrl: string,
-  action: string,
+  communityId: string
+  userId: Id
+  responseUrl: string
+  action: string
   value: string
 }
 

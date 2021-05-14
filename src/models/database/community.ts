@@ -1,4 +1,4 @@
-import { PlatformName } from "../../services/platform/platform";
+import { PlatformName } from "../../services/platform/platform"
 
 export class Community {
   constructor(

@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+export interface Message {
+  send(recipient: string)
+  update(responseUrl: string)
+}
 
-export type Message = string | View | InteractiveView
-export interface View {}
-export interface InteractiveView {}
-
+// TODO: turn into enum
 export type ViewTypes = "gratitudeSummary" | "gratitudeMessage" | "coffeeRouletteMessage" | "tryAgainCoffeeMessage"

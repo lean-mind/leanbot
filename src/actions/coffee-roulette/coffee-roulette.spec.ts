@@ -1,17 +1,17 @@
-import { tryAgainCoffee } from './try-again-coffee';
-import { rejectCoffee } from './reject-coffee';
-import { ButtonActionPropsBuilder } from './../../tests/builders/actions/coffee-button-action-props-builder';
-import { acceptCoffee } from './accept-coffee';
+import { tryAgainCoffee } from "./try-again-coffee"
+import { rejectCoffee } from "./reject-coffee"
+import { ButtonActionPropsBuilder } from "../../tests/builders/actions/coffee-button-action-props-builder"
+import { acceptCoffee } from "./accept-coffee"
 import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { CoffeeRoulettePropsBuilder } from "../../tests/builders/actions/coffee-roulette-props-builder"
 import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
-import { ButtonActionProps } from '../../services/platform/slack/props/button-props';
-import { Database } from '../../services/database/database';
-import { stopCoffee } from './stop-coffee';
+import { ButtonActionProps } from "../../services/platform/slack/props/button-props"
+import { Database } from "../../services/database/database"
+import { stopCoffee } from "./stop-coffee"
 
-describe('Coffee roulette', () => {
+describe("Coffee roulette", () => {
   let i18n: I18n
   let platform: Platform
   let coffeeRouletteProps: CoffeeRouletteProps
@@ -54,8 +54,8 @@ describe('Coffee roulette', () => {
     platform.deleteTempUserData(coffeeRouletteProps.userId, "coffeeText")
   })
 
-  describe('command', () => {
-    it('should inform the user that the command worked', async () => {
+  describe("command", () => {
+    it("should inform the user that the command worked", async () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
 
       await coffeeRoulette(platform, coffeeRouletteProps)
@@ -67,32 +67,36 @@ describe('Coffee roulette', () => {
       )
     })
     
-    it('should ask another user for a coffee', async () => {
+    it("should ask another user for a coffee", async () => {
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
-      
+      platform.getView = jest.fn()
+
       await coffeeRoulette(platform, coffeeRouletteProps)
-      
+
       expect(platform.sendMessage).nthCalledWith(
         2,
-        randomUserId, 
-        await platform.getView("coffeeRouletteMessage", coffeeRouletteProps)
+        randomUserId,
+        undefined
       )
+      expect(platform.getView).toBeCalledWith("coffeeRouletteMessage", coffeeRouletteProps)
     })
-      
-    it('should ask another user for a coffee with message', async () => {
+
+    it("should ask another user for a coffee with message", async () => {
       const coffeeRoulettePropsWithText = CoffeeRoulettePropsBuilder({ text: "irrelevant-text" })
       platform.getCommunityMembers = jest.fn(async () => ([randomUserId]))
-      
+      platform.getView = jest.fn()
+
       await coffeeRoulette(platform, coffeeRoulettePropsWithText)
 
       expect(platform.sendMessage).nthCalledWith(
         2,
-        randomUserId, 
-        await platform.getView("coffeeRouletteMessage", coffeeRoulettePropsWithText)
+        randomUserId,
+        undefined
       )
+      expect(platform.getView).toBeCalledWith("coffeeRouletteMessage", coffeeRoulettePropsWithText)
     })
 
-    it('should not ask the user/yourself for a coffee', async () => {
+    it("should not ask the user/yourself for a coffee", async () => {
       const userMyself = "my-user-id"
       const myselfCoffeeRouletteProps = CoffeeRoulettePropsBuilder({ userId: userMyself })
       platform.getCommunityMembers = jest.fn(async () => ([userMyself]))
@@ -107,7 +111,7 @@ describe('Coffee roulette', () => {
       )
     })
 
-    it('should try again if the user wants to try again', async () => {
+    it("should try again if the user wants to try again", async () => {
       platform.getCommunityMembers = jest.fn(async () => ([]))
       platform.getTempUserData = jest.fn((_userId, _key) => ([randomUserId]))
       platform.updateTempUserData = jest.fn()
@@ -138,7 +142,7 @@ describe('Coffee roulette', () => {
       )
     })
 
-    it('should inform you if no one is available', async () => {
+    it("should inform you if no one is available", async () => {
       platform.getCommunityMembers = jest.fn(async () => ([]))
 
       await coffeeRoulette(platform, coffeeRouletteProps)      
@@ -149,11 +153,11 @@ describe('Coffee roulette', () => {
       )
     })
 
-    it.todo('should try again if there is no response and the user wants to try again')
+    it.todo("should try again if there is no response and the user wants to try again")
   })
 
-  describe('invited user', () => {
-    it('should be able to accept a coffee and inform the OG user', async () => {
+  describe("invited user", () => {
+    it("should be able to accept a coffee and inform the OG user", async () => {
       await acceptCoffee(platform, coffeeButtonProps, db)
 
       expect(platform.sendMessage).toBeCalledWith(
@@ -167,7 +171,7 @@ describe('Coffee roulette', () => {
       expect(db.saveCoffeeBreak).toBeCalled()
     })
 
-    it('should be able to reject a coffee and ask the OG user if they want to try again', async () => {
+    it("should be able to reject a coffee and ask the OG user if they want to try again", async () => {
       await rejectCoffee(platform, coffeeButtonProps)
 
       expect(platform.sendMessage).toBeCalledWith(
@@ -181,11 +185,11 @@ describe('Coffee roulette', () => {
       expect(db.saveCoffeeBreak).not.toBeCalled()
     })
 
-    it.todo('should update the invited user message if there is no response')
+    it.todo("should update the invited user message if there is no response")
   })
   
-  describe('errors', () => {
-    it('should inform the user if there was an error saving to db', async () => {
+  describe("errors", () => {
+    it("should inform the user if there was an error saving to db", async () => {
       db.saveCoffeeBreak = jest.fn(() => { throw Error("irrelevant-db-error")})
 
       await acceptCoffee(platform, coffeeButtonProps, db)

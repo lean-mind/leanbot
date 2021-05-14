@@ -1,5 +1,5 @@
-import { ThanksConfirmationProps } from "../../../actions/thanks/thanks-confirmation";
-import { Id } from "../../../models/platform/slack/id";
+import { ThanksConfirmationProps } from "../../../actions/thanks/thanks-confirmation"
+import { Id } from "../../../models/platform/slack/id"
 
 export const ThanksConfirmationPropsBuilder = ({
   communityId = "irrelevant-community-id",

@@ -4,8 +4,8 @@ import { ThanksProps } from "../../actions/thanks/thanks"
 import { Message, ViewTypes } from "../../models/platform/message"
 import { Logger } from "../logger/logger"
 import { UserInfo } from "./slack/methods/get-user-info"
-import { SlackBody } from "../../models/platform/slack/body";
-import { Community } from "../../models/database/community";
+import { SlackBody } from "../../models/platform/slack/body"
+import { Community } from "../../models/database/community"
 
 export type PlatformName = "slack"
 
@@ -17,7 +17,7 @@ export abstract class Platform {
   static getInstance = (platformName: PlatformName): Platform => {
     const platform = Platform.dictionary[platformName]
     if (platform) return platform
-    
+
     const errorMessage = `The ${platformName} platform is not implemented`
     Logger.onError(errorMessage)
     throw Error(errorMessage)
@@ -42,15 +42,15 @@ export abstract class Platform {
   deleteTempUserData = (userId: string, key: string): void => {
     const tempUserData = this.tempUserData[userId]
     if (tempUserData) {
-      delete this.tempUserData[userId][key]  
+      delete this.tempUserData[userId][key]
     }
   }
 
   abstract getCommunity: (body: SlackBody) => Community
   abstract getView: (view: ViewTypes, options: any | undefined) => Promise<Message>
 
-  abstract sendMessage: (channelId: string, message: Message) => Promise<void>
-  abstract updateMessage: (messageId: any, message: Message) => Promise<void>
+  abstract sendMessage: (channelId: string, message: Message | string) => Promise<void>
+  abstract updateMessage: (messageId: any, message: Message | string) => Promise<void>
 
   abstract getCommunityMembers: (communityId: string) => Promise<string[]>
   abstract getMembersByChannelId: (channelId: string) => Promise<string[]>
