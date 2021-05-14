@@ -2,7 +2,6 @@ import { InteractiveProps } from "../../../../actions/interactive"
 import { SlackBody } from "../../../../models/platform/slack/body"
 import { getSlackButtonAction } from "./button-props"
 import { getSlackThanksConfirmationProps } from "./thanks-props"
-import { completeToDo } from "../../../../actions/todo/complete-todo"
 import { getSlackCheckboxAction } from "./checkbox-action-props"
 
 interface Action {
@@ -16,14 +15,15 @@ interface Dictionary<T> {
 
 const buttonMapper = {
   getProps: getSlackButtonAction,
-  accept: true
+  accept: true,
 }
 
 export const getSlackInteractiveProps = async (body: SlackBody): Promise<InteractiveProps> => {
-  const mapper: Dictionary<Action> = { // TODO: Pendiente refactor 
+  const mapper: Dictionary<Action> = {
+    // TODO: Pendiente refactor
     ["thanks-confirmation"]: {
       getProps: getSlackThanksConfirmationProps,
-      accept: body.payload.type === "view_submission"
+      accept: body.payload.type === "view_submission",
     },
     ["accept-coffee"]: buttonMapper,
     ["reject-coffee"]: buttonMapper,
@@ -34,7 +34,7 @@ export const getSlackInteractiveProps = async (body: SlackBody): Promise<Interac
       accept: true,
     },
   }
-  
+
   let actionId = ""
   if (body.payload?.view) {
     const externalId = body.payload.view.external_id.replace(/^[0-9]+-/, "")
@@ -43,10 +43,10 @@ export const getSlackInteractiveProps = async (body: SlackBody): Promise<Interac
     actionId = body.payload.actions[0].action_id
   }
   const action = mapper[actionId]
-  
+
   return {
     nextStep: actionId,
     accept: action?.accept ?? false,
-    data: action?.accept ? action.getProps(body) : {}
+    data: action?.accept ? action.getProps(body) : {},
   }
 }

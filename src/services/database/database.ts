@@ -3,8 +3,6 @@ import { Community } from "../../models/database/community"
 import { GratitudeMessage, GratitudeMessageOptions } from "../../models/database/gratitude-message"
 import { ToDo } from "../../models/database/todo"
 
-export type DatabaseName = "mongo"
-
 export abstract class Database {
   abstract removeCollections: () => Promise<void>
 

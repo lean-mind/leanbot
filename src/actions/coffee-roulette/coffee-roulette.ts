@@ -1,6 +1,6 @@
-import { Logger } from './../../services/logger/logger';
-import { I18n } from './../../services/i18n/i18n';
-import { Platform } from "../../services/platform/platform";
+import { Logger } from "../../services/logger/logger"
+import { I18n } from "../../services/i18n/i18n"
+import { Platform } from "../../services/platform/platform"
 
 export interface CoffeeRouletteProps {
   channelId?: string,

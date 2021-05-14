@@ -112,7 +112,6 @@ export class MongoDB extends Database {
     }
   }
 
-
   private findGratitudeMessages = async (options: GratitudeMessageOptions) => {
     const query = {}
     if (options.days) {

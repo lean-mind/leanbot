@@ -1,5 +1,5 @@
-import { CoffeeBreak } from './../../../models/database/coffee-break';
-import { Id } from "../../../models/platform/slack/id";
+import { CoffeeBreak } from "./../../../models/database/coffee-break"
+import { Id } from "../../../models/platform/slack/id"
 
 export const CoffeeBreakBuilder = ({
   communityId = "irrelevant-community-id",

@@ -4,8 +4,6 @@ import { MongoDB } from "../../services/database/mongo/mongo"
 import { Platform, PlatformName } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { GratitudeMessageBuilder } from "../../tests/builders/models/gratitude-message-builder"
-import { GratitudeSummaryMessageBuilder } from "../../tests/builders/models/gratitude-summary-message-builder"
-import { GratitudeSummaryViewBuilder } from "../../tests/builders/platform/slack/views/gratitude-summary-view-builder"
 import { sendGratitudeSummaries } from "./send-gratitude-summaries"
 
 jest.mock('../../services/database/mongo/mongo')
@@ -83,32 +81,11 @@ describe('Action Send Gratitude Summary', () => {
       })
     ]))
 
-    const gratitudeSummaryMessage = {
-      text: gratitudeMessage.text,
-      createdAt: gratitudeMessage.createdAt
-    }
-    const senderBlock = await GratitudeSummaryViewBuilder({
-      platform: slack,
-      image: catImage,
-      sent: [GratitudeSummaryMessageBuilder({
-        users: [new Id(firstRecipientId), new Id(secondRecipientId)],
-        ...gratitudeSummaryMessage
-      })]
-    })
-    const recipientBlock = await GratitudeSummaryViewBuilder({
-      platform: slack,
-      image: catImage,
-      received: [GratitudeSummaryMessageBuilder({
-        users: [new Id(senderId)],
-        ...gratitudeSummaryMessage
-      })]
-    })
-
     await sendGratitudeSummaries(mockDb, mockCat)
 
-    expect(slack.sendMessage).toBeCalledWith(senderId, senderBlock)
-    expect(slack.sendMessage).toBeCalledWith(firstRecipientId, recipientBlock)
-    expect(slack.sendMessage).toBeCalledWith(secondRecipientId, recipientBlock)
+    expect(slack.sendMessage).toBeCalledWith(senderId, expect.anything())
+    expect(slack.sendMessage).toBeCalledWith(firstRecipientId, expect.anything())
+    expect(slack.sendMessage).toBeCalledWith(secondRecipientId, expect.anything())
     expect(slack.sendMessage).toBeCalledTimes(3)
   })
 })

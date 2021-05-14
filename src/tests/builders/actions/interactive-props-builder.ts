@@ -1,4 +1,4 @@
-import { InteractiveProps } from "../../../actions/interactive";
+import { InteractiveProps } from "../../../actions/interactive"
 
 export const InteractivePropsBuilder = ({
   nextStep = "irrelevant-next-step",

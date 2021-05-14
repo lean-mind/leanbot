@@ -40,17 +40,17 @@ const getGratitudeMessage = (communityId: string, sender: Id, recipient: Id, cha
   return new GratitudeMessage(communityId, sender, recipient, channel, text, isAnonymous, date);
 }
 
-const sendRecipientMessages = (platform: Platform, gratitudeMessages: GratitudeMessage[]): void => {
-  gratitudeMessages.forEach(({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
+const sendRecipientMessages = async (platform: Platform, gratitudeMessages: GratitudeMessage[]): Promise<void> => {
+  await Promise.all(gratitudeMessages.map(async ({ sender, recipient, text, isAnonymous }: GratitudeMessage) => {
     text = text.split("\n").join("\n>")
     const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
     const recipientMessage = i18n.translate("gratitudeMessage.recipientMessage", { sender: senderName, text: text.toString() })
   
-    platform.sendMessage(recipient.id, recipientMessage)
-  })
+    await platform.sendMessage(recipient.id, recipientMessage)
+  }))
 }
 
-const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous = false): void => {
+const sendSenderMessage = async (platform: Platform, channel: Id, sender: Id, recipient: Id[], text: string, isAnonymous = false): Promise<void> => {
   text = text.split("\n").join("\n>")
   const allRecipients = recipient.map((current: Id) => current.type === IdType.channel ? `<#${current.id}>` : `<@${current.id}>`).join(", ")
   const senderName = isAnonymous ? i18n.translate("gratitudeMessage.anAnonymous") : `<@${sender.id}>`
@@ -59,9 +59,9 @@ const sendSenderMessage = (platform: Platform, channel: Id, sender: Id, recipien
   const channelMessage = i18n.translate("gratitudeMessage.channelMessage", { sender: senderName, recipient: `${allRecipients}`, text })
 
   if (channel.type !== IdType.unknown) {
-    platform.sendMessage(channel.id, channelMessage)
+    await platform.sendMessage(channel.id, channelMessage)
   }
-  platform.sendMessage(sender.id, senderMessage)
+  await platform.sendMessage(sender.id, senderMessage)
 }
 
 const sendMessage = async (platform: Platform, id: string, message: string): Promise<void> => {
@@ -87,15 +87,15 @@ export const thanksConfirmation = async (
     if (gratitudeMessages.length > 0) {
       await db.saveGratitudeMessages(gratitudeMessages)
 
-      sendRecipientMessages(platform, gratitudeMessages)
-      sendSenderMessage(platform, channel, sender, recipients, text, isAnonymous)
+      await sendRecipientMessages(platform, gratitudeMessages)
+      await sendSenderMessage(platform, channel, sender, recipients, text, isAnonymous)
     } else if (recipients[0].id !== sender.id) {
-      sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorNothingToGive")} ${Emojis.Disappointed}`)
+      await sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorNothingToGive")} ${Emojis.Disappointed}`)
     } else {
-      sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorMessageSelf")} ${Emojis.FacePalm}`)
+      await sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.errorMessageSelf")} ${Emojis.FacePalm}`)
     }
   } catch(e) {
-    sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.error")} ${Emojis.ShockedFaceWithExplodingHead}`)
+    await sendMessage(platform, sender.id, `${i18n.translate("gratitudeMessage.error")} ${Emojis.ShockedFaceWithExplodingHead}`)
   }
 }
 

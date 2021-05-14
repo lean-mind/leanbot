@@ -1,4 +1,4 @@
-import { SlackPayload } from "../../../../models/platform/slack/payload";
+import { SlackPayload } from "../../../../models/platform/slack/payload"
 
 export const SlackPayloadBuilder = ({
   teamId = "irrelevant-team-id",
