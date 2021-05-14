@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { i18n, InitOptions, StringMap } from "i18next";
+import { i18n, InitOptions, StringMap } from "i18next"
 
-const i18next = require('i18next')
+const i18next = require("i18next")
 const en = require("./translations/en.json")
 const es = require("./translations/es.json")
 const esCan = require("./translations/es.can.json")
@@ -14,23 +14,23 @@ export class I18n {
     defaultNS: I18n.namespace,
     resources: {
       "en-US": {
-        [I18n.namespace]: en
+        [I18n.namespace]: en,
       },
-      "es": {
-        [I18n.namespace]: es
+      es: {
+        [I18n.namespace]: es,
       },
       "es-CAN": {
-        [I18n.namespace]: esCan
+        [I18n.namespace]: esCan,
       },
     },
     interpolation: {
       prefix: "${",
       suffix: "}",
-      escapeValue: false
-    }
+      escapeValue: false,
+    },
   }
 
-  private constructor() {} 
+  private constructor() {}
 
   static getInstance = async (): Promise<I18n> => {
     if (!I18n.instance.isInitialized) {

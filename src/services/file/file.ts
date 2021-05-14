@@ -1,8 +1,8 @@
-import { existsSync, appendFileSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { Logger } from '../logger/logger';
+import { existsSync, appendFileSync, writeFileSync, readFileSync, mkdirSync } from "fs"
+import { join } from "path"
+import { Logger } from "../logger/logger"
 
-const fileDir = 'logs'
+const fileDir = "logs"
 
 export class File {
   private static exists(file: string): boolean {
@@ -12,17 +12,17 @@ export class File {
 
     return existsSync(file)
   }
-  
+
   static write(message: string, file: string): void {
     const filePath = join(fileDir, file)
     try {
       if (File.exists(filePath)) {
-        appendFileSync(filePath, "\n" + message);
+        appendFileSync(filePath, "\n" + message)
       } else {
-        writeFileSync(filePath, message);
+        writeFileSync(filePath, message)
       }
     } catch (error) {
-      Logger.onFileWriteError(filePath, error);
+      Logger.onFileWriteError(filePath, error)
     }
   }
 
@@ -30,13 +30,13 @@ export class File {
     const filePath = join(fileDir, file)
     try {
       if (existsSync(filePath)) {
-        const data = readFileSync(filePath, { encoding: 'UTF-8' });
-        const lines = data.split(/\r?\n/);
-        return lines;
+        const data = readFileSync(filePath, { encoding: "UTF-8" })
+        const lines = data.split(/\r?\n/)
+        return lines
       }
     } catch (error) {
-      Logger.onFileReadError(filePath, error);
+      Logger.onFileReadError(filePath, error)
     }
-    return [];
+    return []
   }
 }

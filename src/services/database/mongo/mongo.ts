@@ -1,31 +1,29 @@
-import { CoffeeBreak } from './../../../models/database/coffee-break';
-import { MongoClient } from 'mongodb'
-import { JsonData } from '../../../models/json-data';
-import { Database } from '../database';
-import { Logger } from '../../logger/logger';
-import { Collection } from './collection';
-import { config } from '../../../config';
-import { Community } from '../../../models/database/community';
-import { CommunityDto } from '../../../models/database/dtos/community-dto';
-import { GratitudeMessage } from '../../../models/database/gratitude-message';
-import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
-import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
-import { makeQuery, QueryOptions } from "./methods/query";
-import { User } from "../../../models/database/user";
-import { UserDto } from "../../../models/database/dtos/user-dto";
+import { CoffeeBreak } from "../../../models/database/coffee-break"
+import { MongoClient } from "mongodb"
+import { JsonData } from "../../../models/json-data"
+import { Database } from "../database"
+import { Logger } from "../../logger/logger"
+import { Collection } from "./collection"
+import { config } from "../../../config"
+import { Community } from "../../../models/database/community"
+import { CommunityDto } from "../../../models/database/dtos/community-dto"
+import { GratitudeMessage } from "../../../models/database/gratitude-message"
+import { GratitudeMessageDto } from "../../../models/database/dtos/gratitude-message-dto"
+import { CoffeeBreakDto } from "../../../models/database/dtos/coffee-break-dto"
+import { makeQuery, QueryOptions } from "./methods/query"
+import { User } from "../../../models/database/user"
+import { UserDto } from "../../../models/database/dtos/user-dto"
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
 
   private static getClient = () => {
-    return new MongoClient(config.database.mongodb.uri, { 
+    return new MongoClient(config.database.mongodb.uri, {
       useUnifiedTopology: true,
     })
   }
-  
-  constructor(
-    private instance: MongoClient = MongoDB.getClient()
-  ) {
+
+  constructor(private instance: MongoClient = MongoDB.getClient()) {
     super()
   }
 
@@ -37,20 +35,20 @@ export class MongoDB extends Database {
       await this.close()
     }
   }
-  
+
   private connect = async (): Promise<void> => {
     if (!this.instance.isConnected()) {
       await this.instance.connect()
     }
   }
-  
+
   private close = async (): Promise<void> => {
     if (this.instance.isConnected()) {
       await this.instance.close()
       this.instance = MongoDB.getClient()
     }
   }
-  
+
   removeCollections = async (): Promise<void> => {
     Logger.onDBAction("Removing collections")
     await this.on(() => this.dropDatabase())
@@ -68,7 +66,7 @@ export class MongoDB extends Database {
 
   saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
     Logger.onDBAction("Saving gratitude messages")
-    await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages));
+    await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages))
   }
 
   getGratitudeMessages = async (options: QueryOptions): Promise<GratitudeMessage[]> => {
@@ -96,39 +94,39 @@ export class MongoDB extends Database {
     return await this.on(async () => await this.getUserById(userId))
   }
 
-  private dropDatabase = () => this.instance.db(this.database).dropDatabase();
+  private dropDatabase = () => this.instance.db(this.database).dropDatabase()
 
   private insertCommunity = async (community: Community) => {
     if (!community.id) return
 
     const collection = this.instance.db(this.database).collection(Collection.communities)
-    const existsCommunity = await collection.findOne({id: community.id})
+    const existsCommunity = await collection.findOne({ id: community.id })
 
     if (!existsCommunity) {
       const communityJson = CommunityDto.fromModel(community).toJson()
       await collection.insertOne(communityJson)
     }
-  };
+  }
 
   private findAllCommunities = async () => {
     const collection = this.instance.db(this.database).collection(Collection.communities)
-    const cursor = await collection.find({deletedAtTime: null}).toArray()
+    const cursor = await collection.find({ deletedAtTime: null }).toArray()
     return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
-  };
+  }
 
   private insertGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]) => {
     const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) =>
-                                                      GratitudeMessageDto.fromModel(gratitudeMessage).toJson()
-                                                    )
+      GratitudeMessageDto.fromModel(gratitudeMessage).toJson()
+    )
     if (gratitudeMessagesJson.length > 0) {
       await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
     }
-  };
+  }
 
   private findGratitudeMessages = async (options: QueryOptions) => {
     const query = {}
     if (options.days) {
-      const nowTime = (new Date()).getTime()
+      const nowTime = new Date().getTime()
       const queryTime = options.days * 24 * 60 * 60 * 1000
       query["createdAtTime"] = {
         $gte: nowTime - queryTime,
@@ -136,8 +134,10 @@ export class MongoDB extends Database {
       }
     }
     const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
-    return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
-  };
+    return cursor.map(
+      (gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel()
+    )
+  }
 
   private insertCoffeeBreak = async (coffeeBreak: CoffeeBreak) => {
     const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()

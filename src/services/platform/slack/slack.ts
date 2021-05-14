@@ -2,19 +2,17 @@ import axios, { AxiosInstance } from "axios"
 import { config } from "../../../config"
 import { Message, ViewTypes } from "../../../models/platform/message"
 import { SlackBody } from "../../../models/platform/slack/body"
-import { SlackBlock, SlackInteractiveBlock, SlackModal, SlackView } from "../../../models/platform/slack/views"
-import { Logger } from "../../logger/logger"
 import { Platform } from "../platform"
-import { getConversationMembers, chatPostMessage, viewsOpen, getTeamMembers, getUserInfo } from "./methods"
+import { getConversationMembers, getTeamMembers, getUserInfo } from "./methods"
 import { getSlackCoffeeRouletteProps } from "./props/coffee-roulette-props"
 import { getSlackInteractiveProps } from "./props/interactive-props"
 import { getSlackThanksProps } from "./props/thanks-props"
-import { chatUpdateMessage } from './methods/chat-update-message';
 import { getSlackRegisterProps } from "./props/register-props"
 import { CoffeeRouletteMessage, TryAgainCoffeeMessage } from "./views/coffee-roulette-views"
 import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
-import { Community } from "../../../models/database/community";
+import { Community } from "../../../models/database/community"
+import { SlackPlainTextMessage } from "../../../models/platform/slack/views"
 
 export type Request = AxiosInstance
 
@@ -30,11 +28,11 @@ export class Slack extends Platform {
 
   static headers = {
     bot: {
-      Authorization: `Bearer ${config.platform.slack.token}`
+      Authorization: `Bearer ${config.platform.slack.token}`,
     },
     user: {
-      Authorization: `Bearer ${config.platform.slack.userToken}`
-    }
+      Authorization: `Bearer ${config.platform.slack.userToken}`,
+    },
   }
 
   private constructor(
@@ -42,7 +40,7 @@ export class Slack extends Platform {
       baseURL: "https://slack.com/api",
       headers: {
         "Content-type": "application/json; charset=utf-8",
-      }
+      },
     })
   ) {
     super()
@@ -50,7 +48,7 @@ export class Slack extends Platform {
 
   static getBody = (data: any): SlackBody => {
     const payload = data.body.payload ? JSON.parse(data.body.payload) : {}
-    return  { ...data.body, payload } as SlackBody
+    return { ...data.body, payload } as SlackBody
   }
 
   static getToken = (data: any): string | undefined => {
@@ -64,10 +62,10 @@ export class Slack extends Platform {
 
   getView = async (view: ViewTypes, options: any | undefined): Promise<Message> => {
     const mapper = {
-      "gratitudeMessage": GratitudeMessageInteractiveView,
-      "gratitudeSummary": GratitudeSummaryView,
-      "coffeeRouletteMessage": CoffeeRouletteMessage,
-      "tryAgainCoffeeMessage": TryAgainCoffeeMessage
+      gratitudeMessage: GratitudeMessageInteractiveView,
+      gratitudeSummary: GratitudeSummaryView,
+      coffeeRouletteMessage: CoffeeRouletteMessage,
+      tryAgainCoffeeMessage: TryAgainCoffeeMessage,
     }
     const viewFunc = mapper[view]
     // TODO: refactor
@@ -77,26 +75,18 @@ export class Slack extends Platform {
     throw Error("Unknown view error")
   }
 
-  sendMessage = async (channelId: string, message: Message): Promise<void> => {
+  sendMessage = async (channelId: string, message: Message | string): Promise<void> => {
     if (typeof message === "string") {
-      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { text: message })
-    } else if (message instanceof SlackView || message instanceof SlackInteractiveBlock) {
-      await chatPostMessage(this.api, Slack.headers.bot)(channelId, { blocks: (message as SlackBlock).blocks })
-    } else if (message instanceof SlackModal) {
-      await viewsOpen(this.api, Slack.headers.bot)(message as SlackModal, channelId)
-    } else {
-      Logger.onError('Unidentifiable message type')
+      message = new SlackPlainTextMessage(message)
     }
+    await message.send(channelId)(this.api, Slack.headers.bot)
   }
 
-  updateMessage = async (messageId: string, message: Message): Promise<void> => {
+  updateMessage = async (messageId: string, message: Message | string): Promise<void> => {
     if (typeof message === "string") {
-      await chatUpdateMessage(messageId, { text: message })
-    } else if (message instanceof SlackView) {
-      await chatUpdateMessage(messageId, { blocks: (message as SlackBlock).blocks })
-    } else {
-      Logger.onError('Unidentifiable message type')
+      message = new SlackPlainTextMessage(message)
     }
+    await message.update(messageId)
   }
 
   getCommunityMembers = getTeamMembers(this.api, Slack.headers.bot)

@@ -1,4 +1,4 @@
-import { ThanksProps } from "../../../actions/thanks/thanks";
+import { ThanksProps } from "../../../actions/thanks/thanks"
 
 export const ThanksPropsBuilder = ({
   channelId = "irrelevant-channel-id",

@@ -4,4 +4,3 @@ export enum Collection {
   coffeeBreaks = "communities.coffeebreaks",
   users = "users"
 }
-

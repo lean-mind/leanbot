@@ -1,5 +1,5 @@
-import { SlackModal } from "../../../../models/platform/slack/views";
-import { I18n } from "../../../i18n/i18n";
+import { SlackModal } from "../../../../models/platform/slack/views"
+import { I18n } from "../../../i18n/i18n"
 
 let viewNumber = 0
 
@@ -9,15 +9,15 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => 
   const external_id = `${viewNumber++}-thanks-confirmation`
   const title = {
     type: "plain_text",
-    text: i18n.translate("gratitudeMessageView.title")
+    text: i18n.translate("gratitudeMessageView.title"),
   }
   const submit = {
     type: "plain_text",
-    text: i18n.translate("gratitudeMessageView.submit")
+    text: i18n.translate("gratitudeMessageView.submit"),
   }
   const close = {
     type: "plain_text",
-    text: i18n.translate("gratitudeMessageView.cancel")
+    text: i18n.translate("gratitudeMessageView.cancel"),
   }
   const blocks = [
     {
@@ -25,20 +25,20 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => 
       block_id: "recipients",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.translate("gratitudeMessageView.recipientsLabel")}*`
+        text: `*${i18n.translate("gratitudeMessageView.recipientsLabel")}*`,
       },
       accessory: {
         type: "multi_conversations_select",
         placeholder: {
           type: "plain_text",
           text: i18n.translate("gratitudeMessageView.recipientsPlaceholder"),
-          emoji: true
+          emoji: true,
         },
         filter: {
-          include: [ "public", "im" ]
+          include: ["public", "im"],
         },
-        action_id: "action"
-      }
+        action_id: "action",
+      },
     },
     {
       type: "input",
@@ -46,20 +46,20 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => 
       element: {
         type: "plain_text_input",
         multiline: true,
-        action_id: "action"
+        action_id: "action",
       },
       label: {
         type: "plain_text",
         text: i18n.translate("gratitudeMessageView.textLabel"),
-        emoji: true
-      }
+        emoji: true,
+      },
     },
     {
       type: "section",
       block_id: "options",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.translate("gratitudeMessageView.optionsLabel")}*`
+        text: `*${i18n.translate("gratitudeMessageView.optionsLabel")}*`,
       },
       accessory: {
         type: "checkboxes",
@@ -67,24 +67,26 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => 
           {
             text: {
               type: "mrkdwn",
-              text: i18n.translate("gratitudeMessageView.optionsAnonymousLabel")
+              text: i18n.translate("gratitudeMessageView.optionsAnonymousLabel"),
             },
             description: {
               type: "mrkdwn",
-              text: `_${i18n.translate("gratitudeMessageView.optionsAnonymousDescription")}_`
+              text: `_${i18n.translate("gratitudeMessageView.optionsAnonymousDescription")}_`,
             },
-            value: "anonymous"
-          }
+            value: "anonymous",
+          },
         ],
-        action_id: "action"
-      }
+        action_id: "action",
+      },
     },
     {
       type: "section",
       block_id: "channel",
       text: {
         type: "mrkdwn",
-        text: `*${i18n.translate("gratitudeMessageView.channelLabel")}*\n${i18n.translate("gratitudeMessageView.channelDescription")}`
+        text: `*${i18n.translate("gratitudeMessageView.channelLabel")}*\n${i18n.translate(
+          "gratitudeMessageView.channelDescription"
+        )}`,
       },
       accessory: {
         type: "conversations_select",
@@ -93,13 +95,13 @@ export const GratitudeMessageInteractiveView = async (): Promise<SlackModal> => 
           text: i18n.translate("gratitudeMessageView.channelPlaceholder"),
         },
         filter: {
-          include: [ "public" ]
+          include: ["public"],
         },
-        action_id: "action"
-      }
-    }
+        action_id: "action",
+      },
+    },
   ]
-  
+
   return new SlackModal({
     type,
     external_id,

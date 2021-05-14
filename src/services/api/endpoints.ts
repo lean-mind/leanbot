@@ -1,12 +1,12 @@
 import { coffeeRoulette } from "../../actions/coffee-roulette/coffee-roulette"
 import { interactive } from "../../actions/interactive"
 import { sendGratitudeSummaries } from "../../actions/thanks"
-import { thanks } from "../../actions/thanks/thanks"
+import { thanks } from "../../actions/thanks"
 import { Platform } from "../platform/platform"
-import {register} from "../../actions/register/register";
+import { register } from "../../actions/register/register"
 
 export interface EndpointInstance {
-  name: Endpoint,
+  name: Endpoint
   action: (platform: Platform, data: any) => void
   getProps: (platform: Platform, data: any) => Promise<any>
 }
@@ -23,22 +23,22 @@ export const Endpoints: EndpointInstance[] = [
   {
     name: Endpoint.interactive,
     action: interactive,
-    getProps: (platform, data) => platform.getInteractiveProps(data)
+    getProps: (platform, data) => platform.getInteractiveProps(data),
   },
   {
     name: Endpoint.thanks,
     action: thanks,
-    getProps: (platform, data) => platform.getThanksProps(data)
+    getProps: (platform, data) => platform.getThanksProps(data),
   },
   {
     name: Endpoint.coffeeRoulette,
     action: coffeeRoulette,
-    getProps: (platform, data) => platform.getCoffeeRouletteProps(data)
+    getProps: (platform, data) => platform.getCoffeeRouletteProps(data),
   },
   {
     name: Endpoint.sendSummary,
     action: (_) => sendGratitudeSummaries(),
-    getProps: async () => undefined
+    getProps: async () => undefined,
   },
   {
     name: Endpoint.register,

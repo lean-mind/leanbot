@@ -1,18 +1,18 @@
-import * as https from 'https';
-import * as fs from 'fs';
+import * as https from "https"
+import * as fs from "fs"
 import * as jwt from "jsonwebtoken";
-import { json, urlencoded } from 'body-parser';
-import { getDateFormatted, Logger } from '../logger/logger';
-import { config } from '../../config';
-import { EndpointInstance, Endpoints } from './endpoints';
-import { Emojis } from '../../models/emojis';
-import * as morgan from 'morgan'
-import { registerCommunity } from "./methods/register-community";
-import { getPlatformData } from "./methods/get-platform-data";
-import { Slack } from "../platform/slack/slack";
-import { Database } from "../database/database";
-import { QueryOptions } from "../database/mongo/methods/query";
-import { OAuth2Client } from "google-auth-library";
+import { json, urlencoded } from "body-parser"
+import { getDateFormatted, Logger } from "../logger/logger"
+import { config } from "../../config"
+import { EndpointInstance, Endpoints } from "./endpoints"
+import { Emojis } from "../../models/emojis"
+import * as morgan from "morgan"
+import { registerCommunity } from "./methods/register-community"
+import { getPlatformData } from "./methods/get-platform-data"
+import { Slack } from "../platform/slack/slack"
+import { Database } from "../database/database"
+import { QueryOptions } from "../database/mongo/methods/query"
+import { OAuth2Client } from "google-auth-library"
 
 const decodeGoogleToken = async (client: OAuth2Client, request: any) => {
   const authorization: string = request.get("authorization")
@@ -41,14 +41,14 @@ interface SignUpQuery {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const app = require('express')()
+const app = require("express")()
 const client = new OAuth2Client(process.env.CLIENT_ID)
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
-morgan.token('date', () => { return getDateFormatted() })
-app.use(morgan(':date :method :url :status :res[content-length] - :response-time ms'))
+morgan.token("date", () => getDateFormatted())
+app.use(morgan(":date :method :url :status :res[content-length] - :response-time ms"))
 
 Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
   app.post(name, async (request: any, response: any) => {

@@ -2,8 +2,8 @@ import { PlatformName } from "../../../services/platform/platform"
 import { Community } from "../community"
 import { CommunityDto } from "./community-dto"
 
-describe('DTO Community', () => {
-  it('should transform data to JSON', () => {
+describe("DTO Community", () => {
+  it("should transform data to JSON", () => {
     const model = new Community("communityId", "slack", new Date(2020, 3, 14))
 
     const jsonExpected = {
@@ -15,7 +15,7 @@ describe('DTO Community', () => {
     expect(CommunityDto.fromModel(model).toJson()).toStrictEqual(jsonExpected)
   })
 
-  it('should transform data to model', () => {
+  it("should transform data to model", () => {
     const json = {
       id: "communityId",
       platform: "slack" as PlatformName,

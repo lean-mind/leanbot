@@ -1,25 +1,93 @@
 # LeanBot para Slack
 
-Pet Project de un bot para el Slack de LeanMind 💙
+_Pet Project de un bot para el Slack de LeanMind 💙_
 
-----------------
+![Statement coverage](coverage/badge-statements.svg)
+![Branch coverage](coverage/badge-branches.svg)
+![Function coverage](coverage/badge-functions.svg)
+![Line coverage](coverage/badge-lines.svg)
+<a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+![MIT License](https://img.shields.io/github/license/elangosundar/awesome-README-templates?color=2b9348)
 
 ## Índice
 
 - [LeanBot para Slack](#leanbot-para-slack)
   - [Índice](#índice)
-    - [**Docs**](#docs)
+  - [Introducción](#Introducción)
+  - [Uso/Ejemplos](#Uso/Ejemplos)
+    - [CoffeeRoulette](#CoffeeRoulette)
+    - [Thanks](#Thanks)
+  - [Tech Stack](#Tech Stack)
+  - [Docs](#Docs)
   - [Instalación](#instalación)
-    - [**Variables de entorno**](#variables-de-entorno)
-    - [**Bot**](#bot)
-    - [**TheCatAPI**](#thecatapi)
+    - [Variables de entorno](#variables-de-entorno)
+    - [Bot](#bot)
+    - [heCatAPI](#thecatapi)
   - [Scripts](#scripts)
   - [Trabajo en local](#trabajo-en-local)
   - [Despliegue](#despliegue)
   - [Estructura](#estructura)
+  - [Authors](#Authors)
   - [Recursos](#recursos)
+  - [Licencia](#Licencia)
 
-### **Docs**
+----------------
+
+# Introducción
+
+LeanBot nace con la finalidad de darle vida a tu servidor de Slack.
+Posee varios comandos que te ayudarán a interactuar con tus compañeros ya sea
+agradeciéndoles alguna buena acción o invitándoles a un café (COVID free), aunque no todo
+requiere una interacción con los demás, también puedes añadirte tareas a una
+lista para no olvidarte de lo que tienes que hacer (WIP :construction:).
+
+¿Y ya está? Por supuesto que no, contamos con un resumen semanal que te llegará todos los
+lunes a las 8:00 AM (9:00 AM en horario de verano) con las gracias dadas y recibidas acompañado
+de un amigo peludito :smiley_cat:
+
+
+## Uso/Ejemplos
+
+### CoffeeRoulette
+
+Este comando existe con la finalidad de despejarte unos minutillos del trabajo y
+reunirte con tus compañeros de trabajo para conocerse mejor. Su uso es muy simple:
+
+Invoca el comando escribiendo `/coffee-roulette` en cualquier canal donde esté el bot.
+Opcionalmente puedes añadir un mensaje:
+
+```sh
+/coffee-roulette Tengo 10 minutos libres ¿Te apetece un café? 
+```
+
+De forma completamente aleatoria se elegirá un usuario disponible (conectado y no ausente)
+en Slack para tomar un café. A ti se te informará que se está buscando gente para tomarse
+un café mientras que al usuario elegido se le informará que le ha llegado un café de tu parte. Dicho usuario podrá aceptar o rechazar el café.
+Si rechazan tu café, lo puedes volver a intentar.
+
+***IMPORTANTE* →** Si el usuario aleatorio elegido rechaza cualquier café, será de manera
+completamente **anónima** y no se le notificará a nadie tu nombre
+
+### Thanks
+
+Se invoca el comando escribiendo en Slack `/thanks` donde esté presente el LeanBot.
+Tras usar el comando se abre un modal (ventana de Slack) en el cual debes especificar
+a quién/quienes le vas a dar las gracias (pueden ser todos los miembros de un canal)
+y un mensaje. LeanBot además te permite dar las gracias de forma completamente anónima
+si lo deseas haciendo click en el recuadro Anónimo. Si lo deseas también puedes
+publicar las gracias en un canal concreto.
+
+```sh
+/thanks 
+```
+
+## Tech Stack
+
+**Server:** Node, Express, TypeScript
+
+**Libraries:** Morgan, Axios, CORS, i18n, MongoDb, Node-schedule, Jest, SuperTest
+
+### Docs
 
 - [Página de documentos](https://github.com/lean-mind/leanbot/tree/master/docs)
 - [Funcionalidades](https://github.com/lean-mind/leanbot/blob/master/docs/features.md)
@@ -28,7 +96,7 @@ Pet Project de un bot para el Slack de LeanMind 💙
 
 ## Instalación
 
-### **Variables de entorno**
+### Variables de entorno
 
 Necesitas el fichero `.env` en la raíz del proyecto, puedes duplicar el fichero `.env.sample` y modificar los valores:
 
@@ -58,7 +126,7 @@ HTTPS_CERT             # Ruta del certificado SSL, por ejemplo -> my_cert.crt
 HTTPS_KEY              # Ruta de la clave del certificado SSL, por ejemplo -> my_cert.key
 ```
 
-### **Bot**
+### Bot
 
 Para obtener el `SLACK_TOKEN` y el `SLACK_USER_TOKEN` hay que crear una aplicación de Slack en [api.slack.com/apps](https://api.slack.com/apps)
 
@@ -80,7 +148,7 @@ Teniendo los **Slash Commands** tendríamos que ir al apartado **Interactivity**
 
 Si revisas en el apartado **Basic Information** deberías tener los slash commands, los bots y los permisos marcados además de la app instalada en tu workspace de desarrollo. También tendrás el `SLACK_SIGNING_SECRET` que equivale al **Verification Token**
 
-### **TheCatAPI**
+### TheCatAPI
 
 Estamos utilizando [TheCatAPI](https://thecatapi.com) para obtener imágenes aleatorias de gatitos, con ponerlo en producción sería suficiente, si no está el token, devolverá siempre la misma url de una imagen. Creándote una cuenta en [TheCatAPI](https://thecatapi.com) podrás obtener el token.
 
@@ -156,6 +224,13 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
   - **schedule**: Es donde se crearán las fechas o intervalos de las acciones programadas
 - **tests**: Aquí están principalmente los builders de los tests que están con sus respectivos servicios
 
+## Authors
+
+Michael Reyes - [@mreysei](https://github.com/mreysei)  
+Sara Revilla - [@mizsrb](https://github.com/mizsrb)  
+Airán Sánchez - [@AiranSchez](https://github.com/AiranSchez)  
+Juan Antonio Quintana - [@JuanAntonioQ](https://github.com/JuanAntonioQ)
+
 ----------------
 
 ## Recursos
@@ -165,3 +240,7 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
   - [Block Kit Builder](https://app.slack.com/block-kit-builder)
 - [Emojis para Slack](https://emojipedia.org/slack)
 - [La guía de emojis para commits que seguimos en Leanbot](https://gitmoji.dev)
+
+## Licencia
+
+[MIT](https://choosealicense.com/licenses/mit/)

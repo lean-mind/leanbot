@@ -1,9 +1,9 @@
-import { CoffeeBreak } from '../coffee-break';
-import { Id } from "../../platform/slack/id";
-import { CoffeeBreakDto } from './coffee-break-dto';
+import { CoffeeBreak } from "../coffee-break"
+import { Id } from "../../platform/slack/id"
+import { CoffeeBreakDto } from "./coffee-break-dto"
 
-describe('DTO CoffeeBreak', () => {
-  it('should transform to json', () => {
+describe("DTO CoffeeBreak", () => {
+  it("should transform to json", () => {
     const model = new CoffeeBreak(
       "communityId",
       new Id("senderId"),
@@ -20,7 +20,7 @@ describe('DTO CoffeeBreak', () => {
     expect(CoffeeBreakDto.fromModel(model).toJson()).toStrictEqual(jsonExpected)
   })
 
-  it('should transform to model', () => {
+  it("should transform to model", () => {
     const json = {
       communityId: "communityId",
       senderId: "senderId",

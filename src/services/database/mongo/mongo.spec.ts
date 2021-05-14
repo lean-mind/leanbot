@@ -1,16 +1,16 @@
-import { CoffeeBreakBuilder } from './../../../tests/builders/models/coffee-break-builder';
-import { CoffeeBreak } from './../../../models/database/coffee-break';
-import { CommunityBuilder } from './../../../tests/builders/models/community-builder';
-import { GratitudeMessageBuilder } from './../../../tests/builders/models/gratitude-message-builder';
-import { Community } from './../../../models/database/community';
+import { CoffeeBreakBuilder } from "../../../tests/builders/models/coffee-break-builder"
+import { CoffeeBreak } from "../../../models/database/coffee-break"
+import { CommunityBuilder } from "../../../tests/builders/models/community-builder"
+import { GratitudeMessageBuilder } from "../../../tests/builders/models/gratitude-message-builder"
+import { Community } from "../../../models/database/community"
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
-import { GratitudeMessage } from '../../../models/database/gratitude-message';
-import { Id } from '../../../models/platform/slack/id';
-import { User } from "../../../models/database/user";
-import { UserBuilder } from "../../../tests/builders/models/user-builder";
+import { GratitudeMessage } from "../../../models/database/gratitude-message"
+import { Id } from "../../../models/platform/slack/id"
+import { User } from "../../../models/database/user"
+import { UserBuilder } from "../../../tests/builders/models/user-builder"
 
-describe('Service MongoDB: ', () => {
+describe("Service MongoDB: ", () => {
   let db: MongoDB
   const oldConfig = config.database
 
@@ -18,8 +18,8 @@ describe('Service MongoDB: ', () => {
     config.database = {
       mongodb: {
         uri: process.env.TEST_MONGODB_URI || "",
-        database: process.env.TEST_MONGODB_DATABASE || "test"
-      }
+        database: process.env.TEST_MONGODB_DATABASE || "test",
+      },
     }
     db = new MongoDB()
   })
@@ -27,28 +27,28 @@ describe('Service MongoDB: ', () => {
   afterEach(async () => {
     await db.removeCollections()
   })
-  
+
   afterAll(() => {
     config.database = oldConfig
   })
 
-  it('should throw errors if needed', async () => {
+  it("should throw errors if needed", async () => {
     config.database = {
       mongodb: {
         uri: "",
-        database: "test"
-      }
+        database: "test",
+      },
     }
 
     const errorDb = new MongoDB()
     await expect(errorDb.getCommunities()).rejects.toBeDefined()
   })
 
-  describe('Collection communities', () => {
-    it('should save and retrieve communities', async () => {
+  describe("Collection communities", () => {
+    it("should save and retrieve communities", async () => {
       const communities: Community[] = [
-        CommunityBuilder({ id: "first-community-id"}),
-        CommunityBuilder({ id: "second-community-id"})
+        CommunityBuilder({ id: "first-community-id" }),
+        CommunityBuilder({ id: "second-community-id" }),
       ]
       await db.registerCommunity(communities[0])
       await db.registerCommunity(communities[1])
@@ -83,12 +83,12 @@ describe('Service MongoDB: ', () => {
     })
   })
 
-  describe('Collection gratitude messages:', () => {
-    it('should save and retrieve gratitude messages', async () => {
+  describe("Collection gratitude messages:", () => {
+    it("should save and retrieve gratitude messages", async () => {
       const gratitudeMessages: GratitudeMessage[] = [
         GratitudeMessageBuilder({ text: "message 1" }),
         GratitudeMessageBuilder({ text: "message 2" }),
-        GratitudeMessageBuilder({ text: "message 3" })
+        GratitudeMessageBuilder({ text: "message 3" }),
       ]
       await db.saveGratitudeMessages(gratitudeMessages)
 
@@ -100,7 +100,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedMessages).toHaveLength(3)
     })
 
-    it('should retrieve gratitude messages for a certain community', async () => {
+    it("should retrieve gratitude messages for a certain community", async () => {
       const communityId = "test-community-id"
       const gratitudeMessages: GratitudeMessage[] = [
         GratitudeMessageBuilder({ communityId }),
@@ -115,7 +115,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedMessages).toHaveLength(1)
     })
 
-    it('should retrieve gratitude messages for a certain user', async () => {
+    it("should retrieve gratitude messages for a certain user", async () => {
       const userId: Id = new Id("test-user-id")
       const gratitudeMessages: GratitudeMessage[] = [
         GratitudeMessageBuilder({ sender: userId }),
@@ -132,14 +132,14 @@ describe('Service MongoDB: ', () => {
       expect(retrievedMessages).toHaveLength(2)
     })
 
-    it('should retrieve gratitude messages from a given number of days', async () => {
+    it("should retrieve gratitude messages from a given number of days", async () => {
       const today = new Date()
       const fiveDaysAgo = new Date()
       fiveDaysAgo.setDate(today.getDate() - 5)
 
       const gratitudeMessages: GratitudeMessage[] = [
         GratitudeMessageBuilder({ createdAt: today }),
-        GratitudeMessageBuilder({ createdAt: fiveDaysAgo })
+        GratitudeMessageBuilder({ createdAt: fiveDaysAgo }),
       ]
       await db.saveGratitudeMessages(gratitudeMessages)
 
@@ -150,7 +150,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedMessages).toHaveLength(1)
     })
 
-    it('should retrieve gratitude messages for a given time interval with 1 or both boundaries', async () => {
+    it("should retrieve gratitude messages for a given time interval with 1 or both boundaries", async () => {
       const today = new Date()
       const fiveDaysAgo = new Date(today.getDate() - 5)
       const tenDaysAgo = new Date(today.getDate() - 10)
@@ -186,8 +186,8 @@ describe('Service MongoDB: ', () => {
     })
   })
 
-  describe('Collection coffeeBreaks:', () => {
-    it('should save and retrieve coffee breaks', async () => {
+  describe("Collection coffee breaks:", () => {
+    it("should save and retrieve coffee breaks", async () => {
       const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
 
       await db.saveCoffeeBreak(coffeeBreak)
@@ -198,7 +198,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedCoffees).toHaveLength(1)
     })
 
-    it('should retrieve coffee breaks for a certain community', async () => {
+    it("should retrieve coffee breaks for a certain community", async () => {
       const communityId = "test-community-id"
       const coffeeBreaks: CoffeeBreak[] = [
         CoffeeBreakBuilder({ communityId }),
@@ -216,7 +216,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedCoffees).toHaveLength(1)
     })
 
-    it('should retrieve coffee breaks for a certain user', async () => {
+    it("should retrieve coffee breaks for a certain user", async () => {
       const userId: Id = new Id("test-user-id")
       const coffeeBreaks: CoffeeBreak[] = [
         CoffeeBreakBuilder({ sender: userId }),
@@ -236,7 +236,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedCoffees).toHaveLength(2)
     })
 
-    it('should retrieve coffee breaks from a given number of days', async () => {
+    it("should retrieve coffee breaks from a given number of days", async () => {
       const today = new Date()
       const fiveDaysAgo = new Date(today.getDate() - 5)
 
@@ -256,7 +256,7 @@ describe('Service MongoDB: ', () => {
       expect(retrievedCoffees).toHaveLength(1)
     })
 
-    it('should retrieve coffee breaks for a given time interval with 1 or both boundaries', async () => {
+    it("should retrieve coffee breaks for a given time interval with 1 or both boundaries", async () => {
       const today = new Date()
       const fiveDaysAgo = new Date(today.getDate() - 5)
       const tenDaysAgo = new Date(today.getDate() - 10)
@@ -293,4 +293,4 @@ describe('Service MongoDB: ', () => {
       expect(retrievedCoffees).toHaveLength(2)
     })
   })
-}) 
+})
