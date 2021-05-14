@@ -1,15 +1,9 @@
-import { CoffeeBreak } from './../../models/database/coffee-break';
+import { CoffeeBreak } from '../../models/database/coffee-break';
 import { Community } from "../../models/database/community";
 import { GratitudeMessage } from "../../models/database/gratitude-message";
 import { Logger } from "../logger/logger";
 import { QueryOptions } from './mongo/methods/query';
 import { User } from "../../models/database/user";
-
-export interface DatabaseResponse {
-  ok: boolean
-  data?: any
-  error?: any
-}
 
 export type DatabaseName = "mongo"
 
@@ -33,8 +27,8 @@ export abstract class Database {
 
   abstract registerCommunity: (community: Community) => Promise<void>
   abstract getCommunities: () => Promise<Community[]>
-
-  abstract saveGratitudeMessage: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
+  
+  abstract saveGratitudeMessages: (gratitudeMessages: GratitudeMessage[]) => Promise<void>
   abstract getGratitudeMessages: (options: QueryOptions) => Promise<GratitudeMessage[]>
 
   abstract saveCoffeeBreak: (coffeeBreak: CoffeeBreak) => Promise<void>

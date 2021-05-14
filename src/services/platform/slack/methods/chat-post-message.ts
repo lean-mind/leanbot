@@ -6,7 +6,7 @@ interface ChatPostMessageProps {
   blocks?: any[]
 }
 
-export const chatPostMessage = (request: Request, headers: any) => async (channel: string, { text, blocks }: ChatPostMessageProps) => {
+export const chatPostMessage = (request: Request, headers: any) => async (channel: string, { text, blocks }: ChatPostMessageProps): Promise<void> => {
   const endpoint = "/chat.postMessage"  
   Logger.onRequest(endpoint, { channel, text, blocks })
   if (text || blocks) {

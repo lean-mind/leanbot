@@ -1,7 +1,7 @@
 import { Logger } from "../../../logger/logger"
 import { Request } from "../slack"
 
-export const viewsOpen = (request: Request, headers: any) => async (view: any, trigger_id: string) => {
+export const viewsOpen = (request: Request, headers: any) => async (view: any, trigger_id: string): Promise<void> => {
   const endpoint = "/views.open"
   Logger.onRequest(endpoint, { view, trigger_id })
   const { data, status } = await request.post(endpoint, {

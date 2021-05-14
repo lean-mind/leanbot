@@ -1,34 +1,18 @@
 import * as https from 'https';
 import * as fs from 'fs';
 import * as jwt from "jsonwebtoken";
-import { json, urlencoded } from "body-parser";
-import { Logger } from "../logger/logger";
-import { config } from "../../config";
-import { EndpointInstance, Endpoints } from "./endpoints";
-import { Emojis } from "../../models/emojis";
+import { json, urlencoded } from 'body-parser';
+import { getDateFormatted, Logger } from '../logger/logger';
+import { config } from '../../config';
+import { EndpointInstance, Endpoints } from './endpoints';
+import { Emojis } from '../../models/emojis';
+import * as morgan from 'morgan'
+import { registerCommunity } from "./methods/register-community";
+import { getPlatformData } from "./methods/get-platform-data";
 import { Slack } from "../platform/slack/slack";
-import { Platform } from "../platform/platform";
-import { Community } from "../../models/database/community";
 import { Database } from "../database/database";
 import { QueryOptions } from "../database/mongo/methods/query";
 import { OAuth2Client } from "google-auth-library";
-
-const getPlatformData = async (request: any) => {
-  const db = Database.make()
-
-  if (Slack.getToken(request) === config.platform.slack.signingSecret) {
-    const platform: Platform = Slack.getInstance()
-    const data = Slack.getBody(request)
-    const community: Community = { id: data.team_id, platform: "slack" }
-    await db.registerCommunity(community)
-
-    return { platform, data }
-  }
-}
-
-const getPlatformProps = async (platform: Platform, data, getProps) => {
-  return await getProps(platform, data)
-}
 
 const decodeGoogleToken = async (client: OAuth2Client, request: any) => {
   const authorization: string = request.get("authorization")
@@ -55,25 +39,29 @@ const decodeIdToken = (token: string) => {
 interface SignUpQuery {
   id: string
 }
-  
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const app = require('express')()
 const client = new OAuth2Client(process.env.CLIENT_ID)
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
+morgan.token('date', () => { return getDateFormatted() })
+app.use(morgan(':date :method :url :status :res[content-length] - :response-time ms'))
+
 Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
   app.post(name, async (request: any, response: any) => {
-    const data = await getPlatformData(request)
+    const { platform, data } = await getPlatformData(request)
 
     if (config.maintenance) {
       return response.send(`¡Estamos en mantenimiento, sentimos las molestias! ${Emojis.Construction}`)
     }
 
-    if (data) {
-      const props = await getPlatformProps(data.platform, data.data, getProps)
-      action(data.platform, props)
+    if (platform && data) {
+      await registerCommunity(platform, data)
+      const props = await platform.getPlatformProps(data, getProps)
+      action(platform, props)
       return response.send()
     }
 
@@ -83,9 +71,8 @@ Endpoints.forEach(({ name, action, getProps }: EndpointInstance) => {
   })
 })
 
-
 const db: Database = Database.make()
-    
+
 app.get("/gratitudeMessages", async (request: any, response: any) => {
   // TODO: maintenance??
   const options: QueryOptions = request.query
@@ -124,7 +111,6 @@ app.post("/signup", async (request: any, response: any) => {
     return response.send(`Invalid token: ${error}`)
   }
 })
-
 
 export const httpsApp = https.createServer({
   key: fs.readFileSync(process.env.HTTPS_KEY ?? ""),

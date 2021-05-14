@@ -4,7 +4,7 @@ export const InteractivePropsBuilder = ({
   nextStep = "irrelevant-next-step",
   data = {},
   accept = true,
-}): InteractiveProps => ({
+}: Partial<InteractiveProps>): InteractiveProps => ({
   nextStep,
   data,
   accept

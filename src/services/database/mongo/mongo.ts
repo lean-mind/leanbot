@@ -1,7 +1,7 @@
-import { CoffeeBreak } from '../../../models/database/coffee-break';
+import { CoffeeBreak } from './../../../models/database/coffee-break';
 import { MongoClient } from 'mongodb'
 import { JsonData } from '../../../models/json-data';
-import { Database, DatabaseResponse } from '../database';
+import { Database } from '../database';
 import { Logger } from '../../logger/logger';
 import { Collection } from './collection';
 import { config } from '../../../config';
@@ -10,9 +10,9 @@ import { CommunityDto } from '../../../models/database/dtos/community-dto';
 import { GratitudeMessage } from '../../../models/database/gratitude-message';
 import { GratitudeMessageDto } from '../../../models/database/dtos/gratitude-message-dto';
 import { CoffeeBreakDto } from '../../../models/database/dtos/coffee-break-dto';
-import { UserDto } from "../../../models/database/dtos/user-dto";
-import { makeQuery, QueryOptions } from './methods/query';
+import { makeQuery, QueryOptions } from "./methods/query";
 import { User } from "../../../models/database/user";
+import { UserDto } from "../../../models/database/dtos/user-dto";
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -29,18 +29,13 @@ export class MongoDB extends Database {
     super()
   }
 
-  private on = async (callback: () => Promise<any>): Promise<DatabaseResponse> => {
-    let data: any
+  private on = async (callback: () => Promise<any>): Promise<any> => {
     try {
       await this.connect()
-      data = await callback()
-    } catch (error) {
-      Logger.onDBError(error)
+      return await callback()
+    } finally {
       await this.close()
-      return { ok: false, error }
     }
-    await this.close()
-    return { ok: true, data }
   }
   
   private connect = async (): Promise<void> => {
@@ -57,105 +52,117 @@ export class MongoDB extends Database {
   }
   
   removeCollections = async (): Promise<void> => {
-    await this.on(() => this.instance.db(this.database).dropDatabase())
+    Logger.onDBAction("Removing collections")
+    await this.on(() => this.dropDatabase())
   }
-  
+
   registerCommunity = async (community: Community): Promise<void> => {
-    await this.on(async () => {
-      if (!community.id) return
-      
-      const collection = this.instance.db(this.database).collection(Collection.communities)
-      const existsCommunity = await collection.findOne({ id: community.id })
-      
-      if (!existsCommunity) {
-        Logger.onDBAction("Registering community")
-        const communityJson = CommunityDto.fromModel(community).toJson()
-        await collection.insertOne(communityJson)
-      }
-    })
+    Logger.onDBAction("Registering community")
+    await this.on(async () => await this.insertCommunity(community))
   }
-  
+
   getCommunities = async (): Promise<Community[]> => {
-    const response = await this.on(async () => {
-      Logger.onDBAction("Getting communities")
-      const cursor = await this.instance.db(this.database).collection(Collection.communities).find({deletedAtTime: null}).toArray()
-      return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
-    });
-    
-    return response.ok ? response.data : []
+    Logger.onDBAction("Getting communities")
+    return await this.on(async () => await this.findAllCommunities())
   }
 
-  saveGratitudeMessage = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
-    const response = await this.on(async () => {
-      const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) => GratitudeMessageDto.fromModel(gratitudeMessage).toJson())
-
-      if (gratitudeMessagesJson.length > 0) {
-        Logger.onDBAction("Saving gratitude messages")
-        await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
-      }
-    });
-    
-    if (!response.ok) throw Error(`saveGratitudeMessage error: ${response.error}`)
+  saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
+    Logger.onDBAction("Saving gratitude messages")
+    await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages));
   }
 
   getGratitudeMessages = async (options: QueryOptions): Promise<GratitudeMessage[]> => {
-    const response = await this.on(async () => {
-      const query = makeQuery(options)
-      Logger.onDBAction("Getting gratitude messages")
-      const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
-      return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
-    })
-
-    return response.ok ? response.data : []
+    Logger.onDBAction("Getting gratitude messages")
+    return await this.on(async () => await this.findGratitudeMessages(options))
   }
 
   saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
-    const response = await this.on(async () => {
-      const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
-      Logger.onDBAction("Saving coffee break")
-      await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
-    })
-
-    if (!response.ok) throw Error(`saveCoffeeBreak error: ${response.error}`)
+    Logger.onDBAction("Saving coffee break")
+    return await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
   }
 
   getCoffeeBreaks = async (options: QueryOptions): Promise<CoffeeBreak[]> => {
-    const response = await this.on(async () => {
-      const query = makeQuery(options)
-      Logger.onDBAction("Getting coffee breaks...")
-      const cursor = await this.instance.db(this.database).collection(Collection.coffeeBreaks).find(query).toArray()
-      return cursor.map((coffeeBreakJson): CoffeeBreak => CoffeeBreakDto.fromJson(coffeeBreakJson).toModel())
-    })
-
-    return response.ok ? response.data : []
+    Logger.onDBAction("Getting coffee breaks...")
+    return await this.on(async () => await this.findCoffeeBreaks(options))
   }
 
   saveUser = async (user: User): Promise<User | undefined> => {
-    const response = await this.on(async () => {
-      const userExists = await this.getUserById(user.userId)
-      if (userExists) {
-        Logger.onDBAction("User already exists")
-        return undefined
-      }
-      Logger.onDBAction("Registering user")
-      const userJson = UserDto.fromModel(user).toJson()
-      await this.instance.db(this.database).collection(Collection.users).insertOne(userJson)
-      return user
-    })
-
-    return response.ok ? response.data : undefined
+    Logger.onDBAction("Registering user")
+    return await this.on(async () => await this.insertUser(user))
   }
 
   getUser = async(userId: string): Promise<User | undefined> => {
-    const response = await this.on(async () => {
-      return await this.getUserById(userId);
-    })
-    return response.ok ? response.data : undefined
+    Logger.onDBAction(`Getting user with id ${userId}`)
+    return await this.on(async () => await this.getUserById(userId))
+  }
+
+  private dropDatabase = () => this.instance.db(this.database).dropDatabase();
+
+  private insertCommunity = async (community: Community) => {
+    if (!community.id) return
+
+    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const existsCommunity = await collection.findOne({id: community.id})
+
+    if (!existsCommunity) {
+      const communityJson = CommunityDto.fromModel(community).toJson()
+      await collection.insertOne(communityJson)
+    }
+  };
+
+  private findAllCommunities = async () => {
+    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const cursor = await collection.find({deletedAtTime: null}).toArray()
+    return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
+  };
+
+  private insertGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]) => {
+    const gratitudeMessagesJson = gratitudeMessages.map((gratitudeMessage) =>
+                                                      GratitudeMessageDto.fromModel(gratitudeMessage).toJson()
+                                                    )
+    if (gratitudeMessagesJson.length > 0) {
+      await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
+    }
+  };
+
+  private findGratitudeMessages = async (options: QueryOptions) => {
+    const query = {}
+    if (options.days) {
+      const nowTime = (new Date()).getTime()
+      const queryTime = options.days * 24 * 60 * 60 * 1000
+      query["createdAtTime"] = {
+        $gte: nowTime - queryTime,
+        $lt: nowTime,
+      }
+    }
+    const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
+    return cursor.map((gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel())
+  };
+
+  private insertCoffeeBreak = async (coffeeBreak: CoffeeBreak) => {
+    const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
+    await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+  }
+
+  private findCoffeeBreaks = async (options: QueryOptions) => {
+    const query = makeQuery(options)
+    const cursor = await this.instance.db(this.database).collection(Collection.coffeeBreaks).find(query).toArray()
+    return cursor.map((coffeeBreakJson): CoffeeBreak => CoffeeBreakDto.fromJson(coffeeBreakJson).toModel())
   }
 
   private getUserById = async (userId: string): Promise<User | undefined> => {
     const usersCollection = this.instance.db(this.database).collection(Collection.users)
     const user = await usersCollection.findOne({"userId": userId})
     return user ? UserDto.fromJson(user).toModel() : undefined
+  }
+
+  private insertUser = async (user: User) => {
+    const userExists = await this.getUserById(user.userId)
+    if (userExists) {
+      return undefined
+    }
+    const userJson = UserDto.fromModel(user).toJson()
+    await this.instance.db(this.database).collection(Collection.users).insertOne(userJson)
+    return user
   }
 }

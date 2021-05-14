@@ -4,7 +4,9 @@ import { ThanksProps } from "../../actions/thanks/thanks"
 import { Message, ViewTypes } from "../../models/platform/message"
 import { Logger } from "../logger/logger"
 import { UserInfo } from "./slack/methods/get-user-info"
-import {RegisterProps} from "../../actions/register/register";
+import { SlackBody } from "../../models/platform/slack/body";
+import { Community } from "../../models/database/community";
+import { RegisterProps } from "../../actions/register/register";
 
 export type PlatformName = "slack"
 
@@ -20,6 +22,10 @@ export abstract class Platform {
     const errorMessage = `The ${platformName} platform is not implemented`
     Logger.onError(errorMessage)
     throw Error(errorMessage)
+  }
+
+  getPlatformProps = async (data, getProps) => {
+    return await getProps(this, data)
   }
 
   getTempUserData = (userId: string, key: string): string[] | undefined => {
@@ -41,6 +47,7 @@ export abstract class Platform {
     }
   }
 
+  abstract getCommunity: (body: SlackBody) => Community
   abstract getView: (view: ViewTypes, options: any | undefined) => Promise<Message>
 
   abstract sendMessage: (channelId: string, message: Message) => Promise<void>

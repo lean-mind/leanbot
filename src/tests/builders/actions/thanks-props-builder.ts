@@ -3,7 +3,7 @@ import { ThanksProps } from "../../../actions/thanks/thanks";
 export const ThanksPropsBuilder = ({
   channelId = "irrelevant-channel-id",
   block = {}
-}): ThanksProps => ({
+}: Partial<ThanksProps>): ThanksProps => ({
   channelId,
   block,
 })
