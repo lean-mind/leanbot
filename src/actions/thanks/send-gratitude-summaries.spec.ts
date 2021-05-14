@@ -4,8 +4,6 @@ import { MongoDB } from "../../services/database/mongo/mongo"
 import { Platform, PlatformName } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { GratitudeMessageBuilder } from "../../tests/builders/models/gratitude-message-builder"
-import { GratitudeSummaryMessageBuilder } from "../../tests/builders/models/gratitude-summary-message-builder"
-import { GratitudeSummaryViewBuilder } from "../../tests/builders/platform/slack/views/gratitude-summary-view-builder"
 import { sendGratitudeSummaries } from "./send-gratitude-summaries"
 
 jest.mock('../../services/database/mongo/mongo')

@@ -4,10 +4,10 @@ export const GratitudeSummaryMessageBuilder = ({
   users = [],
   text = "irrelevant-text",
   isAnonymous = false,
-  createdAt = new Date()
+  createdAt = new Date(),
 }: Partial<GratitudeSummaryMessage>): GratitudeSummaryMessage => ({
   users,
   text,
   isAnonymous,
-  createdAt
+  createdAt,
 })
