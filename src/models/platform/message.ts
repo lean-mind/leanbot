@@ -4,4 +4,4 @@ export interface Message {
 }
 
 // TODO: turn into enum
-export type ViewTypes = "gratitudeSummary" | "gratitudeMessage" | "coffeeRouletteMessage" | "tryAgainCoffeeMessage"
+export type ViewTypes = "gratitudeSummary" | "gratitudeMessage" | "coffeeRouletteMessage" | "tryAgainCoffeeMessage" | "toDoList"
