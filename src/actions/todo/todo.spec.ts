@@ -52,7 +52,7 @@ describe("To Do", () => {
       await todo(platform, props, db)
 
       expect(db.getToDos).toBeCalledWith(userId.id)
-      expect(platform.sendMessage).toBeCalledWith(userId.id, await platform.getView("toDoList", toDoList))
+      expect(platform.sendMessage).toBeCalledWith(userId.id, expect.anything())
     })
 
     it("should allow the user to complete a todo", async () => {
