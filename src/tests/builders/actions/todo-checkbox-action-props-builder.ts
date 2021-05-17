@@ -5,8 +5,10 @@ export const CheckboxActionPropsBuilder = ({
   userId = "irrelevant-user-id",
   value = "irrelevant-value",
   responseUrl = "irrelevant-response-url",
+  assigned = false
 }): CheckboxActionProps => ({
   userId: new Id(userId),
   value,
   responseUrl,
+  assigned
 })
