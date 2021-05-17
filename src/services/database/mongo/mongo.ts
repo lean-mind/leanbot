@@ -79,6 +79,10 @@ export class MongoDB extends Database {
     return await this.on(async () => await this.findAssignedToDos(userId))
   }
 
+  getToDoById = async (toDoId: string): Promise<ToDo> => {
+    return await this.on(async () => await this.findToDoById(toDoId))
+  }
+
   completeToDo = async (toDoId: string): Promise<void> => {
     return await this.on(async () => await this.completeToDoById(toDoId))
   }
@@ -144,6 +148,12 @@ export class MongoDB extends Database {
     return cursor?.map((todo: JsonData) => {
         return ToDoDto.fromJson(todo).toModel()
     }) ?? []
+  }
+
+  private findToDoById = async (toDoId: string) => {
+    const collection = this.db().collection(Collection.toDos)
+    const result = await collection.findOne({ "_id": new ObjectId(toDoId) })
+    return ToDoDto.fromJson(result).toModel()
   }
 
   private completeToDoById = async (toDoId: string) => {

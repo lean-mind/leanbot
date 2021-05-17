@@ -35,17 +35,18 @@ const listToDos = async (platform: Platform, data: TodoProps, db: Database) => {
 const createToDo = async (platform: Platform, data: TodoProps, db: Database) => {
   const i18n: I18n = await I18n.getInstance()
   if (data.text.length === 0) {
-    await platform.sendMessage(data.userId, i18n.translate("todo.emptyTextError", {todo: data.text}))
+    await platform.sendMessage(data.userId, await i18n.translate("todo.emptyTextError", { todo: data.text }))
     return
   }
   const todo: ToDo = new ToDo(new Id(data.userId), data.text)
   await db.saveToDo(todo)
-  await platform.sendMessage(data.userId, i18n.translate("todo.toDoCreated", {todo: data.text}))
+  await platform.sendMessage(data.userId, await i18n.translate("todo.toDoCreated", { todo: data.text }))
 }
 
 const assignToDo = async (platform: Platform, data: TodoProps, db: Database, assigneeId: string) => {
   const i18n: I18n = await I18n.getInstance()
   const todo: ToDo = new ToDo(new Id(data.userId), data.text, new Id(assigneeId))
   await db.saveToDo(todo)
-  await platform.sendMessage(data.userId, i18n.translate("todo.toDoCreated", {todo: data.text}))
+  await platform.sendMessage(data.userId, await i18n.translate("todo.toDoCreated", { todo: data.text }))
+  await platform.sendMessage(assigneeId, await i18n.translate("todo.toDoAssigned", { todo: data.text, user: `<@${data.userId}>` }))
 }

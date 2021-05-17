@@ -16,5 +16,6 @@ export abstract class Database {
 
   abstract saveToDo: (todo: ToDo) => Promise<void>
   abstract getToDos: (userId: string) => Promise<ToDo[]>
+  abstract getToDoById: (toDoId: string) => Promise<ToDo>
   abstract completeToDo: (toDoId: string) => Promise<void>
 }

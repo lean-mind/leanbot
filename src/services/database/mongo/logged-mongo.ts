@@ -50,6 +50,11 @@ export class LoggedDatabase extends Database {
     return await this.database.getToDos(userId)
   }
 
+  getToDoById = async (toDoId: string): Promise<ToDo> => {
+    this.logger.onDBAction(`Getting todo with id ${toDoId}`)
+    return await this.database.getToDoById(toDoId)
+  }
+
   completeToDo = async (toDoId: string): Promise<void> => {
     this.logger.onDBAction(`Completing todo with id ${toDoId}`)
     return await this.database.completeToDo(toDoId)

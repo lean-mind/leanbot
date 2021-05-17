@@ -49,6 +49,8 @@
   "todo": {
     "toDoListTitle": ":spiral_note_pad: *Aquí te va el curro:*",
     "toDoCreated": "Se creó la siguiente tarea: \n> ${todo}",
+    "toDoAssigned": "${user} ha creado una tarea para ti: \n> ${todo}",
+    "completedAssignedToDo": "${user} completó la tarea que le asignaste: \n> ${todo}",
     "emptyToDoList": "No tienes tareas pendientes :white_check_mark:",
     "emptyTextError": ":x: Debes proporcionar un mensaje para la tarea o una opción: list",
     "assignedToDoListTitle": ":white_check_mark: *Tareas que has asignado a compañer@s*:",
