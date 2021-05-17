@@ -11,5 +11,5 @@ export const completeToDo = async (
 ) => {
   await db.completeToDo(value)
   const toDoList: ToDo[] = await db.getToDos(userId.id)
-  await platform.updateMessage(responseUrl, await platform.getView("toDoList", toDoList))
+  await platform.updateMessage(responseUrl, await platform.getView("toDoList", { userId: userId.id, toDoList }))
 }

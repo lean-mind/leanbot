@@ -50,7 +50,11 @@
     "toDoListTitle": ":spiral_note_pad: These are your tasks:",
     "toDoCreated": "The following todo has been created: \n> ${todo}",
     "emptyToDoList": "You have nothing to do :white_check_mark:",
-    "emptyTextError": "You must provide a task description or an option: list"
+    "emptyTextError": "You must provide a task description or an option: list",
+    "assignedToDoListTitle": ":white_check_mark: *Tasks assigned to your colleagues:*",
+    "emptyAssignedToDoList": "You have not assigned any tasks for your colleagues",
+    "assignedBy": "by ${user}",
+    "assignedTo": "for ${user}"
   },
   "button": {
     "accept": "Accept",

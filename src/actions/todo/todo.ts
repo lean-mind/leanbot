@@ -29,7 +29,7 @@ export const todo = async (platform: Platform, data: TodoProps, db: Database = F
 
 const listToDos = async (platform: Platform, data: TodoProps, db: Database) => {
   const toDoList: ToDo[] = await db.getToDos(data.userId)
-  await platform.sendMessage(data.userId, await platform.getView("toDoList", toDoList))
+  await platform.sendMessage(data.userId, await platform.getView("toDoList", { userId: data.userId, toDoList }))
 }
 
 const createToDo = async (platform: Platform, data: TodoProps, db: Database) => {

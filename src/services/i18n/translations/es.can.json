@@ -47,10 +47,14 @@
     "error": "Vaya, hubo algún error con tu café... :shocked_face_with_exploding_head:"
   },
   "todo": {
-    "toDoListTitle": ":spiral_note_pad: Aquí te va el curro:",
+    "toDoListTitle": ":spiral_note_pad: *Aquí te va el curro:*",
     "toDoCreated": "Se creó la siguiente tarea: \n> ${todo}",
     "emptyToDoList": "No tienes tareas pendientes :white_check_mark:",
-    "emptyTextError": ":x: Debes proporcionar un mensaje para la tarea o una opción: list"
+    "emptyTextError": ":x: Debes proporcionar un mensaje para la tarea o una opción: list",
+    "assignedToDoListTitle": ":white_check_mark: *Tareas que has asignado a compañer@s*:",
+    "emptyAssignedToDoList": "No has asignado tareas a nadie",
+    "assignedBy": "por ${user}",
+    "assignedTo": "para ${user}"
   },
   "button": {
     "accept": "Mándale",
