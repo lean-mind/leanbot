@@ -10,6 +10,7 @@ describe("DTO ToDo", () => {
       userId: model.user.id,
       text: model.text,
       completed: model.completed,
+      assigneeId: model.user.id
     }
 
     expect(ToDoDto.fromModel(model).toJson()).toStrictEqual(jsonExpected)
@@ -19,10 +20,11 @@ describe("DTO ToDo", () => {
     const json = {
       _id: "irrelevant-mongo-object-id",
       userId: "irrelevant-user-id",
+      assigneeId: "irrelevant-assignee-id",
       text: "irrelevant-todo-text",
     }
 
-    const modelExpected = new ToDo(new Id(json.userId), json.text, json._id)
+    const modelExpected = new ToDo(new Id(json.userId), json.text, new Id(json.assigneeId), json._id)
 
     expect(ToDoDto.fromJson(json).toModel()).toStrictEqual(modelExpected)
   })
