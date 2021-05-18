@@ -18,7 +18,7 @@ export const completeToDo = async (
     const todo = await db.getToDoById(value)
     await platform.sendMessage(
       todo.user.id,
-      await i18n.translate("todo.completedAssignedToDo", { user: `<@${userId.id}>`, text: todo.text })
+      await i18n.translate("todo.completedAssignedToDo", { user: `<@${userId.id}>`, todo: todo.text })
     )
   }
 }
