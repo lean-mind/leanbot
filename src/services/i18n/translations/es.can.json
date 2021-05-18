@@ -56,7 +56,9 @@
     "assignedToDoListTitle": ":white_check_mark: *Tareas que has asignado a compañer@s*:",
     "emptyAssignedToDoList": "No has asignado tareas a nadie",
     "assignedBy": "por ${user}",
-    "assignedTo": "para ${user}"
+    "assignedTo": "para ${user}",
+    "fullUserToDoList": ":books: Ya tienes muchas tareas pendientes, completa alguna antes de añadir más",
+    "fullAssigneeToDoList": "${user} ya tiene muchas tareas pendientes, espera antes de pedirle que haga algo más :clock10:"
   },
   "button": {
     "accept": "Mándale",

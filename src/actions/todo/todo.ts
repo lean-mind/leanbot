@@ -38,6 +38,10 @@ const createToDo = async (platform: Platform, data: TodoProps, db: Database) => 
     await platform.sendMessage(data.userId, await i18n.translate("todo.emptyTextError", { todo: data.text }))
     return
   }
+  if (!await getUserTodoAvailability(data.userId, db)) {
+    await platform.sendMessage(data.userId, await i18n.translate("todo.fullUserToDoList"))
+    return
+  }
   const todo: ToDo = new ToDo(new Id(data.userId), data.text)
   await db.saveToDo(todo)
   await platform.sendMessage(data.userId, await i18n.translate("todo.toDoCreated", { todo: data.text }))
@@ -45,8 +49,19 @@ const createToDo = async (platform: Platform, data: TodoProps, db: Database) => 
 
 const assignToDo = async (platform: Platform, data: TodoProps, db: Database, assigneeId: string) => {
   const i18n: I18n = await I18n.getInstance()
+  if (!await getUserTodoAvailability(assigneeId, db)) {
+    await platform.sendMessage(data.userId, await i18n.translate("todo.fullAssigneeToDoList", { user: `<@${assigneeId}>` }))
+    return
+  }
   const todo: ToDo = new ToDo(new Id(data.userId), data.text, new Id(assigneeId))
   await db.saveToDo(todo)
   await platform.sendMessage(data.userId, await i18n.translate("todo.toDoCreated", { todo: data.text }))
   await platform.sendMessage(assigneeId, await i18n.translate("todo.toDoAssigned", { todo: data.text, user: `<@${data.userId}>` }))
+}
+
+const getUserTodoAvailability = async (userId: string, db: Database): Promise<boolean> => {
+  const userToDos = await db.getToDos(userId)
+  const userToDoCount = userToDos.filter((todo) => !todo.completed).length
+  const maxToDos = 10
+  return userToDoCount < maxToDos
 }

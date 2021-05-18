@@ -56,7 +56,9 @@
     "assignedToDoListTitle": ":white_check_mark: *Tasks assigned to your colleagues:*",
     "emptyAssignedToDoList": "You have not assigned any tasks for your colleagues",
     "assignedBy": "by ${user}",
-    "assignedTo": "for ${user}"
+    "assignedTo": "for ${user}",
+    "fullUserToDoList": ":books: You have plenty of tasks to do, complete some of them before adding more",
+    "fullAssigneeToDoList": "${user} already has too many tasks, wait before asking them to do something else :clock10:"
   },
   "button": {
     "accept": "Accept",
