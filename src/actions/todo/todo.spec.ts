@@ -66,7 +66,7 @@ describe("To Do", () => {
       const props: TodoProps = TodoPropsBuilder({ userId: userId.id, text })
 
       await todo(platform, props, db)
-      const expectedView = await platform.getView("toDoList", { userId, toDoList })
+      const expectedView = await platform.getView("toDoList", { userId: userId.id, toDoList })
 
       expect(db.getToDos).toBeCalledWith(userId.id)
       expect(platform.sendMessage).toBeCalledWith(
