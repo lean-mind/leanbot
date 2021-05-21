@@ -5,6 +5,7 @@ import { Cat } from "../../services/cat/cat"
 import { Database } from "../../services/database/database"
 import { Logger } from "../../services/logger/logger"
 import { Platform, PlatformName } from "../../services/platform/platform"
+import { Factory } from "../../services/infrastructure/factory"
 
 const getGratitudeSummaryMessageFrom = (
   gratitudeMessage: GratitudeMessage,
@@ -54,7 +55,10 @@ const update = (
   if (!existingGratitudeSummary) summary.push(gratitudeSummary)
 }
 
-export const sendGratitudeSummaries = async (db: Database = Database.make(), cat: Cat = new Cat()): Promise<void> => {
+export const sendGratitudeSummaries = async (
+  db: Database = Factory.createRepository(),
+  cat: Cat = new Cat()
+): Promise<void> => {
   Logger.log("Sending gratitude summaries...")
   try {
     const catImage = await cat.getRandomImage({})

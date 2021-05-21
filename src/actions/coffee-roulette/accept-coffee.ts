@@ -5,11 +5,12 @@ import { Platform } from "../../services/platform/platform"
 import { Database } from "../../services/database/database"
 import { CoffeeBreak } from "../../models/database/coffee-break"
 import { Id } from "../../models/platform/slack/id"
+import { Factory } from "../../services/infrastructure/factory"
 
 export const acceptCoffee = async (
   platform: Platform,
   data: ButtonActionProps,
-  db: Database = Database.make()
+  db: Database = Factory.createRepository()
 ): Promise<void> => {
   const i18n: I18n = await I18n.getInstance()
   const createdAt = new Date()

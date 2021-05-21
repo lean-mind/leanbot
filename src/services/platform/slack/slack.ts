@@ -12,6 +12,8 @@ import { GratitudeSummaryView } from "./views/view-gratitude-summary"
 import { GratitudeMessageInteractiveView } from "./views/view-gratitude-message"
 import { Community } from "../../../models/database/community"
 import { SlackPlainTextMessage } from "../../../models/platform/slack/views"
+import { getSlackTodoProps } from "./props/todo-props"
+import { ToDoListView } from "./views/todo-views"
 
 export type Request = AxiosInstance
 
@@ -65,6 +67,7 @@ export class Slack extends Platform {
       gratitudeSummary: GratitudeSummaryView,
       coffeeRouletteMessage: CoffeeRouletteMessage,
       tryAgainCoffeeMessage: TryAgainCoffeeMessage,
+      toDoList: ToDoListView,
     }
     const viewFunc = mapper[view]
     // TODO: refactor
@@ -95,6 +98,7 @@ export class Slack extends Platform {
   getThanksProps = getSlackThanksProps
   getInteractiveProps = getSlackInteractiveProps
   getCoffeeRouletteProps = getSlackCoffeeRouletteProps
+  getTodoProps = getSlackTodoProps
 }
 
 Platform.dictionary["slack"] = Slack.getInstance()

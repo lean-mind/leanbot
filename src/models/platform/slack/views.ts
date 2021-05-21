@@ -38,7 +38,9 @@ export class SlackInteractiveBlock implements SlackBlock, Message {
     await chatPostMessage(request, headers)(recipient, { blocks: this.blocks })
   }
 
-  update = (_: string) => undefined
+  update = async (responseUrl: string) => {
+    await chatUpdateMessage(responseUrl, { blocks: this.blocks })
+  }
 }
 
 export class SlackModal implements SlackBlock, Message {

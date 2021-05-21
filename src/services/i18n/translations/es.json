@@ -46,6 +46,20 @@
     "recipientRejectedOffer": "Has rechazado el café de ${sender}",
     "error": "Vaya, hubo algún error con tu café... :shocked_face_with_exploding_head:"
   },
+  "todo": {
+    "toDoListTitle": ":spiral_note_pad: *Estas son tus tareas:*",
+    "toDoCreated": "Se ha creado la siguiente tarea: \n> ${todo}",
+    "toDoAssigned": "${user} ha creado una tarea para ti: \n> ${todo}",
+    "completedAssignedToDo": "${user} ha completado la tarea que le asignaste: \n> ${todo}",
+    "emptyToDoList": "No tienes tareas pendientes :white_check_mark:",
+    "emptyTextError": "Debes proporcionar un mensaje para la tarea o una opción: list",
+    "assignedToDoListTitle": ":white_check_mark: *Tareas que has asignado a compañer@s*:",
+    "emptyAssignedToDoList": "No has asignado tareas a nadie",
+    "assignedBy": "por ${user}",
+    "assignedTo": "para ${user}",
+    "fullUserToDoList": ":books: Ya tienes muchas tareas pendientes, completa alguna antes de añadir más",
+    "fullAssigneeToDoList": "${user} ya tiene muchas tareas pendientes, espera antes de pedirle que haga algo más :clock10:"
+  },
   "button": {
     "accept": "Aceptar",
     "reject": "Rechazar",

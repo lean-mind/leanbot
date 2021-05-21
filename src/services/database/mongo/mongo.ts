@@ -1,8 +1,7 @@
 import { CoffeeBreak } from "../../../models/database/coffee-break"
-import { MongoClient } from "mongodb"
+import { MongoClient, ObjectId } from "mongodb"
 import { JsonData } from "../../../models/json-data"
 import { Database } from "../database"
-import { Logger } from "../../logger/logger"
 import { Collection } from "./collection"
 import { config } from "../../../config"
 import { Community } from "../../../models/database/community"
@@ -10,6 +9,8 @@ import { CommunityDto } from "../../../models/database/dtos/community-dto"
 import { GratitudeMessage, GratitudeMessageOptions } from "../../../models/database/gratitude-message"
 import { GratitudeMessageDto } from "../../../models/database/dtos/gratitude-message-dto"
 import { CoffeeBreakDto } from "../../../models/database/dtos/coffee-break-dto"
+import { ToDo } from "../../../models/database/todo"
+import { ToDoDto } from "../../../models/database/dtos/to-do-dto"
 
 export class MongoDB extends Database {
   private database = config.database.mongodb.database
@@ -47,41 +48,51 @@ export class MongoDB extends Database {
   }
 
   removeCollections = async (): Promise<void> => {
-    Logger.onDBAction("Removing collections")
     await this.on(() => this.dropDatabase())
   }
 
   registerCommunity = async (community: Community): Promise<void> => {
-    Logger.onDBAction("Registering community")
     await this.on(async () => await this.insertCommunity(community))
   }
 
   getCommunities = async (): Promise<Community[]> => {
-    Logger.onDBAction("Getting communities")
     return await this.on(async () => await this.findAllCommunities())
   }
 
   saveGratitudeMessages = async (gratitudeMessages: GratitudeMessage[]): Promise<void> => {
-    Logger.onDBAction("Saving gratitude messages")
     await this.on(async () => await this.insertGratitudeMessages(gratitudeMessages))
   }
 
   getGratitudeMessages = async (options: GratitudeMessageOptions): Promise<GratitudeMessage[]> => {
-    Logger.onDBAction("Getting gratitude messages")
     return await this.on(async () => await this.findGratitudeMessages(options))
   }
 
   saveCoffeeBreak = async (coffeeBreak: CoffeeBreak): Promise<void> => {
-    Logger.onDBAction("Saving coffee break")
     return await this.on(async () => await this.insertCoffeeBreak(coffeeBreak))
   }
 
-  private dropDatabase = () => this.instance.db(this.database).dropDatabase()
+  saveToDo = async (todo: ToDo): Promise<void> => {
+    return await this.on(async () => await this.insertToDo(todo))
+  }
+
+  getToDos = async (userId: string) => {
+    return await this.on(async () => await this.findAssignedToDos(userId))
+  }
+
+  getToDoById = async (toDoId: string): Promise<ToDo> => {
+    return await this.on(async () => await this.findToDoById(toDoId))
+  }
+
+  completeToDo = async (toDoId: string): Promise<void> => {
+    return await this.on(async () => await this.completeToDoById(toDoId))
+  }
+
+  private dropDatabase = () => this.db().dropDatabase()
 
   private insertCommunity = async (community: Community) => {
     if (!community.id) return
 
-    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const collection = this.db().collection(Collection.communities)
     const existsCommunity = await collection.findOne({ id: community.id })
 
     if (!existsCommunity) {
@@ -91,7 +102,7 @@ export class MongoDB extends Database {
   }
 
   private findAllCommunities = async () => {
-    const collection = this.instance.db(this.database).collection(Collection.communities)
+    const collection = this.db().collection(Collection.communities)
     const cursor = await collection.find({ deletedAtTime: null }).toArray()
     return cursor?.map((community: JsonData) => CommunityDto.fromJson(community).toModel()) ?? []
   }
@@ -101,7 +112,7 @@ export class MongoDB extends Database {
       GratitudeMessageDto.fromModel(gratitudeMessage).toJson()
     )
     if (gratitudeMessagesJson.length > 0) {
-      await this.instance.db(this.database).collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
+      await this.db().collection(Collection.gratitudeMessages).insertMany(gratitudeMessagesJson)
     }
   }
 
@@ -115,7 +126,7 @@ export class MongoDB extends Database {
         $lt: nowTime,
       }
     }
-    const cursor = await this.instance.db(this.database).collection(Collection.gratitudeMessages).find(query).toArray()
+    const cursor = await this.db().collection(Collection.gratitudeMessages).find(query).toArray()
     return cursor.map(
       (gratitudeMessageJson): GratitudeMessage => GratitudeMessageDto.fromJson(gratitudeMessageJson).toModel()
     )
@@ -123,6 +134,37 @@ export class MongoDB extends Database {
 
   private insertCoffeeBreak = async (coffeeBreak: CoffeeBreak) => {
     const coffeeBreakJson = CoffeeBreakDto.fromModel(coffeeBreak).toJson()
-    await this.instance.db(this.database).collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+    await this.db().collection(Collection.coffeeBreaks).insertOne(coffeeBreakJson)
+  }
+
+  private insertToDo = async (todo: ToDo) => {
+    const toDoJson = ToDoDto.fromModel(todo).toJson()
+    await this.db().collection(Collection.toDos).insertOne(toDoJson)
+  }
+
+  private findAssignedToDos = async (userId: string) => {
+    const collection = this.db().collection(Collection.toDos)
+    const cursor = await collection.find({ $or: [{ userId }, { assigneeId: userId }] }).toArray()
+    return cursor?.map((todo: JsonData) => {
+        return ToDoDto.fromJson(todo).toModel()
+    }) ?? []
+  }
+
+  private findToDoById = async (toDoId: string) => {
+    const collection = this.db().collection(Collection.toDos)
+    const result = await collection.findOne({ "_id": new ObjectId(toDoId) })
+    return ToDoDto.fromJson(result).toModel()
+  }
+
+  private completeToDoById = async (toDoId: string) => {
+    const collection = this.db().collection(Collection.toDos)
+    await collection.updateOne(
+      { "_id" : new ObjectId(toDoId) },
+      { $set: { "completed" : true } }
+    )
+  }
+
+  private db = () => {
+    return this.instance.db(this.database)
   }
 }

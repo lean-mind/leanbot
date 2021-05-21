@@ -10,6 +10,7 @@ import { coffeeRoulette, CoffeeRouletteProps } from "./coffee-roulette"
 import { ButtonActionProps } from "../../services/platform/slack/props/button-props"
 import { Database } from "../../services/database/database"
 import { stopCoffee } from "./stop-coffee"
+import { Factory } from "../../services/infrastructure/factory"
 
 describe("Coffee roulette", () => {
   let i18n: I18n
@@ -37,7 +38,7 @@ describe("Coffee roulette", () => {
     platform.sendMessage = jest.fn()
     platform.updateMessage = jest.fn()
 
-    db = Database.make()
+    db = Factory.createRepository()
     db.saveCoffeeBreak = jest.fn()
     
     coffeeRouletteProps = CoffeeRoulettePropsBuilder({})

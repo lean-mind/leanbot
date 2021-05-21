@@ -5,6 +5,7 @@ import { Platform } from "../../services/platform/platform"
 import { Slack } from "../../services/platform/slack/slack"
 import { ThanksConfirmationPropsBuilder } from "../../tests/builders/actions/thanks-confirmation-props-builder"
 import { thanksConfirmation, ThanksConfirmationProps } from "./thanks-confirmation"
+import { Factory } from "../../services/infrastructure/factory";
 
 describe('Actions Thanks Confirmation', () => {
   const fromId = "U-from-id"
@@ -19,7 +20,7 @@ describe('Actions Thanks Confirmation', () => {
   })
 
   beforeEach(() => {
-    db = Database.make()
+    db = Factory.createRepository()
     db.saveGratitudeMessages = jest.fn()
 
     platform = Slack.getInstance()

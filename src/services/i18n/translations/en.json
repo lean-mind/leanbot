@@ -46,6 +46,20 @@
     "recipientRejectedOffer": "You rejected ${sender}'s coffee",
     "error": "Sorry, there was a problem with your coffee... :shocked_face_with_exploding_head:"
   },
+  "todo": {
+    "toDoListTitle": ":spiral_note_pad: These are your tasks:",
+    "toDoCreated": "The following todo has been created: \n> ${todo}",
+    "toDoAssigned": "${user} has created a task for you: \n> ${todo}",
+    "completedAssignedToDo": "${user} has completed the task you assigned: \n> ${todo}",
+    "emptyToDoList": "You have nothing to do :white_check_mark:",
+    "emptyTextError": "You must provide a task description or an option: list",
+    "assignedToDoListTitle": ":white_check_mark: *Tasks assigned to your colleagues:*",
+    "emptyAssignedToDoList": "You have not assigned any tasks for your colleagues",
+    "assignedBy": "by ${user}",
+    "assignedTo": "for ${user}",
+    "fullUserToDoList": ":books: You have plenty of tasks to do, complete some of them before adding more",
+    "fullAssigneeToDoList": "${user} already has too many tasks, wait before asking them to do something else :clock10:"
+  },
   "button": {
     "accept": "Accept",
     "reject": "Reject",

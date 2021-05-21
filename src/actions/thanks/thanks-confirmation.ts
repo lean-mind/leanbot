@@ -4,6 +4,7 @@ import { Id, IdType } from "../../models/platform/slack/id"
 import { Database } from "../../services/database/database"
 import { I18n } from "../../services/i18n/i18n"
 import { Platform } from "../../services/platform/platform"
+import { Factory } from "../../services/infrastructure/factory";
 
 export interface ThanksConfirmationProps {
   communityId: string
@@ -70,7 +71,7 @@ const sendMessage = async (platform: Platform, id: string, message: string): Pro
 export const thanksConfirmation = async (
   platform: Platform,
   { communityId, sender, recipients, text, isAnonymous, channel }: ThanksConfirmationProps,
-  db: Database = Database.make(),
+  db: Database = Factory.createRepository(),
 ): Promise<void> => {
   i18n = await I18n.getInstance()
   const createdAt = new Date()

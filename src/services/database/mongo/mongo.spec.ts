@@ -6,6 +6,9 @@ import { Community } from "../../../models/database/community"
 import { config } from "../../../config"
 import { MongoDB } from "./mongo"
 import { GratitudeMessage } from "../../../models/database/gratitude-message"
+import { ToDo } from "../../../models/database/todo"
+import { ToDoBuilder } from "../../../tests/builders/models/to-do-builder"
+import { Id } from "../../../models/platform/slack/id"
 
 describe("Service MongoDB: ", () => {
   let db: MongoDB
@@ -98,6 +101,20 @@ describe("Service MongoDB: ", () => {
     it("should save coffee breaks", async () => {
       const coffeeBreak: CoffeeBreak = CoffeeBreakBuilder({})
       await db.saveCoffeeBreak(coffeeBreak)
+    })
+  })
+
+  describe('Collection to dos:', () => {
+    it('should save and retrieve to dos', async () => {
+      const userId = "test-user-id"
+      const toDo: ToDo = ToDoBuilder({ user: new Id(userId) })
+      await db.saveToDo(toDo)
+
+      const retrievedToDos: ToDo[] = await db.getToDos(userId)
+
+      expect(retrievedToDos).toHaveLength(1)
+      expect(retrievedToDos[0].user).toEqual(toDo.user)
+      expect(retrievedToDos[0].text).toEqual(toDo.text)
     })
   })
 })
