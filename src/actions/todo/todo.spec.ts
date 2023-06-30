@@ -25,6 +25,7 @@ describe("To Do", () => {
     db = Factory.createRepository()
     db.saveToDo = jest.fn()
     db.completeToDo = jest.fn()
+    db.getToDos = jest.fn().mockImplementation(() => ([]))
   })
 
   describe("/todo", () => {

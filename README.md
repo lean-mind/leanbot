@@ -22,7 +22,7 @@ _Pet Project de un bot para el Slack de LeanMind 💙_
   - [Instalación](#instalación)
     - [Variables de entorno](#variables-de-entorno)
     - [Bot](#bot)
-    - [heCatAPI](#thecatapi)
+    - [TheCatAPI](#thecatapi)
   - [Scripts](#scripts)
   - [Trabajo en local](#trabajo-en-local)
   - [Despliegue](#despliegue)
