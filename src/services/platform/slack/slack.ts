@@ -15,6 +15,7 @@ import { SlackPlainTextMessage } from "../../../models/platform/slack/views"
 import { getSlackTodoProps } from "./props/todo-props"
 import { ToDoListView } from "./views/todo-views"
 import { getSlackStatsProps } from "./props/stats-props"
+import { StatsSummaryView } from "./views/view-stats-summary"
 
 export type Request = AxiosInstance
 
@@ -66,6 +67,7 @@ export class Slack extends Platform {
     const mapper = {
       gratitudeMessage: GratitudeMessageInteractiveView,
       gratitudeSummary: GratitudeSummaryView,
+      statsSummary: StatsSummaryView,
       coffeeRouletteMessage: CoffeeRouletteMessage,
       tryAgainCoffeeMessage: TryAgainCoffeeMessage,
       toDoList: ToDoListView,
