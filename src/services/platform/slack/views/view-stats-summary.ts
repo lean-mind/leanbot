@@ -67,7 +67,7 @@ export const StatsSummaryView = async (stats: StatsSummaryViewProps): Promise<Sl
         },
         {
           "type": "mrkdwn",
-          "text": `Le has enviado un total de ${stats.bestReceiver.count} mensajes de gratitud a <@${stats.bestReceiver.receiverId}>`
+          "text": `Le has enviado un total de ${stats.bestSender.count} mensajes de gratitud a <@${stats.bestSender.senderId}>`
         }
       ]
     },
@@ -80,7 +80,7 @@ export const StatsSummaryView = async (stats: StatsSummaryViewProps): Promise<Sl
         },
         {
           "type": "mrkdwn",
-          "text": `<@${stats.bestSender.senderId}> te ha enviado un total de ${stats.bestSender.count} mensajes de gratitud`
+          "text": `<@${stats.bestReceiver.receiverId}> te ha enviado un total de ${stats.bestReceiver.count} mensajes de gratitud`
         }
       ]
     },
