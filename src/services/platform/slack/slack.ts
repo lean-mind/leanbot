@@ -14,6 +14,7 @@ import { Community } from "../../../models/database/community"
 import { SlackPlainTextMessage } from "../../../models/platform/slack/views"
 import { getSlackTodoProps } from "./props/todo-props"
 import { ToDoListView } from "./views/todo-views"
+import { getSlackStatsProps } from "./props/stats-props"
 
 export type Request = AxiosInstance
 
@@ -99,6 +100,7 @@ export class Slack extends Platform {
   getInteractiveProps = getSlackInteractiveProps
   getCoffeeRouletteProps = getSlackCoffeeRouletteProps
   getTodoProps = getSlackTodoProps
+  getStatsProps = getSlackStatsProps
 }
 
 Platform.dictionary["slack"] = Slack.getInstance()

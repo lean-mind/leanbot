@@ -4,6 +4,7 @@ import { sendGratitudeSummaries } from "../../actions/thanks"
 import { thanks } from "../../actions/thanks"
 import { Platform } from "../platform/platform"
 import { todo } from "../../actions/todo/todo";
+import { sendStatsSummaries } from "../../actions/stats/send-stats-summaries"
 
 export interface EndpointInstance {
   name: Endpoint
@@ -16,7 +17,8 @@ export enum Endpoint {
   thanks = "/thanks",
   coffeeRoulette = "/coffee-roulette",
   sendSummary = "/send-summary",
-  todo = "/todo"
+  todo = "/todo",
+  sendStats = "/stats"
 }
 
 export const Endpoints: EndpointInstance[] = [
@@ -44,5 +46,10 @@ export const Endpoints: EndpointInstance[] = [
     name: Endpoint.sendSummary,
     action: (_) => sendGratitudeSummaries(),
     getProps: async () => undefined,
+  },
+  {
+    name: Endpoint.sendStats,
+    action: sendStatsSummaries,
+    getProps: async (platform, data) => platform.getStatsProps(data),
   },
 ]

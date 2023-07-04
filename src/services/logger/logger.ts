@@ -8,13 +8,13 @@ export enum LogFiles {
 // TODO: maybe add colors in logs
 export class Logger {
   private static info = (message: string, showInConsole = true) => {
-    const log = `${getDateFormatted()} ${message}`
+    const log = `[${getDateFormatted()}] ${message}`
     if (showInConsole) console.info(log)
     File.write(log, LogFiles.log)
   }
 
   private static error = (message: string, error?: any) => {
-    const log = `${getDateFormatted()} ${message}` + (error ? `: ${JSON.stringify(error)}` : "")
+    const log = `[${getDateFormatted()}] ${message}` + (error ? `: ${JSON.stringify(error)}` : "")
     console.error(log)
     File.write(log, LogFiles.error)
     Logger.info(`${message} (see "${LogFiles.error}" file for more info)`, false)
@@ -48,5 +48,5 @@ export const getDateFormatted = (date: Date = new Date(Date.now())): string => {
   const hours = date.getHours()
   const minutes = date.getMinutes()
   const seconds = date.getSeconds()
-  return `[${days}/${months}/${years} ${hours}:${minutes}:${seconds}]`
+  return `${days}/${months}/${years} ${hours}:${minutes}:${seconds}`
 }

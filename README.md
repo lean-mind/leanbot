@@ -13,12 +13,12 @@ _Pet Project de un bot para el Slack de LeanMind 💙_
 
 - [LeanBot para Slack](#leanbot-para-slack)
   - [Índice](#índice)
-  - [Introducción](#Introducción)
-  - [Uso/Ejemplos](#Uso/Ejemplos)
-    - [CoffeeRoulette](#CoffeeRoulette)
-    - [Thanks](#Thanks)
-  - [Tech Stack](#Tech Stack)
-  - [Docs](#Docs)
+- [Introducción](#introducción)
+  - [Uso/Ejemplos](#usoejemplos)
+    - [CoffeeRoulette](#coffeeroulette)
+    - [Thanks](#thanks)
+  - [Tech Stack](#tech-stack)
+    - [Docs](#docs)
   - [Instalación](#instalación)
     - [Variables de entorno](#variables-de-entorno)
     - [Bot](#bot)
@@ -27,9 +27,9 @@ _Pet Project de un bot para el Slack de LeanMind 💙_
   - [Trabajo en local](#trabajo-en-local)
   - [Despliegue](#despliegue)
   - [Estructura](#estructura)
-  - [Authors](#Authors)
+  - [Authors](#authors)
   - [Recursos](#recursos)
-  - [Licencia](#Licencia)
+  - [Licencia](#licencia)
 
 ----------------
 
@@ -132,13 +132,13 @@ Para obtener el `SLACK_TOKEN` y el `SLACK_USER_TOKEN` hay que crear una aplicaci
 
 Una vez creado el bot, deberías estar en la sección **Basic Information** tendrás un desplegable "**Add features and functionality**", entraremos en donde dice **Bot** y te redireccionará a la sección **App Home** donde actualizaremos los scopes dándole al botón en verde "Review Scopes to Add". Vamos al apartado de **Scopes** y añadiremos los siguientes **Bot Token Scopes** en base a los métodos que estamos consumiendo de Slack:
 
-Method   | Bot Scopes
----------|-----------
-[`/chat.postMessage`](https://api.slack.com/methods/chat.postMessage) | `chat:write`
-[`/conversations.members`](https://api.slack.com/methods/conversations.members) | `channels:read`, `groups:read`, `im:read`, `mpim:read`
-[`/conversations.list`](https://api.slack.com/methods/conversations.list) | `channels:read`, `groups:read`, `im:read`, `mpim:read`
-[`/users.info`](https://api.slack.com/methods/users.info) | `users:read`
-[`/views.open`](https://api.slack.com/methods/views.open) | _No scope required_
+| Method                                                                          | Bot Scopes                                             |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [`/chat.postMessage`](https://api.slack.com/methods/chat.postMessage)           | `chat:write`                                           |
+| [`/conversations.members`](https://api.slack.com/methods/conversations.members) | `channels:read`, `groups:read`, `im:read`, `mpim:read` |
+| [`/conversations.list`](https://api.slack.com/methods/conversations.list)       | `channels:read`, `groups:read`, `im:read`, `mpim:read` |
+| [`/users.info`](https://api.slack.com/methods/users.info)                       | `users:read`                                           |
+| [`/views.open`](https://api.slack.com/methods/views.open)                       | _No scope required_                                    |
 
 Una vez tengamos los _scopes_ actualizados, podremos instalar el bot en nuestro _workspace_, podremos hacerlo al principio de la misma página donde actualizaste los _scopes_. Ya tendrémos disponible el token del bot que debería comenzar por `xoxb`.
 
@@ -180,7 +180,7 @@ Si nunca has utilizado node, se arrancarían utilizando el comando `npm run <scr
 ## Trabajo en local
 
 1. Clonar el repositorio
-12. Generar un certificado y una clave SSL ([Tutorial](https://programarivm.com/pon-en-marcha-un-servidor-https-en-node-js-con-express))  
+12. Generar un certificado y una clave SSL ([Tutorial](https://devcenter.heroku.com/articles/ssl-certificate-self))  
 2. Configurar el `.env` haciendo una copia de `.env.sample` y actualizando las variables.
 3. Instalar los paquetes de node con `npm install`
 4. Exponer tu ip local para poder acceder a los comandos desde slack (se recomienda [`ngrok`](https://ngrok.com))

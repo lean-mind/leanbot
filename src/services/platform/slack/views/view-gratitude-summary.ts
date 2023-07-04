@@ -13,7 +13,7 @@ const toMessage = ({ users, createdAt, text, isAnonymous }: GratitudeSummaryMess
   const userList = isAnonymous
     ? i18n.translate("gratitudeMessageSummary.anonymous")
     : users.map(({ id }) => `<@${id}>`).join(", ")
-  return `• *${userList}* \`${getDateFormatted(createdAt)}\`: ${text}`
+  return `• *${userList}* \`[${getDateFormatted(createdAt)}]\`: ${text}`
 }
 
 export const GratitudeSummaryView = async ({
@@ -46,7 +46,7 @@ export const GratitudeSummaryView = async ({
         type: "mrkdwn",
         text: hasSent
           ? `*${i18n.translate("gratitudeMessageSummary.sent")}*\n` +
-            sent?.map((message) => toMessage(message, i18n)).join("\n")
+          sent?.map((message) => toMessage(message, i18n)).join("\n")
           : i18n.translate("gratitudeMessageSummary.noSent"),
       },
     },
@@ -57,7 +57,7 @@ export const GratitudeSummaryView = async ({
         type: "mrkdwn",
         text: hasReceived
           ? `*${i18n.translate("gratitudeMessageSummary.received")}*\n` +
-            received?.map((message) => toMessage(message, i18n)).join("\n")
+          received?.map((message) => toMessage(message, i18n)).join("\n")
           : i18n.translate("gratitudeMessageSummary.noReceived"),
       },
     },
@@ -76,14 +76,14 @@ export const GratitudeSummaryView = async ({
           text:
             (hasSent
               ? i18n.translate("gratitudeMessageSummary.sentCount", {
-                  count: (sent?.length ?? 0) + "",
-                })
+                count: (sent?.length ?? 0) + "",
+              })
               : "") +
             (hasSent && hasReceived ? `. ` : "") +
             (hasReceived
               ? i18n.translate("gratitudeMessageSummary.receivedCount", {
-                  count: (received?.length ?? 0) + "",
-                })
+                count: (received?.length ?? 0) + "",
+              })
               : ""),
         },
       ],

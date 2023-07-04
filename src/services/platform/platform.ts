@@ -7,6 +7,7 @@ import { UserInfo } from "./slack/methods/get-user-info"
 import { SlackBody } from "../../models/platform/slack/body"
 import { Community } from "../../models/database/community"
 import { TodoProps } from "../../actions/todo/todo"
+import { StatsProps } from "../../actions/stats/send-stats-summaries"
 
 export type PlatformName = "slack"
 
@@ -61,4 +62,5 @@ export abstract class Platform {
   abstract getInteractiveProps: (data: any) => Promise<InteractiveProps | undefined>
   abstract getCoffeeRouletteProps: (data: any) => Promise<CoffeeRouletteProps>
   abstract getTodoProps: (data: any) => Promise<TodoProps>
+  abstract getStatsProps: (data: any) => Promise<StatsProps>
 }

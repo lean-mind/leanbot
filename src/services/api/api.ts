@@ -15,7 +15,7 @@ app.use(json())
 app.use(urlencoded({ extended: true }))
 
 morgan.token("date", () => {
-  return getDateFormatted()
+  return `[${getDateFormatted()}]`
 })
 app.use(morgan(":date :method :url :status :res[content-length] - :response-time ms"))
 
